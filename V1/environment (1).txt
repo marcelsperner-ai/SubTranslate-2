@@ -1,0 +1,6 @@
+GEMINI_API_KEY=""
+EMAIL_SENDER="marcel.sperner@gmail.com"
+EMAIL_PASSWORD=""
+EMAIL_RECEIVER="neginmarcel2024@gmail.com"
+SMTP_SERVER="smtp.gmail.com"
+SMTP_PORT=465
