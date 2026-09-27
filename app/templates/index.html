@@ -328,18 +328,11 @@
                     </div>
 
                     <div id="edtechActiveBox" style="display: none;">
-                        <p>Die persische Übersetzung liegt vor. Klicke auf 'Validieren', um die Zeitstempel und Keywords der Vokabelliste zu prüfen.</p>
-                        <button id="btnValidateEdtech" class="btn btn-custom w-100 mb-3">CSV Validieren</button>
-
                         <div id="validationResult" class="alert d-none"></div>
 
                         <hr>
-                        <h6>3. Generierung</h6>
+                        <h6>CSV-Generierung</h6>
                         <form id="generateEdtechForm">
-                            <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="generateCsvOnly" name="generate_csv_only">
-                                <label class="form-check-label" for="generateCsvOnly">Nur neue CSV (Vokabeln) generieren, keine ASS</label>
-                            </div>
                             <button type="submit" id="btnGenerateEdtech" class="btn btn-success w-100" disabled>CSV generieren</button>
                         </form>
 
@@ -392,6 +385,7 @@
                             </div>
                         </div>
                     </form>
+                    <button type="button" id="btnRebuildAss" class="btn btn-outline-primary mt-3 d-none">ASS erneut berechnen</button>
                 </div>
                 <!-- EDTECH PROMPTS TAB -->
                 <div class="tab-pane fade" id="ed-prompts">

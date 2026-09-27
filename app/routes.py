@@ -283,6 +283,7 @@ def generate_edtech(t_id):
         
         if generate_csv_only:
             if res_csv and os.path.exists(res_csv):
+                update_edtech_status(t_id, 0)
                 return jsonify({"message": "CSV erfolgreich generiert"})
             return jsonify({"error": "CSV generiert, Datei aber auf dem Laufwerk nicht gefunden"}), 500
         else:
@@ -301,6 +302,13 @@ def get_project(t_id):
     t = get_translation_by_id(t_id)
     if not t:
         return jsonify({"error": "Projekt nicht gefunden"}), 404
+    base_name = t['original_filename'].replace('.srt', '')
+    outputs_dir = current_app.config['OUTPUTS_DIR']
+    t['available_downloads'] = {
+        'srt': os.path.exists(os.path.join(outputs_dir, f"{base_name}_FA.srt")),
+        'ass': bool(t.get('edtech_done')) and os.path.exists(os.path.join(outputs_dir, f"{base_name}_Interaktiv.ass")),
+        'csv': os.path.exists(os.path.join(outputs_dir, f"{base_name}_Vokabeln.csv"))
+    }
     return jsonify(t)
 
 @main_bp.route('/api/prompts/<int:t_id>', methods=['GET'])

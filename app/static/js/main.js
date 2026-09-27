@@ -1,6 +1,7 @@
 let currentProjectId = null;
 let pollInterval = null;
 let generateAssAfterValidation = false;
+let currentAvailableDownloads = { srt: false, ass: false, csv: false };
 
 // DOM Elemente
 const form = document.getElementById('newProjectForm');
@@ -31,9 +32,9 @@ const btnPauseResume = document.getElementById('btnPauseResume');
 // EdTech & Archiv Elemente
 const edtechStatusBox = document.getElementById('edtechStatusBox');
 const edtechActiveBox = document.getElementById('edtechActiveBox');
-const btnValidateEdtech = document.getElementById('btnValidateEdtech');
 const validationResult = document.getElementById('validationResult');
 const btnGenerateEdtech = document.getElementById('btnGenerateEdtech');
+const btnRebuildAss = document.getElementById('btnRebuildAss');
 const generateEdtechForm = document.getElementById('generateEdtechForm');
 const edtechSettingsForm = document.getElementById('edtechSettingsForm');
 const fixModal = new bootstrap.Modal(document.getElementById('fixModal'));
@@ -44,6 +45,8 @@ let promptPreviewRequest = 0;
 let promptPreviewLoaded = false;
 let promptSaved = false;
 let episodeSummarySaved = true;
+let hasGeneratedAss = false;
+let savedEdtechSettings = null;
 
 // 1. INITIALISIERUNG
 document.addEventListener("DOMContentLoaded", () => {
@@ -191,6 +194,24 @@ function escapeHtml(unsafe) {
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;");
 }
+
+function getEdtechSettingsSnapshot() {
+    const settings = {};
+    for (const field of edtechSettingsForm.elements) {
+        if (!field.name) continue;
+        settings[field.name] = field.type === 'checkbox' ? field.checked : field.value;
+    }
+    return JSON.stringify(settings);
+}
+
+function updateAssRebuildButton() {
+    const hasChanges = hasGeneratedAss && savedEdtechSettings !== null
+        && getEdtechSettingsSnapshot() !== savedEdtechSettings;
+    btnRebuildAss.classList.toggle('d-none', !hasChanges);
+}
+
+edtechSettingsForm.addEventListener('input', updateAssRebuildButton);
+edtechSettingsForm.addEventListener('change', updateAssRebuildButton);
 
 async function loadMetadata() {
     try {
@@ -344,6 +365,9 @@ async function loadProjectToMain(id, title, status) {
     currentProjectId = id;
     projectTitle.textContent = title; // XSS-Schutz
     progressSection.style.display = 'block';
+    document.getElementById('downloadLinks').classList.add('d-none');
+    let availableDownloads = { srt: status === 'abgeschlossen', ass: false, csv: false };
+    currentAvailableDownloads = availableDownloads;
     
     formSection.classList.add('locked');
     startBtn.textContent = 'Gesperrt';
@@ -355,6 +379,9 @@ async function loadProjectToMain(id, title, status) {
         let pRes = await fetch(`/api/project/${id}`);
         if(pRes.ok) {
             let pData = await pRes.json();
+            availableDownloads = pData.available_downloads || availableDownloads;
+            currentAvailableDownloads = availableDownloads;
+            hasGeneratedAss = Boolean(availableDownloads.ass);
             // Formularfelder befüllen
             if (edtechSettingsForm.elements['infobox_duration']) edtechSettingsForm.elements['infobox_duration'].value = pData.infobox_duration || 9;
             if (edtechSettingsForm.elements['ass_sync_offset']) edtechSettingsForm.elements['ass_sync_offset'].value = pData.ass_sync_offset || 0;
@@ -362,6 +389,8 @@ async function loadProjectToMain(id, title, status) {
             if (edtechSettingsForm.elements['hl_bold']) edtechSettingsForm.elements['hl_bold'].checked = pData.hl_bold === 1 || pData.hl_bold === true;
             if (edtechSettingsForm.elements['hl_underline']) edtechSettingsForm.elements['hl_underline'].checked = pData.hl_underline === 1 || pData.hl_underline === true;
             if (edtechSettingsForm.elements['hl_color']) edtechSettingsForm.elements['hl_color'].checked = pData.hl_color === 1 || pData.hl_color === true;
+            savedEdtechSettings = getEdtechSettingsSnapshot();
+            updateAssRebuildButton();
         }
         
         // Prompts abrufen und in die Tabs schreiben
@@ -376,7 +405,7 @@ async function loadProjectToMain(id, title, status) {
     }
     
     if (status === 'abgeschlossen') {
-        unlockEdtech();
+        unlockEdtech(availableDownloads);
     } else {
         edtechZone.classList.add('disabled-overlay');
         edtechStatusBox.style.display = 'block';
@@ -479,7 +508,8 @@ function startPolling() {
             updatePauseResumeButton(data.status);
             
             if (data.status === 'abgeschlossen') {
-                unlockEdtech();
+                currentAvailableDownloads.srt = true;
+                unlockEdtech(currentAvailableDownloads);
                 clearInterval(pollInterval);
                 loadProjects(); 
             } else {
@@ -551,7 +581,8 @@ btnPauseResume.addEventListener('click', async () => {
 });
 
 // --- EDTECH LOGIK ---
-function unlockEdtech() {
+function unlockEdtech(availableDownloads = currentAvailableDownloads) {
+    currentAvailableDownloads = availableDownloads;
     edtechZone.classList.remove('disabled-overlay');
     edtechStatusBox.style.display = 'none';
     edtechActiveBox.style.display = 'block';
@@ -561,6 +592,14 @@ function unlockEdtech() {
     document.getElementById('linkSrt').href = `/api/download/${currentProjectId}?type=srt`;
     document.getElementById('linkAss').href = `/api/download/${currentProjectId}?type=ass`;
     document.getElementById('linkCsv').href = `/api/download/${currentProjectId}?type=csv`;
+
+    document.getElementById('linkSrt').style.display = availableDownloads.srt ? 'inline-block' : 'none';
+    document.getElementById('linkAss').style.display = availableDownloads.ass ? 'inline-block' : 'none';
+    document.getElementById('linkCsv').style.display = availableDownloads.csv ? 'inline-block' : 'none';
+    document.getElementById('downloadLinks').classList.toggle(
+        'd-none',
+        !Object.values(availableDownloads).some(Boolean)
+    );
 }
 
 function showValidationMismatches(data) {
@@ -594,9 +633,13 @@ async function generateAss(ignoreValidationErrors = false) {
 
         document.getElementById('downloadLinks').classList.remove('d-none');
         document.getElementById('linkAss').style.display = 'inline-block';
+        currentAvailableDownloads = { srt: true, ass: true, csv: true };
         validationResult.className = 'alert alert-success';
         validationResult.textContent = 'CSV geprüft; ASS erfolgreich erstellt.';
         validationResult.classList.remove('d-none');
+        hasGeneratedAss = true;
+        savedEdtechSettings = getEdtechSettingsSnapshot();
+        updateAssRebuildButton();
         loadProjects();
     } catch (error) {
         validationResult.className = 'alert alert-danger';
@@ -609,8 +652,6 @@ async function generateAss(ignoreValidationErrors = false) {
 }
 
 async function validateEdtech() {
-    btnValidateEdtech.disabled = true;
-    btnValidateEdtech.textContent = "Prüfe...";
     validationResult.classList.add('d-none');
     
     try {
@@ -621,6 +662,7 @@ async function validateEdtech() {
         if (data.status === 'no_csv_yet') {
             validationResult.className = 'alert alert-info';
             validationResult.textContent = 'Keine CSV vorhanden. Bitte zuerst generieren.';
+            generateAssAfterValidation = false;
         } else if (data.ts_mismatches.length === 0 && data.kw_mismatches.length === 0) {
             validationResult.className = 'alert alert-success';
             validationResult.textContent = 'CSV geprüft: keine Abweichungen gefunden.';
@@ -634,19 +676,13 @@ async function validateEdtech() {
             showValidationMismatches(data);
         }
     } catch (error) {
+        generateAssAfterValidation = false;
         validationResult.className = 'alert alert-danger';
         validationResult.textContent = error.message || 'Fehler bei der Validierung.';
     } finally {
-        btnValidateEdtech.disabled = false;
-        btnValidateEdtech.textContent = "CSV Validieren";
         validationResult.classList.remove('d-none');
     }
 }
-
-btnValidateEdtech.addEventListener('click', () => {
-    generateAssAfterValidation = false;
-    validateEdtech();
-});
 
 btnApplyFix.addEventListener('click', async () => {
     const method = document.getElementById('fixMethodSelect').value;
@@ -688,7 +724,7 @@ generateEdtechForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     btnGenerateEdtech.disabled = true;
     btnGenerateEdtech.textContent = 'Generiere CSV...';
-    generateAssAfterValidation = !document.getElementById('generateCsvOnly').checked;
+    generateAssAfterValidation = true;
     document.getElementById('linkAss').style.display = 'none';
     
     const settingsData = new FormData(edtechSettingsForm);
@@ -705,6 +741,10 @@ generateEdtechForm.addEventListener('submit', async (e) => {
         let result = await res.json();
         
         if (res.ok) {
+            currentAvailableDownloads.csv = true;
+            currentAvailableDownloads.ass = false;
+            hasGeneratedAss = false;
+            updateAssRebuildButton();
             document.getElementById('downloadLinks').classList.remove('d-none');
             validationResult.className = 'alert alert-info';
             validationResult.textContent = 'CSV erstellt. Prüfung läuft...';
@@ -721,4 +761,15 @@ generateEdtechForm.addEventListener('submit', async (e) => {
         btnGenerateEdtech.disabled = false;
         btnGenerateEdtech.textContent = 'CSV generieren';
     }
+});
+
+btnRebuildAss.addEventListener('click', async () => {
+    if (!currentProjectId || !hasGeneratedAss) return;
+
+    generateAssAfterValidation = true;
+    btnRebuildAss.disabled = true;
+    btnRebuildAss.textContent = 'Prüfe CSV...';
+    await validateEdtech();
+    btnRebuildAss.disabled = false;
+    btnRebuildAss.textContent = 'ASS erneut berechnen';
 });
