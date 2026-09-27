@@ -40,6 +40,7 @@ def init_db():
         "hl_color": "INTEGER DEFAULT 0",
         "infobox_content": "TEXT DEFAULT 'Nur deutsches Wort'",
         "episode_summary": "TEXT DEFAULT ''",
+        "custom_translation_prompt": "TEXT DEFAULT ''",
         # --- NEU FÜR DEN HEARTBEAT & LEASE ---
         "heartbeat_at": "REAL DEFAULT 0",
         "worker_token": "TEXT DEFAULT NULL"
@@ -71,7 +72,8 @@ def save_project_settings(t_id, settings_dict):
         UPDATE translations SET 
             batch_size = ?, infobox_duration = ?, ass_sync_offset = ?, 
             hl_bold = ?, hl_underline = ?, hl_color = ?, 
-            infobox_content = ?, episode_summary = ?, sync_offset = ?, profile_key = ?
+            infobox_content = ?, episode_summary = ?, custom_translation_prompt = ?,
+            sync_offset = ?, profile_key = ?
         WHERE id = ?
     '''
     c.execute(query, (
@@ -83,6 +85,7 @@ def save_project_settings(t_id, settings_dict):
         1 if settings_dict.get('hl_color') else 0,
         settings_dict.get('infobox_content', 'Deutsches Wort + Farsi-Keyword'),
         settings_dict.get('episode_summary', ''),
+        settings_dict.get('custom_translation_prompt', ''),
         settings_dict.get('sync_offset', 0),
         settings_dict.get('profile_key', 'default'),
         t_id

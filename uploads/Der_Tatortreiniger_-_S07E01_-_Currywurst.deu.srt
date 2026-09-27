@@ -1,0 +1,2155 @@
+1
+00:00:00,200 --> 00:00:02,920
+<font color="#0000FF">Untertitel:</font>
+<font color="#0000FF">Norddeutscher Rundfunk 2018</font>
+
+2
+00:00:07,680 --> 00:00:09,720
+<font color="#FFFFFF">* Titelmusik *</font>
+
+3
+00:01:06,480 --> 00:01:07,920
+<font color="#FFFF00">Hallo?</font>
+
+4
+00:01:10,480 --> 00:01:11,960
+<font color="#FFFF00">Is hier jemand?</font>
+
+5
+00:01:17,400 --> 00:01:18,760
+<font color="#FFFF00">Hä?</font>
+
+6
+00:01:26,360 --> 00:01:27,760
+<font color="#FFFF00">Och.</font>
+
+7
+00:01:35,360 --> 00:01:36,640
+<font color="#FFFF00">Braver Hund.</font>
+
+8
+00:01:37,480 --> 00:01:39,240
+<font color="#FFFF00">Jetzt such den Hunni.</font>
+
+9
+00:01:39,760 --> 00:01:41,960
+<font color="#FFFFFF">* Kläffen *</font>
+
+10
+00:01:43,400 --> 00:01:44,760
+<font color="#FFFF00">Moin.</font>
+
+11
+00:01:45,240 --> 00:01:46,440
+<font color="#FFFF00">Schotte.</font>
+
+12
+00:01:46,560 --> 00:01:49,240
+<font color="#FFFF00">Mein Name.</font>
+<font color="#00FF00">Das ist eine Überraschung.</font>
+
+13
+00:01:49,360 --> 00:01:52,840
+<font color="#FFFF00">Hatten Sie nicht angerufen?</font>
+<font color="#00FF00">Ja, vor Ewigkeiten.</font>
+
+14
+00:01:52,880 --> 00:01:54,960
+<font color="#FFFF00">Ich war im Stau. </font>
+<font color="#00FF00">Verstehe.</font>
+
+15
+00:01:55,280 --> 00:01:56,520
+<font color="#00FF00">Große Krise.</font>
+
+16
+00:01:56,640 --> 00:01:58,800
+<font color="#00FF00">Und jetzt wieder im Flow? </font>
+<font color="#FFFF00">Joa.</font>
+
+17
+00:01:59,400 --> 00:02:03,40
+<font color="#00FF00">Ich muss sagen, Herr Schotte:</font>
+<font color="#00FF00">Ich liebe Ihre Arbeit.</font>
+
+18
+00:02:05,880 --> 00:02:10,520
+<font color="#00FF00">Ich wag's nicht zu fragen, aber ...</font>
+<font color="#00FF00">Haben Sie mir was mitgebracht?</font>
+
+19
+00:02:10,600 --> 00:02:11,880
+<font color="#FFFF00">Ähm ... joa ...</font>
+
+20
+00:02:12,00 --> 00:02:13,640
+<font color="#FFFF00">Hier ... Putzmittel.</font>
+
+21
+00:02:16,40 --> 00:02:17,360
+<font color="#00FF00">Sensationell.</font>
+
+22
+00:02:18,760 --> 00:02:23,280
+<font color="#00FF00">Entschuldigen Sie das Chaos,</font>
+<font color="#00FF00">es gab einen bedauerlichen Vorfall.</font>
+
+23
+00:02:23,600 --> 00:02:25,800
+<font color="#FFFF00">Deswegen bin ich ja hier.</font>
+
+24
+00:02:26,00 --> 00:02:27,840
+<font color="#00FF00">Wie war noch mal der Name?</font>
+
+25
+00:02:27,920 --> 00:02:30,200
+<font color="#FFFF00">Schotte, Heiko. Tatortreinigung.</font>
+
+26
+00:02:30,280 --> 00:02:33,280
+<font color="#FFFF00">Bin ich hier nicht richtig?</font>
+<font color="#00FF00">Doch, doch, ja.</font>
+
+27
+00:02:34,320 --> 00:02:36,680
+<font color="#FFFF00">Ja, denn ... leg ich mal los, ne.</font>
+
+28
+00:02:43,600 --> 00:02:47,00
+<font color="#00FF00">Sind Sie verwandt</font>
+<font color="#00FF00">mit dem Maler Siegfried Schotte?</font>
+
+29
+00:02:47,80 --> 00:02:49,160
+<font color="#FFFF00">Roland Schotte - mein Cousin.</font>
+
+30
+00:02:49,280 --> 00:02:52,640
+<font color="#00FF00">Ich mein den Maler.</font>
+<font color="#FFFF00">Der is ja Maler. </font>
+<font color="#00FF00">Tatsächlich?</font>
+
+31
+00:02:52,720 --> 00:02:54,200
+<font color="#FFFF00">Ja, netter Kerl.</font>
+
+32
+00:02:54,280 --> 00:02:55,800
+<font color="#00FF00">Und was malt der so?</font>
+
+33
+00:02:55,880 --> 00:03:00,560
+<font color="#FFFF00">Er hat in den Deichtorhallen ...</font>
+<font color="#00FF00">Da sind Arbeiten Ihres Cousins?</font>
+
+34
+00:03:01,160 --> 00:03:02,840
+<font color="#FFFF00">Die Wände. </font>
+<font color="#00FF00">Die Wende?</font>
+
+35
+00:03:03,400 --> 00:03:04,560
+<font color="#FFFF00">Die WÄNDE.</font>
+
+36
+00:03:04,640 --> 00:03:07,160
+<font color="#00FF00">Thema Mauerfall? </font>
+<font color="#FFFF00">Thema Renovierung.</font>
+
+37
+00:03:07,680 --> 00:03:09,680
+<font color="#00FF00">Sie meinen ...? </font>
+<font color="#FFFF00">Die Wände.</font>
+
+38
+00:03:10,80 --> 00:03:13,360
+<font color="#00FF00">Was hat Ihr Cousin da gemacht?</font>
+<font color="#FFFF00">Weiß gestrichen.</font>
+
+39
+00:03:13,480 --> 00:03:15,560
+<font color="#00FF00">Klingt radikal. </font>
+<font color="#FFFF00">Joa, geht so.</font>
+
+40
+00:03:16,240 --> 00:03:19,600
+<font color="#FFFF00">Das Wichtige sind ja die Bilder.</font>
+<font color="#00FF00">Welche Bilder?</font>
+
+41
+00:03:19,760 --> 00:03:21,840
+<font color="#FFFF00">Was da grad ausgestellt wird.</font>
+
+42
+00:03:21,880 --> 00:03:25,400
+<font color="#00FF00">Er hat in den Deichtorhallen ...</font>
+<font color="#FFFF00">Die Wände geweißelt.</font>
+
+43
+00:03:25,440 --> 00:03:28,720
+<font color="#00FF00">Warum erzählen Sie mir das?</font>
+<font color="#FFFF00">Sie hatten gefragt.</font>
+
+44
+00:03:29,160 --> 00:03:30,800
+<font color="#00FF00">Wär zu schön gewesen.</font>
+
+45
+00:03:31,200 --> 00:03:33,760
+<font color="#00FF00">Siegfried Schotte in meiner Galerie.</font>
+
+46
+00:03:33,840 --> 00:03:36,480
+<font color="#FFFF00">Und der Siegfried ...</font>
+<font color="#FFFF00">was malt der so?</font>
+
+47
+00:03:36,640 --> 00:03:39,480
+<font color="#00FF00">Weiße, monochrome Flächen -</font>
+<font color="#00FF00">sensationell.</font>
+
+48
+00:03:45,200 --> 00:03:48,840
+<font color="#00FF00">Ich hab gleich gesagt,</font>
+<font color="#00FF00">das Bild kommt nicht infrage.</font>
+
+49
+00:03:49,80 --> 00:03:51,640
+<font color="#00FF00">Aber dann hat er hier herumgebrüllt,</font>
+
+50
+00:03:51,760 --> 00:03:56,120
+<font color="#00FF00">er sei Konrad Kirschelich und</font>
+<font color="#00FF00">lasse nicht so mit sich umgehen.</font>
+
+51
+00:03:56,200 --> 00:03:59,720
+<font color="#00FF00">Das Bild dürfe der Welt</font>
+<font color="#00FF00">nicht vorenthalten werden.</font>
+
+52
+00:03:59,840 --> 00:04:02,40
+<font color="#00FF00">Er hat Rotz und Wasser geweint,</font>
+
+53
+00:04:02,80 --> 00:04:05,560
+<font color="#00FF00">weil er im Bild</font>
+<font color="#00FF00">den Tod seiner Frau verarbeitet hat.</font>
+
+54
+00:04:05,680 --> 00:04:07,600
+<font color="#00FF00">Dann fing er an zu betteln.</font>
+
+55
+00:04:07,680 --> 00:04:11,960
+<font color="#00FF00">Für 5 Euro würde er das Bild</font>
+<font color="#00FF00">der Galerie Ravenbach verkaufen.</font>
+
+56
+00:04:13,320 --> 00:04:15,960
+<font color="#00FF00">Irgendwann hab ich</font>
+<font color="#00FF00">die Polizei geholt.</font>
+
+57
+00:04:16,240 --> 00:04:21,40
+<font color="#FFFF00">Warum haben Sie ihm nicht 5 Euro</font>
+<font color="#FFFF00">gegeben? </font>
+<font color="#00FF00">Es ist nicht so viel wert.</font>
+
+58
+00:04:21,440 --> 00:04:23,00
+<font color="#FFFF00">Ja, aber ... 5 Euro!</font>
+
+59
+00:04:23,80 --> 00:04:26,160
+<font color="#00FF00">Vielleicht als Almosen,</font>
+<font color="#00FF00">nicht als Kaufpreis.</font>
+
+60
+00:04:29,680 --> 00:04:31,240
+<font color="#FFFF00">Ich find's ganz schön.</font>
+
+61
+00:04:31,320 --> 00:04:33,880
+<font color="#00FF00">Es passt auch sicher</font>
+<font color="#00FF00">in eine Pizzeria</font>
+
+62
+00:04:34,00 --> 00:04:37,00
+<font color="#00FF00">oder ein anthroposophisches</font>
+<font color="#00FF00">Wellness-Hotel.</font>
+
+63
+00:04:37,160 --> 00:04:39,160
+<font color="#00FF00">Aber nicht in meine Galerie.</font>
+
+64
+00:04:40,400 --> 00:04:41,560
+<font color="#FFFF00">Warum?</font>
+
+65
+00:04:41,600 --> 00:04:45,880
+<font color="#00FF00">Das ist ein dekoratives Bild,</font>
+<font color="#00FF00">und ich zeige Zeitgenössisches.</font>
+
+66
+00:04:46,640 --> 00:04:50,360
+<font color="#FFFF00">Der Maler ist doch ein Zeitgenosse.</font>
+<font color="#00FF00">Das reicht nicht.</font>
+
+67
+00:04:50,480 --> 00:04:51,640
+<font color="#FFFF00">Sondern?</font>
+
+68
+00:04:51,720 --> 00:04:53,600
+<font color="#00FF00">Zeitgenössische Kunst ist</font>
+
+69
+00:04:53,680 --> 00:04:57,320
+<font color="#00FF00">eine relevante Auseinandersetzung</font>
+<font color="#00FF00">mit der Gegenwart.</font>
+
+70
+00:04:59,840 --> 00:05:01,240
+<font color="#FFFF00">Und dann?</font>
+
+71
+00:05:01,480 --> 00:05:04,480
+<font color="#00FF00">Dann ist er hier eingebrochen</font>
+<font color="#00FF00">mit dem Bild.</font>
+
+72
+00:05:04,760 --> 00:05:07,560
+<font color="#00FF00">In die Kamera</font>
+<font color="#00FF00">hat er ein krudes Manifest</font>
+
+73
+00:05:07,720 --> 00:05:11,360
+<font color="#00FF00">über die mafiösen Strukturen</font>
+<font color="#00FF00">der Kunstwelt gehalten.</font>
+
+74
+00:05:11,480 --> 00:05:14,920
+<font color="#00FF00">Dann nahm er 5 Euro</font>
+<font color="#00FF00">aus der Kaffeekasse und sagte,</font>
+
+75
+00:05:15,00 --> 00:05:19,440
+<font color="#00FF00">er verkaufe jetzt symbolisch</font>
+<font color="#00FF00">das Bild an die Galerie Ravenbach.</font>
+
+76
+00:05:21,720 --> 00:05:22,960
+<font color="#FFFF00">Verrückt.</font>
+
+77
+00:05:23,40 --> 00:05:27,480
+<font color="#FFFF00">Haben Sie keine Alarmanlage?</font>
+<font color="#00FF00">Doch, die Polizei kam auch gleich.</font>
+
+78
+00:05:27,600 --> 00:05:31,240
+<font color="#00FF00">Aber vorher haben schon</font>
+<font color="#00FF00">zwei Wachleute rumgeballert.</font>
+
+79
+00:05:31,320 --> 00:05:34,960
+<font color="#00FF00">Dann sah es aus wie nach</font>
+<font color="#00FF00">einer Hermann-Nitsch-Aktion.</font>
+
+80
+00:05:35,80 --> 00:05:36,280
+<font color="#FFFF00">Gab's Tote?</font>
+
+81
+00:05:36,360 --> 00:05:40,160
+<font color="#00FF00">Konrad Kirschelich</font>
+<font color="#00FF00">kämpft wohl auf der Intensivstation</font>
+
+82
+00:05:40,240 --> 00:05:42,440
+<font color="#00FF00">um sein kleines Künstlerdasein.</font>
+
+83
+00:05:42,680 --> 00:05:44,240
+<font color="#00FF00">Alle anderen sind tot.</font>
+
+84
+00:05:44,800 --> 00:05:47,80
+<font color="#FFFF00">Ach du Scheiße. </font>
+<font color="#00FF00">Oder unverletzt.</font>
+
+85
+00:05:47,240 --> 00:05:50,640
+<font color="#00FF00">Alle unverletzt bis auf einer!</font>
+<font color="#00FF00">Bin ein Nervenbündel.</font>
+
+86
+00:05:50,720 --> 00:05:53,280
+<font color="#00FF00">Aber die Exponate sind unbeschädigt.</font>
+
+87
+00:05:53,680 --> 00:05:57,200
+<font color="#FFFF00">Das ist ja die Hauptsache.</font>
+<font color="#00FF00">Das ist alles Scolatti.</font>
+
+88
+00:05:57,960 --> 00:05:59,440
+<font color="#00FF00">Das ist ein Großer.</font>
+
+89
+00:06:00,240 --> 00:06:01,920
+<font color="#00FF00">Ein ganz ein Großer.</font>
+
+90
+00:06:05,160 --> 00:06:07,520
+<font color="#FFFFFF">* Dynamische Musik *</font>
+
+91
+00:07:10,160 --> 00:07:11,720
+<font color="#FFFF00">Lustich.</font>
+
+92
+00:07:25,360 --> 00:07:27,160
+<font color="#FFFF00">Ich find's schon schön.</font>
+
+93
+00:07:28,680 --> 00:07:31,960
+<font color="#FFFF00">Ich kenn jemand,</font>
+<font color="#FFFF00">der's auch schön fänd - Merle.</font>
+
+94
+00:07:32,200 --> 00:07:34,280
+<font color="#FFFF00">Meine derzeitige Ex-Freundin,</font>
+
+95
+00:07:34,360 --> 00:07:38,440
+<font color="#FFFF00">aber hoffentlich zukünftige Frau</font>
+<font color="#FFFF00">und Mutter meiner Kinder.</font>
+
+96
+00:07:38,560 --> 00:07:41,960
+<font color="#FFFF00">Die hat bald Geburtstag,</font>
+<font color="#FFFF00">so was würde die umhauen.</font>
+
+97
+00:07:42,40 --> 00:07:45,840
+<font color="#FFFF00">Meist schenke ich was Kleines,</font>
+<font color="#FFFF00">Lustiges: Furzkissen oder so.</font>
+
+98
+00:07:45,920 --> 00:07:48,200
+<font color="#FFFF00">Und dann auf einmal WHOA! Kunst.</font>
+
+99
+00:07:48,360 --> 00:07:51,520
+<font color="#FFFF00">Was würd das kosten?</font>
+<font color="#00FF00">Kann ich so nicht sagen.</font>
+
+100
+00:07:51,640 --> 00:07:53,800
+<font color="#FFFF00">Für 20 Euro würd ich's nehmen.</font>
+
+101
+00:07:54,360 --> 00:07:55,800
+<font color="#FFFF00">50! </font>
+<font color="#00FF00">Sie sind süß.</font>
+
+102
+00:07:56,40 --> 00:08:00,680
+<font color="#00FF00">Sie glauben, Sie können ein Bild</font>
+<font color="#00FF00">bei Ravenbach für 50 Euro kaufen?</font>
+
+103
+00:08:02,120 --> 00:08:06,40
+<font color="#FFFF00">Na ja, Sie haben 5 Euro bezahlt</font>
+<font color="#FFFF00">und finden's scheußlich.</font>
+
+104
+00:08:06,160 --> 00:08:07,680
+<font color="#FFFF00">50 wär das Zehnfache.</font>
+
+105
+00:08:07,720 --> 00:08:10,520
+<font color="#00FF00">Es geht aber drum,</font>
+<font color="#00FF00">wie viel es wert ist.</font>
+
+106
+00:08:10,720 --> 00:08:13,720
+<font color="#00FF00">Das ist im Moment ...</font>
+<font color="#00FF00">mindestens 1000 wert.</font>
+
+107
+00:08:14,200 --> 00:08:15,640
+<font color="#FFFF00">Wa? Warum das denn?!</font>
+
+108
+00:08:15,880 --> 00:08:19,520
+<font color="#FFFF00">Sie wollen keine 5 geben,</font>
+<font color="#FFFF00">und jetzt wollen Sie 1000?</font>
+
+109
+00:08:19,600 --> 00:08:21,400
+<font color="#FFFF00">Das ist beschädigt! </font>
+<font color="#00FF00">Eben.</font>
+
+110
+00:08:22,160 --> 00:08:25,720
+<font color="#FFFF00">Das müsste man zukleben</font>
+<font color="#FFFF00">und vorsichtig drübermalen.</font>
+
+111
+00:08:26,400 --> 00:08:27,680
+<font color="#00FF00">Im Gegenteil.</font>
+
+112
+00:08:27,760 --> 00:08:30,600
+<font color="#00FF00">Das Einschussloch</font>
+<font color="#00FF00">macht es zum Kunstwerk.</font>
+
+113
+00:08:30,800 --> 00:08:32,40
+<font color="#FFFF00">Wa?</font>
+
+114
+00:08:32,120 --> 00:08:36,440
+<font color="#00FF00">So entsteht ein Spannungsfeld</font>
+<font color="#00FF00">zwischen Harmonie und Zerstörung.</font>
+
+115
+00:08:36,480 --> 00:08:39,480
+<font color="#00FF00">Eine Lücke,</font>
+<font color="#00FF00">die der Betrachter füllen muss.</font>
+
+116
+00:08:40,280 --> 00:08:42,840
+<font color="#00FF00">Mehrdeutig, irritierend, verstörend.</font>
+
+117
+00:08:42,920 --> 00:08:45,720
+<font color="#FFFF00">Was ist gut dran,</font>
+<font color="#FFFF00">wenn man verstört ist?</font>
+
+118
+00:08:46,360 --> 00:08:48,40
+<font color="#00FF00">Eine neue Sichtweise.</font>
+
+119
+00:08:48,720 --> 00:08:52,480
+<font color="#00FF00">Kunst, die nicht verstört</font>
+<font color="#00FF00">oder provoziert, ist belanglos.</font>
+
+120
+00:08:52,520 --> 00:08:55,80
+<font color="#FFFF00">Belanglos heißt billiger? </font>
+<font color="#00FF00">Ja.</font>
+
+121
+00:08:55,280 --> 00:08:58,840
+<font color="#00FF00">Aber Belangloses</font>
+<font color="#00FF00">werden Sie hier nicht finden. </font>
+<font color="#FFFF00">Och.</font>
+
+122
+00:08:59,360 --> 00:09:02,520
+<font color="#FFFF00">Das Maximale,</font>
+<font color="#FFFF00">das ich geben könnte, wären ...</font>
+
+123
+00:09:03,560 --> 00:09:04,560
+<font color="#FFFF00">... 400.</font>
+
+124
+00:09:04,680 --> 00:09:07,680
+<font color="#00FF00">Da finden Sie sicher</font>
+<font color="#00FF00">was auf dem Flohmarkt.</font>
+
+125
+00:09:07,760 --> 00:09:09,280
+<font color="#00FF00">Aber DAS kostet 1000.</font>
+
+126
+00:09:09,360 --> 00:09:10,440
+<font color="#00FF00">Bis jetzt.</font>
+
+127
+00:09:10,560 --> 00:09:12,400
+<font color="#FFFF00">Gut ... hat sich erledigt.</font>
+
+128
+00:09:25,40 --> 00:09:28,200
+<font color="#00FF00">Um Gotteswillen!</font>
+<font color="#00FF00">Das ist ein echter Scolatti!</font>
+
+129
+00:09:28,680 --> 00:09:29,960
+<font color="#FFFF00">Ach so ...</font>
+
+130
+00:09:30,120 --> 00:09:32,680
+<font color="#FFFF00">Ja, ich weiß, ein ganz, ganz Großer.</font>
+
+131
+00:09:32,840 --> 00:09:34,280
+<font color="#FFFF00">Aber warum?</font>
+
+132
+00:09:35,280 --> 00:09:39,480
+<font color="#FFFF00">Wenn's schon darum geht,</font>
+<font color="#FFFF00">dass Kunst provoziert oder verstört,</font>
+
+133
+00:09:39,520 --> 00:09:41,360
+<font color="#FFFF00">denn frag ich mich:</font>
+
+134
+00:09:41,440 --> 00:09:45,800
+<font color="#FFFF00">Was soll an 'nem nachgebauten</font>
+<font color="#FFFF00">5-Euro-Schein provozierend sein?</font>
+
+135
+00:09:45,920 --> 00:09:48,560
+<font color="#FFFF00">Gut, hat einer</font>
+<font color="#FFFF00">'nen 5er nachgebastelt.</font>
+
+136
+00:09:48,800 --> 00:09:52,720
+<font color="#00FF00">Aber dieser 5er ist</font>
+<font color="#00FF00">aus lauter Euroscheinen-hergestellt.</font>
+
+137
+00:09:53,240 --> 00:09:56,160
+<font color="#FFFF00">Aber man weiß ja,</font>
+<font color="#FFFF00">dass das Bastelgeld ist.</font>
+
+138
+00:09:56,240 --> 00:09:58,600
+<font color="#FFFF00">Is ja nich echt, und deswegen ...</font>
+
+139
+00:10:07,680 --> 00:10:09,400
+<font color="#FFFF00">Das sind echte Scheine?!</font>
+
+140
+00:10:09,760 --> 00:10:13,200
+<font color="#FFFF00">Da ... da hat der</font>
+<font color="#FFFF00">aus echten Euroscheinen das ...</font>
+
+141
+00:10:13,680 --> 00:10:15,400
+<font color="#FFFF00">'n echter Hunni hier?!</font>
+
+142
+00:10:15,480 --> 00:10:16,920
+<font color="#FFFF00">Alles echte ...?</font>
+
+143
+00:10:17,200 --> 00:10:20,160
+<font color="#FFFF00">Und der ganze Geldpacken dahinter?</font>
+<font color="#00FF00">500er.</font>
+
+144
+00:10:21,160 --> 00:10:23,520
+<font color="#FFFF00">500-Euro-Sch... Als Hintergrund?!</font>
+
+145
+00:10:23,800 --> 00:10:25,800
+<font color="#FFFF00">Und ... die Sterne da ...</font>
+
+146
+00:10:26,160 --> 00:10:29,520
+<font color="#FFFF00">Hat er da 200er zerschnitten</font>
+<font color="#FFFF00">nur für so Sterne?!</font>
+
+147
+00:10:30,40 --> 00:10:31,600
+<font color="#FFFF00">Ich fass es nicht!</font>
+
+148
+00:10:31,680 --> 00:10:33,680
+<font color="#FFFF00">Das ist ... das ... also ...</font>
+
+149
+00:10:34,00 --> 00:10:36,520
+<font color="#FFFF00">Ääääh, das sind doch mindestens ...</font>
+
+150
+00:10:37,00 --> 00:10:40,280
+<font color="#FFFF00">Das sind Tausende?!</font>
+<font color="#00FF00">120.000 - nur das Material.</font>
+
+151
+00:10:40,400 --> 00:10:44,40
+<font color="#FFFF00">120.000 Euro, um einen</font>
+<font color="#FFFF00">5-Euro-Schein nachzubasteln?!</font>
+
+152
+00:10:45,240 --> 00:10:48,40
+<font color="#00FF00">Faszinierend, nicht?</font>
+<font color="#FFFF00">Nee, das ist sch...</font>
+
+153
+00:10:48,360 --> 00:10:49,800
+<font color="#FFFF00">Dekadent ist das!</font>
+
+154
+00:10:49,880 --> 00:10:53,440
+<font color="#FFFF00">Und das soll Kunst sein?!</font>
+<font color="#00FF00">Sehen Sie, es provoziert.</font>
+
+155
+00:10:53,560 --> 00:10:55,480
+<font color="#FFFF00">Eine bodenlose Frechheit.</font>
+
+156
+00:10:55,720 --> 00:10:59,280
+<font color="#FFFF00">Macht sich lustig über alle,</font>
+<font color="#FFFF00">die für Geld schuften!</font>
+
+157
+00:10:59,360 --> 00:11:03,280
+<font color="#FFFF00">Für die Ecke reiß ich mir</font>
+<font color="#FFFF00">ein halbes Jahr den Arsch auf!</font>
+
+158
+00:11:03,560 --> 00:11:05,480
+<font color="#FFFF00">Und zwar mit echter Arbeit!</font>
+
+159
+00:11:05,520 --> 00:11:10,80
+<font color="#FFFF00">Geld ist für mich kein Spaßgeld,</font>
+<font color="#FFFF00">mit dem ich die Wände tapeziere.</font>
+
+160
+00:11:11,160 --> 00:11:15,00
+<font color="#FFFF00">Und dann heißt es "Echte Werte"!</font>
+<font color="#00FF00">Das lieb ich an Scolatti.</font>
+
+161
+00:11:15,40 --> 00:11:16,760
+<font color="#00FF00">Er lässt niemanden kalt.</font>
+
+162
+00:11:17,280 --> 00:11:19,920
+<font color="#00FF00">Er trifft Sie</font>
+<font color="#00FF00">in Ihrer Lebensrealität.</font>
+
+163
+00:11:20,680 --> 00:11:25,320
+<font color="#FFFF00">Nee! Geld zu zerschneiden, hat mit</font>
+<font color="#FFFF00">meiner Realität gar nix zu tun.</font>
+
+164
+00:11:25,600 --> 00:11:29,320
+<font color="#FFFF00">Also das ... Das regt mich</font>
+<font color="#FFFF00">wirklich auf! </font>
+<font color="#00FF00">Das ist gut.</font>
+
+165
+00:11:29,440 --> 00:11:30,760
+<font color="#FFFF00">Isses nich!</font>
+
+166
+00:11:30,840 --> 00:11:33,680
+<font color="#FFFF00">Weil ich mich aufrege,</font>
+<font color="#FFFF00">ist das nicht gut!</font>
+
+167
+00:11:33,760 --> 00:11:36,320
+<font color="#FFFF00">Manchmal ist es dann auch nicht gut!</font>
+
+168
+00:11:36,360 --> 00:11:40,640
+<font color="#FFFF00">Ich hab Respekt vor Kunst, auch</font>
+<font color="#FFFF00">wenn ich's meistens nicht verstehe.</font>
+
+169
+00:11:40,680 --> 00:11:42,840
+<font color="#FFFF00">Bin ich dann halt zu blöd für.</font>
+
+170
+00:11:42,920 --> 00:11:45,120
+<font color="#FFFF00">Aber DAS hier! DAS versteh ich.</font>
+
+171
+00:11:45,240 --> 00:11:49,960
+<font color="#FFFF00">Das ist 'ne Beleidigung für die,</font>
+<font color="#FFFF00">für die 5 Euro noch was wert sind.</font>
+
+172
+00:11:50,40 --> 00:11:51,280
+<font color="#FFFF00">120.000 Euro!</font>
+
+173
+00:11:51,400 --> 00:11:55,120
+<font color="#FFFF00">Und das ist nicht der Kaufpreis, ne?</font>
+<font color="#00FF00">Natürlich nicht.</font>
+
+174
+00:11:55,280 --> 00:11:58,600
+<font color="#FFFF00">'ne Million? Woher hat der</font>
+<font color="#FFFF00">so viel zum Verbasteln?</font>
+
+175
+00:11:58,640 --> 00:12:01,920
+<font color="#00FF00">Mäzene, private Stiftungen,</font>
+<font color="#00FF00">öffentliche Gelder.</font>
+
+176
+00:12:02,80 --> 00:12:04,520
+<font color="#FFFF00">Ich hab das auch noch mitbezahlt?!</font>
+
+177
+00:12:05,960 --> 00:12:10,480
+<font color="#FFFF00">Ich hab mit meinen Steuern bezahlt,</font>
+<font color="#FFFF00">dass der Geld zerschneidet?!</font>
+
+178
+00:12:12,600 --> 00:12:14,800
+<font color="#FFFF00">Ich will mein Geld zurück!</font>
+
+179
+00:12:17,160 --> 00:12:19,40
+<font color="#FFFFFF">* Dynamische Musik *</font>
+
+180
+00:12:44,320 --> 00:12:47,160
+<font color="#00FF00">Das ist kein Kriterium</font>
+<font color="#00FF00">für das Kunstwerk,</font>
+
+181
+00:12:47,240 --> 00:12:50,600
+<font color="#00FF00">was der Künstler damit verdient.</font>
+<font color="#FFFF00">Ich find schon.</font>
+
+182
+00:12:50,680 --> 00:12:55,320
+<font color="#FFFF00">Macht groß auf gesellschaftskritisch</font>
+<font color="#FFFF00">und verdient 'nen Sack Kohle.</font>
+
+183
+00:12:55,400 --> 00:12:56,840
+<font color="#00FF00">Wieso auch nicht?</font>
+
+184
+00:12:57,400 --> 00:12:59,560
+<font color="#FFFF00">Weil's dann glaubwürdiger wär.</font>
+
+185
+00:13:00,120 --> 00:13:03,200
+<font color="#00FF00">Armut macht Kunst glaubwürdiger?</font>
+<font color="#00FF00">Na, Servus.</font>
+
+186
+00:13:05,720 --> 00:13:10,00
+<font color="#FFFF00">Wenn ich wüsste, jemand hat da</font>
+<font color="#FFFF00">sein ganzes Geld reingesteckt,</font>
+
+187
+00:13:10,160 --> 00:13:12,600
+<font color="#FFFF00">hätte ich noch mehr Respekt davor.</font>
+
+188
+00:13:13,560 --> 00:13:18,560
+<font color="#FFFF00">Da würd ich denken, das war dem echt</font>
+<font color="#FFFF00">wichtig, der hatte was zu sagen.</font>
+
+189
+00:13:18,640 --> 00:13:21,160
+<font color="#FFFF00">Aber so denkt man nur: Verarschung.</font>
+
+190
+00:13:21,840 --> 00:13:25,360
+<font color="#FFFF00">Da machen sich Leute</font>
+<font color="#FFFF00">einen Kopp vor seinen Bildern</font>
+
+191
+00:13:25,520 --> 00:13:27,440
+<font color="#FFFF00">oder regen sich drüber auf.</font>
+
+192
+00:13:27,560 --> 00:13:31,720
+<font color="#FFFF00">Und er lacht sich 'nen Ast</font>
+<font color="#FFFF00">und guckt seine Kontoauszüge an.</font>
+
+193
+00:13:32,120 --> 00:13:33,960
+<font color="#00FF00">Es ist doch uninteressant,</font>
+
+194
+00:13:34,40 --> 00:13:37,560
+<font color="#00FF00">aus welcher Motivation</font>
+<font color="#00FF00">ein Künstler Werke schafft.</font>
+
+195
+00:13:37,600 --> 00:13:40,40
+<font color="#00FF00">Die Glaubwürdigkeit liegt im Werk.</font>
+
+196
+00:13:40,520 --> 00:13:44,80
+<font color="#FFFF00">Geld zu vernichten,</font>
+<font color="#FFFF00">ist für mich nicht glaubwürdig.</font>
+
+197
+00:13:45,160 --> 00:13:47,80
+<font color="#00FF00">Er hat es nicht vernichtet.</font>
+
+198
+00:13:47,680 --> 00:13:49,120
+<font color="#FFFF00">Na ja.</font>
+
+199
+00:13:50,440 --> 00:13:52,160
+<font color="#00FF00">Er hat etwas geschaffen.</font>
+
+200
+00:13:54,480 --> 00:13:55,960
+<font color="#00FF00">Etwas Neues.</font>
+
+201
+00:13:57,720 --> 00:13:59,880
+<font color="#00FF00">Den ideellen Wert, die Idee.</font>
+
+202
+00:14:00,280 --> 00:14:02,120
+<font color="#00FF00">Und den finanziellen Wert.</font>
+
+203
+00:14:02,160 --> 00:14:05,240
+<font color="#00FF00">Das Bild ist mehr wert</font>
+<font color="#00FF00">als der Materialwert.</font>
+
+204
+00:14:05,320 --> 00:14:07,960
+<font color="#FFFF00">Warum hat er</font>
+<font color="#FFFF00">kein Falschgeld genommen?</font>
+
+205
+00:14:08,560 --> 00:14:10,280
+<font color="#00FF00">Hätte Sie das aufgeregt?</font>
+
+206
+00:14:11,240 --> 00:14:14,320
+<font color="#FFFF00">Wahrscheinlich nich, aber ...</font>
+<font color="#00FF00">Sie sagen es.</font>
+
+207
+00:14:14,960 --> 00:14:17,840
+<font color="#00FF00">Es wäre eine</font>
+<font color="#00FF00">belanglose Bastelarbeit gewesen</font>
+
+208
+00:14:17,880 --> 00:14:19,880
+<font color="#00FF00">und hätte Sie kalt gelassen.</font>
+
+209
+00:14:20,840 --> 00:14:22,200
+<font color="#FFFF00">Ja gut, vielleicht.</font>
+
+210
+00:14:22,600 --> 00:14:26,320
+<font color="#FFFF00">Aber hier, Kirsche, ne.</font>
+<font color="#FFFF00">Das regt mich auch nicht auf.</font>
+
+211
+00:14:26,400 --> 00:14:28,680
+<font color="#FFFF00">Lässt mich aber auch nicht kalt.</font>
+
+212
+00:14:28,800 --> 00:14:32,80
+<font color="#FFFF00">Es erinnert mich</font>
+<font color="#FFFF00">an was zwischen Merle und mir.</font>
+
+213
+00:14:32,120 --> 00:14:34,680
+<font color="#FFFF00">Kann ich gar nicht</font>
+<font color="#FFFF00">genau beschreiben.</font>
+
+214
+00:14:34,760 --> 00:14:37,200
+<font color="#FFFF00">Ich denke: "Ja, genauso sind wir."</font>
+
+215
+00:14:37,360 --> 00:14:39,560
+<font color="#FFFF00">Is vielleicht spießig, aber ...</font>
+
+216
+00:14:39,640 --> 00:14:42,400
+<font color="#FFFF00">Wieso kann Kunst</font>
+<font color="#FFFF00">nicht einfach schön sein?</font>
+
+217
+00:14:42,440 --> 00:14:45,720
+<font color="#00FF00">Finden Sie Geld nicht schön?</font>
+<font color="#FFFF00">Doch, klar, schon.</font>
+
+218
+00:14:47,360 --> 00:14:49,920
+<font color="#00FF00">Geld ist ein einzigartiges Material.</font>
+
+219
+00:14:50,00 --> 00:14:52,360
+<font color="#00FF00">Dynamisch, authentisch, lebendig.</font>
+
+220
+00:14:53,480 --> 00:14:54,720
+<font color="#00FF00">Sehen Sie?</font>
+
+221
+00:14:54,800 --> 00:14:55,920
+<font color="#00FF00">Da.</font>
+
+222
+00:14:56,80 --> 00:14:59,600
+<font color="#00FF00">Kleine Falten,</font>
+<font color="#00FF00">Verfärbungen, Knicke, Kritzel ...</font>
+
+223
+00:15:01,480 --> 00:15:04,400
+<font color="#00FF00">Jeder Schein erzählt</font>
+<font color="#00FF00">Tausende Geschichten.</font>
+
+224
+00:15:07,80 --> 00:15:09,440
+<font color="#00FF00">Mein Gott, ist echtes Geld schön.</font>
+
+225
+00:15:13,40 --> 00:15:15,600
+<font color="#FFFF00">Didis Frau Lisa würde ausflippen.</font>
+
+226
+00:15:16,640 --> 00:15:19,760
+<font color="#FFFF00">Die fände das blasphe...</font>
+<font color="#FFFF00">hier, Gotteslästerung.</font>
+
+227
+00:15:19,800 --> 00:15:21,80
+<font color="#00FF00">Wieso das denn?</font>
+
+228
+00:15:21,240 --> 00:15:24,320
+<font color="#00FF00">In der Kirche</font>
+<font color="#00FF00">stehen überall goldene Kreuze.</font>
+
+229
+00:15:24,440 --> 00:15:26,800
+<font color="#00FF00">Findet sie das auch blasphemisch?</font>
+
+230
+00:15:26,920 --> 00:15:29,440
+<font color="#FFFF00">So gesehen ... Stimmt, is was dran.</font>
+
+231
+00:15:30,800 --> 00:15:34,00
+<font color="#00FF00">Ich gebe zu,</font>
+<font color="#00FF00">Geld ist kein günstiges Material.</font>
+
+232
+00:15:35,160 --> 00:15:38,280
+<font color="#00FF00">Beim "David" vom Michelangelo</font>
+<font color="#00FF00">fragt auch keiner:</font>
+
+233
+00:15:38,360 --> 00:15:42,480
+<font color="#00FF00">"Musste es dieser teure Marmor sein?</font>
+<font color="#00FF00">Hätte es nicht Gips getan?"</font>
+
+234
+00:15:42,600 --> 00:15:44,240
+<font color="#00FF00">Das liebe ich an Kunst.</font>
+
+235
+00:15:44,360 --> 00:15:47,440
+<font color="#00FF00">Sie setzt sich kompromisslos</font>
+<font color="#00FF00">über alles weg,</font>
+
+236
+00:15:47,560 --> 00:15:50,80
+<font color="#00FF00">was mittelmäßig und gewöhnlich ist.</font>
+
+237
+00:15:50,680 --> 00:15:53,480
+<font color="#FFFF00">Und was ist an Sculatti</font>
+<font color="#FFFF00">so ungewöhnlich?</font>
+
+238
+00:15:54,320 --> 00:15:56,600
+<font color="#FFFF00">Klar, die Idee is nich schlecht.</font>
+
+239
+00:15:56,640 --> 00:15:59,840
+<font color="#FFFF00">Aber so 'n Kreuz</font>
+<font color="#FFFF00">mach ich dir in drei Stunden.</font>
+
+240
+00:16:00,00 --> 00:16:02,920
+<font color="#00FF00">Kunst wird nicht</font>
+<font color="#00FF00">nach Stundenlohn bezahlt.</font>
+
+241
+00:16:02,960 --> 00:16:04,320
+<font color="#FFFF00">Schon klar.</font>
+
+242
+00:16:04,400 --> 00:16:05,720
+<font color="#FFFF00">Und mir ist klar,</font>
+
+243
+00:16:05,840 --> 00:16:10,280
+<font color="#FFFF00">dass der Wert von 'nem Kunstwerk</font>
+<font color="#FFFF00">nicht leicht zu ermitteln ist.</font>
+
+244
+00:16:10,400 --> 00:16:13,200
+<font color="#FFFF00">Aber zum Beispiel ...</font>
+<font color="#FFFF00">so 'n Bild wie ...</font>
+
+245
+00:16:13,760 --> 00:16:15,480
+<font color="#FFFF00">Hier, die Mona Lisa.</font>
+
+246
+00:16:15,640 --> 00:16:16,920
+<font color="#00FF00">200 Millionen.</font>
+
+247
+00:16:17,40 --> 00:16:20,200
+<font color="#FFFF00">Wie bidde?</font>
+<font color="#00FF00">Ist der aktuelle Marktwert. </font>
+<font color="#FFFF00">Boah.</font>
+
+248
+00:16:20,720 --> 00:16:22,640
+<font color="#FFFF00">Das leuchtet ja noch ein.</font>
+
+249
+00:16:22,800 --> 00:16:24,720
+<font color="#FFFF00">Das ist ja ein tolles Bild.</font>
+
+250
+00:16:24,920 --> 00:16:28,00
+<font color="#FFFF00">Ob's 200 Millionen wert ist,</font>
+<font color="#FFFF00">weiß ich nicht.</font>
+
+251
+00:16:28,160 --> 00:16:30,160
+<font color="#FFFF00">Jedenfalls isses gut gemalt.</font>
+
+252
+00:16:31,80 --> 00:16:33,640
+<font color="#FFFF00">Gut, als Frau</font>
+<font color="#FFFF00">wär die nicht mein Typ.</font>
+
+253
+00:16:33,720 --> 00:16:37,560
+<font color="#FFFF00">Zu brav - und sonderlich</font>
+<font color="#FFFF00">humorvoll sieht die nicht aus.</font>
+
+254
+00:16:37,960 --> 00:16:40,520
+<font color="#FFFF00">Wenigstens ist das aber einzigartig.</font>
+
+255
+00:16:41,800 --> 00:16:46,80
+<font color="#FFFF00">Deshalb ist das so teuer, weil's</font>
+<font color="#FFFF00">sonst keiner kann. </font>
+<font color="#00FF00">Stimmt nicht.</font>
+
+256
+00:16:46,200 --> 00:16:49,40
+<font color="#00FF00">Sie könnten heut</font>
+<font color="#00FF00">so genaue Kopien machen,</font>
+
+257
+00:16:49,200 --> 00:16:53,640
+<font color="#00FF00">dass Experten tagelang bräuchten,</font>
+<font color="#00FF00">um den Unterschied zu finden.</font>
+
+258
+00:16:53,760 --> 00:16:57,200
+<font color="#00FF00">Jedes Museum könnte</font>
+<font color="#00FF00">seine eigene Mona Lisa haben.</font>
+
+259
+00:16:58,360 --> 00:17:01,00
+<font color="#FFFF00">Ja, wenn,</font>
+<font color="#FFFF00">will man das Original sehen.</font>
+
+260
+00:17:01,80 --> 00:17:04,160
+<font color="#00FF00">Genau. Original da Vinci,</font>
+<font color="#00FF00">Original Scolatti.</font>
+
+261
+00:17:04,760 --> 00:17:07,760
+<font color="#FFFF00">Aber der Unterschied</font>
+<font color="#FFFF00">bei dem Geld ist doch,</font>
+
+262
+00:17:07,840 --> 00:17:09,560
+<font color="#FFFF00">da hatte einer 'ne Idee.</font>
+
+263
+00:17:10,40 --> 00:17:13,760
+<font color="#FFFF00">Dann hat er geschafft,</font>
+<font color="#FFFF00">dass es dafür 'ne Lobby gibt.</font>
+
+264
+00:17:13,920 --> 00:17:16,80
+<font color="#FFFF00">Auf einmal war es große Kunst.</font>
+
+265
+00:17:16,520 --> 00:17:19,80
+<font color="#FFFF00">Aber ohne Lobby bleibt nichts übrig.</font>
+
+266
+00:17:19,160 --> 00:17:23,520
+<font color="#FFFF00">Bei der Mona Lisa bleibt wenigstens</font>
+<font color="#FFFF00">noch ein ganz tolles Bild,</font>
+
+267
+00:17:23,600 --> 00:17:25,400
+<font color="#FFFF00">was einen einfach umhaut.</font>
+
+268
+00:17:26,120 --> 00:17:27,960
+<font color="#FFFF00">Weil das Bild so toll ist.</font>
+
+269
+00:17:28,80 --> 00:17:30,80
+<font color="#00FF00">Einfach so. </font>
+<font color="#FFFF00">Joa, einfach so.</font>
+
+270
+00:17:30,160 --> 00:17:33,880
+<font color="#00FF00">Wenn Sie noch nie von der Mona Lisa</font>
+<font color="#00FF00">gehört hätten ...</font>
+
+271
+00:17:34,00 --> 00:17:37,560
+<font color="#00FF00">Würden Sie in einem Museum</font>
+<font color="#00FF00">zwischen all den Bildern</font>
+
+272
+00:17:37,680 --> 00:17:42,120
+<font color="#00FF00">wie vom Blitz getroffen genau</font>
+<font color="#00FF00">vor der Mona Lisa stehen bleiben?</font>
+
+273
+00:17:42,160 --> 00:17:46,560
+<font color="#00FF00">Aus dem Moment heraus würden Sie</font>
+<font color="#00FF00">die Dimension des Bildes erfassen?</font>
+
+274
+00:17:46,640 --> 00:17:48,40
+<font color="#00FF00">Einfach so?</font>
+
+275
+00:17:48,120 --> 00:17:50,960
+<font color="#FFFF00">Ja, vielleicht nicht</font>
+<font color="#FFFF00">die ganze Dimension.</font>
+
+276
+00:17:51,80 --> 00:17:53,80
+<font color="#00FF00">Sie würden vorbeilaufen. </font>
+<font color="#FFFF00">Ja.</font>
+
+277
+00:17:59,680 --> 00:18:03,40
+<font color="#FFFF00">In Wirklichkeit ist</font>
+<font color="#FFFF00">die Mona Lisa nicht so toll?</font>
+
+278
+00:18:03,80 --> 00:18:05,640
+<font color="#FFFF00">Man findet die nur toll,</font>
+<font color="#FFFF00">weil's alle tun?</font>
+
+279
+00:18:05,720 --> 00:18:08,640
+<font color="#00FF00">Im Moment gibt es</font>
+<font color="#00FF00">vielleicht 116 Menschen,</font>
+
+280
+00:18:08,680 --> 00:18:12,880
+<font color="#00FF00">die fundiert begründen können,</font>
+<font color="#00FF00">warum es ein Meisterwerk ist.</font>
+
+281
+00:18:14,320 --> 00:18:15,760
+<font color="#FFFF00">Wie mit Svenja.</font>
+
+282
+00:18:16,00 --> 00:18:17,200
+<font color="#00FF00">Bitte?</font>
+
+283
+00:18:18,200 --> 00:18:19,760
+<font color="#FFFF00">Die Frau von Roland.</font>
+
+284
+00:18:19,840 --> 00:18:24,00
+<font color="#FFFF00">Als die noch Single war, hätten wir</font>
+<font color="#FFFF00">auf 'ner Party beinahe ...</font>
+
+285
+00:18:24,80 --> 00:18:27,00
+<font color="#FFFF00">Aber dann fand ich die</font>
+<font color="#FFFF00">nicht so attraktiv.</font>
+
+286
+00:18:27,160 --> 00:18:30,160
+<font color="#FFFF00">"Vielleicht</font>
+<font color="#FFFF00">krieg ich noch was Hübscheres."</font>
+
+287
+00:18:30,440 --> 00:18:34,360
+<font color="#FFFF00">Am nächsten Tag kam Roland an</font>
+<font color="#FFFF00">und war total verschossen.</font>
+
+288
+00:18:35,280 --> 00:18:38,720
+<font color="#FFFF00">Sie sei die schönste Frau,</font>
+<font color="#FFFF00">der er je begegnet ist.</font>
+
+289
+00:18:38,800 --> 00:18:41,960
+<font color="#FFFF00">Und ich dachte,</font>
+<font color="#FFFF00">DER findet nichts Hübscheres.</font>
+
+290
+00:18:42,80 --> 00:18:46,360
+<font color="#FFFF00">Und Didi fragt mich, wie der Roland</font>
+<font color="#FFFF00">an die Hammer-Alte kommt.</font>
+
+291
+00:18:47,280 --> 00:18:51,200
+<font color="#FFFF00">Und Frido auch noch:</font>
+<font color="#FFFF00">"Svenja ist ja 'ne Mörderbraut!"</font>
+
+292
+00:18:51,920 --> 00:18:54,760
+<font color="#FFFF00">Seitdem finde ich die auch</font>
+<font color="#FFFF00">extrem hübsch.</font>
+
+293
+00:18:56,160 --> 00:18:59,00
+<font color="#00FF00">Niemand ist frei</font>
+<font color="#00FF00">von der Meinung anderer.</font>
+
+294
+00:18:59,160 --> 00:19:00,520
+<font color="#FFFF00">Bei Merle schon.</font>
+
+295
+00:19:00,720 --> 00:19:03,520
+<font color="#FFFF00">Merle ist</font>
+<font color="#FFFF00">die schönste Frau des Universums.</font>
+
+296
+00:19:03,560 --> 00:19:07,400
+<font color="#FFFF00">Da gehör ich zu den 116,</font>
+<font color="#FFFF00">die fundiert begründen können, ...</font>
+
+297
+00:19:08,200 --> 00:19:11,280
+<font color="#FFFF00">Das mit den 116</font>
+<font color="#FFFF00">hat jetzt nix zu tun mit ...</font>
+
+298
+00:19:13,520 --> 00:19:15,520
+<font color="#00FF00">Pudern? </font>
+<font color="#FFFF00">Nee. Wa? ja.</font>
+
+299
+00:19:15,880 --> 00:19:18,400
+<font color="#FFFF00">Also bei Merle bin ich der Einzige,</font>
+
+300
+00:19:18,600 --> 00:19:21,600
+<font color="#FFFF00">der sehen kann,</font>
+<font color="#FFFF00">wie schön sie wirklich ist.</font>
+
+301
+00:19:22,240 --> 00:19:23,920
+<font color="#00FF00">Mögen Sie Spitzweg?</font>
+
+302
+00:19:24,680 --> 00:19:26,440
+<font color="#FFFF00">Im Moment nich, danke.</font>
+
+303
+00:19:27,880 --> 00:19:29,240
+<font color="#FFFF00">Liebe Merle.</font>
+
+304
+00:19:29,320 --> 00:19:32,600
+<font color="#FFFF00">Mit ... mit diesem Bild</font>
+<font color="#FFFF00">will ich dir zeigen ...</font>
+
+305
+00:19:33,480 --> 00:19:35,920
+<font color="#FFFF00">... was du ... was du für mich ...</font>
+
+306
+00:19:36,400 --> 00:19:38,200
+<font color="#FFFF00">Merle, guck dir das an.</font>
+
+307
+00:19:38,600 --> 00:19:39,800
+<font color="#FFFF00">Das is doch ...</font>
+
+308
+00:19:40,320 --> 00:19:41,400
+<font color="#FFFF00">Ich nehm's.</font>
+
+309
+00:19:41,480 --> 00:19:42,640
+<font color="#00FF00">Oh.</font>
+
+310
+00:19:42,760 --> 00:19:47,280
+<font color="#FFFF00">Sprengt völlig mein Budget,</font>
+<font color="#FFFF00">aber Merle sprengt ja auch meine ...</font>
+
+311
+00:19:47,360 --> 00:19:49,720
+<font color="#FFFF00">Die fällt um, wenn sie das sieht.</font>
+
+312
+00:19:49,840 --> 00:19:51,480
+<font color="#FFFF00">Am besten ins Bett, ne.</font>
+
+313
+00:19:51,560 --> 00:19:53,200
+<font color="#FFFF00">Was soll's, ich nehm's.</font>
+
+314
+00:19:53,280 --> 00:19:57,120
+<font color="#FFFF00">Aber so einpacken,</font>
+<font color="#FFFF00">dass "Galerie Ravenbach" draufsteht,</font>
+
+315
+00:19:57,240 --> 00:19:59,800
+<font color="#FFFF00">dass sie sofort sieht:</font>
+<font color="#FFFF00">Das ist Kunst.</font>
+
+316
+00:20:01,160 --> 00:20:03,720
+<font color="#00FF00">Herr Kirschelich</font>
+<font color="#00FF00">ist grad verstorben.</font>
+
+317
+00:20:03,800 --> 00:20:05,920
+<font color="#FFFF00">Das tut mir leid, das ...</font>
+
+318
+00:20:06,160 --> 00:20:08,880
+<font color="#00FF00">Das verändert</font>
+<font color="#00FF00">die Situation des Bildes.</font>
+
+319
+00:20:09,40 --> 00:20:12,400
+<font color="#FFFF00">Das muss ich Merle ja nicht</font>
+<font color="#FFFF00">auf die Nase binden.</font>
+
+320
+00:20:12,640 --> 00:20:14,880
+<font color="#00FF00">Es kostet jetzt 5000 Euro.</font>
+
+321
+00:20:16,600 --> 00:20:17,720
+<font color="#00FF00">Bis jetzt.</font>
+
+322
+00:20:17,760 --> 00:20:21,600
+<font color="#FFFF00">Ein toter Zeitgenosse</font>
+<font color="#FFFF00">ist mehr wert als ein lebendiger?</font>
+
+323
+00:20:22,560 --> 00:20:26,200
+<font color="#00FF00">Durch die Tragik ist das Bild</font>
+<font color="#00FF00">von anderem Interesse.</font>
+
+324
+00:20:26,480 --> 00:20:29,00
+<font color="#FFFF00">Mit Tragik kann man mehr verdienen.</font>
+
+325
+00:20:29,40 --> 00:20:31,400
+<font color="#00FF00">Ich kann nichts für die Umstände.</font>
+
+326
+00:20:31,440 --> 00:20:34,760
+<font color="#00FF00">Aber es wäre sicher</font>
+<font color="#00FF00">im Sinne von Herrn Kirschelich,</font>
+
+327
+00:20:34,840 --> 00:20:37,560
+<font color="#00FF00">wenn ich sein Vermächtnis</font>
+<font color="#00FF00">gut verkaufe.</font>
+
+328
+00:20:37,880 --> 00:20:42,520
+<font color="#FFFF00">Es wär am meisten in seinem Sinn,</font>
+<font color="#FFFF00">wenn sich einer am Bild erfreut.</font>
+
+329
+00:20:42,640 --> 00:20:45,840
+<font color="#FFFF00">Wie Merle.</font>
+<font color="#00FF00">Dann hätt er's verschenken müssen.</font>
+
+330
+00:20:46,40 --> 00:20:47,320
+<font color="#FFFF00">Hm?</font>
+
+331
+00:20:48,00 --> 00:20:49,400
+<font color="#FFFF00">Hm.</font>
+
+332
+00:20:52,200 --> 00:20:56,120
+<font color="#FFFF00">Ich hab das eingesprüht,</font>
+<font color="#FFFF00">muss noch 20 Minuten einziehen.</font>
+
+333
+00:20:56,800 --> 00:20:59,640
+<font color="#FFFF00">Ich geh ma auf 'ne Wurst.</font>
+<font color="#00FF00">Machen Sie nur.</font>
+
+334
+00:21:00,160 --> 00:21:01,640
+<font color="#00FF00">Und Tür zu!</font>
+
+335
+00:21:02,480 --> 00:21:04,760
+<font color="#00FF00">Sonst kommt noch das Leben rein.</font>
+
+336
+00:21:05,160 --> 00:21:06,480
+<font color="#FFFF00">Hm?</font>
+
+337
+00:21:07,40 --> 00:21:08,160
+<font color="#FFFF00">Hm.</font>
+
+338
+00:21:10,600 --> 00:21:11,720
+<font color="#00FFFF">4,60.</font>
+
+339
+00:21:11,800 --> 00:21:14,00
+<font color="#FFFF00">Und wenn ich gleich zahl? </font>
+<font color="#00FFFF">4,60.</font>
+
+340
+00:21:14,40 --> 00:21:15,280
+<font color="#FFFF00">Stimmt so.</font>
+
+341
+00:21:20,120 --> 00:21:22,680
+<font color="#00FFFF">Der is vollgekritzelt.</font>
+<font color="#FFFF00">Echt? </font>
+<font color="#00FFFF">Ja, hier.</font>
+
+342
+00:21:22,800 --> 00:21:26,960
+<font color="#FFFF00">Gar nicht aufgefallen.</font>
+<font color="#00FFFF">Hast kein andern? </font>
+<font color="#FFFF00">Der gilt trotzdem.</font>
+
+343
+00:21:30,480 --> 00:21:33,40
+<font color="#00FFFF">Bist grad aus der Galerie gekommen?</font>
+
+344
+00:21:33,80 --> 00:21:36,800
+<font color="#00FFFF">Is einer umgebracht worden, ne?</font>
+<font color="#FFFF00">War wohl 'n Versehen.</font>
+
+345
+00:21:37,440 --> 00:21:40,880
+<font color="#00FFFF">Bisse auch Künstler?</font>
+<font color="#FFFF00">Nee! Ich bin Tatortreiniger.</font>
+
+346
+00:21:41,240 --> 00:21:44,80
+<font color="#FFFF00">Meine Arbeit fängt an,</font>
+<font color="#FFFF00">wo sich andere ...</font>
+
+347
+00:21:44,360 --> 00:21:48,160
+<font color="#FFFF00">Wenn 'n Mord passiert is,</font>
+<font color="#FFFF00">denn mach ich das Blut wech.</font>
+
+348
+00:21:48,280 --> 00:21:49,960
+<font color="#00FFFF">'n Mann, der putzt?!</font>
+
+349
+00:21:50,600 --> 00:21:51,800
+<font color="#FFFF00">Kanns ma gucken.</font>
+
+350
+00:21:51,880 --> 00:21:54,200
+<font color="#00FFFF">So richtig ordentlich? </font>
+<font color="#FFFF00">Ja, sicha.</font>
+
+351
+00:21:54,280 --> 00:21:58,600
+<font color="#00FFFF">Kannst ma meinen Wagen putzen.</font>
+<font color="#FFFF00">Das kost aber mehr als 'ne Curry.</font>
+
+352
+00:21:58,720 --> 00:22:00,600
+<font color="#00FFFF">Verdienste gut? </font>
+<font color="#FFFF00">31,50.</font>
+
+353
+00:22:01,160 --> 00:22:04,160
+<font color="#00FFFF">Ich werd nicht mehr.</font>
+<font color="#00FFFF">31,50 auf die Stunde?!</font>
+
+354
+00:22:04,880 --> 00:22:07,880
+<font color="#00FFFF">Als ich geputzt hab,</font>
+<font color="#00FFFF">hab ich 6,50 verdient.</font>
+
+355
+00:22:09,320 --> 00:22:11,320
+<font color="#00FFFF">Ich putz auch nich schlecht.</font>
+
+356
+00:22:11,680 --> 00:22:15,120
+<font color="#FFFF00">Drin hängt 'n Bild aus echtem Geld,</font>
+<font color="#FFFF00">120.000 Euro.</font>
+
+357
+00:22:15,200 --> 00:22:17,00
+<font color="#FFFF00">Kost 'ne Million. </font>
+<font color="#00FFFF">Echt?</font>
+
+358
+00:22:17,880 --> 00:22:20,80
+<font color="#FFFF00">Beeindruckt dich das nicht? </font>
+<font color="#00FFFF">Nö.</font>
+
+359
+00:22:20,840 --> 00:22:24,280
+<font color="#00FFFF">Alles über 500 Euro</font>
+<font color="#00FFFF">existiert für mich gar nicht.</font>
+
+360
+00:22:24,400 --> 00:22:27,200
+<font color="#00FFFF">15.000 oder 500.000 Euro -</font>
+<font color="#00FFFF">das mir egal.</font>
+
+361
+00:22:27,240 --> 00:22:30,960
+<font color="#00FFFF">Ich hab den Wagen,</font>
+<font color="#00FFFF">aus dem Jungen is was geworden ...</font>
+
+362
+00:22:31,40 --> 00:22:32,480
+<font color="#00FFFF">Mann is leider wech.</font>
+
+363
+00:22:33,400 --> 00:22:35,120
+<font color="#00FFFF">Aber ich bin gesund.</font>
+
+364
+00:22:36,520 --> 00:22:40,40
+<font color="#FFFF00">Das eine Bild aus der Galerie,</font>
+<font color="#FFFF00">das hätt ich gerne.</font>
+
+365
+00:22:40,120 --> 00:22:42,200
+<font color="#FFFF00">Zum einen find ich das schön.</font>
+
+366
+00:22:42,440 --> 00:22:45,440
+<font color="#FFFF00">Zum anderen könnt ich</font>
+<font color="#FFFF00">'ne Frau beeindrucken.</font>
+
+367
+00:22:45,560 --> 00:22:47,480
+<font color="#00FFFF">Malste ihr halt selber was.</font>
+
+368
+00:22:49,400 --> 00:22:51,680
+<font color="#00FFFF">Hauptsache is, kommt von Herzen.</font>
+
+369
+00:22:51,720 --> 00:22:53,640
+<font color="#FFFF00">Wie die Wurst, ne? </font>
+<font color="#00FFFF">Richtig.</font>
+
+370
+00:22:54,440 --> 00:22:55,880
+<font color="#FFFF00">Hasse noch Brot?</font>
+
+371
+00:22:58,560 --> 00:23:01,160
+<font color="#00FFFF">Lass es dir mal richtig schmecken.</font>
+
+372
+00:23:07,560 --> 00:23:10,200
+<font color="#FFFFFF">* Beschwingte Musik *</font>
+
+373
+00:23:46,40 --> 00:23:47,400
+<font color="#FFFFFF">* Ratschen *</font>
+
+374
+00:24:05,520 --> 00:24:08,80
+<font color="#00FF00">Der Fünfer aus dem Scolatti-Set, ja!</font>
+
+375
+00:24:08,120 --> 00:24:11,480
+<font color="#00FF00">Es sind heute massenhaft Leute</font>
+<font color="#00FF00">raus und rein ...</font>
+
+376
+00:24:11,680 --> 00:24:16,120
+<font color="#00FF00">Vielleicht ist er rausgerutscht</font>
+<font color="#00FF00">und jemand hat ihn eingesteckt.</font>
+
+377
+00:24:17,160 --> 00:24:19,240
+<font color="#00FF00">Du! Die kommt jeden Moment!</font>
+
+378
+00:24:22,440 --> 00:24:25,80
+<font color="#FFFF00">'n Fünfer, sagten Sie?</font>
+<font color="#FFFF00">5-Euro-Schein?</font>
+
+379
+00:24:25,480 --> 00:24:27,840
+<font color="#FFFF00">Nee, is mir nich ... aufgefallen.</font>
+
+380
+00:24:28,00 --> 00:24:29,760
+<font color="#FFFF00">Da hab ich nichts ...</font>
+
+381
+00:24:30,40 --> 00:24:32,40
+<font color="#FFFF00">Was ist an dem so besonders?</font>
+
+382
+00:24:32,80 --> 00:24:35,360
+<font color="#00FF00">Eine der konsequentesten Arbeiten</font>
+<font color="#00FF00">von Scolatti.</font>
+
+383
+00:24:35,440 --> 00:24:37,360
+<font color="#00FF00">Ein handsigniertes Geldset.</font>
+
+384
+00:24:37,440 --> 00:24:40,440
+<font color="#00FF00">Aber der Wert</font>
+<font color="#00FF00">ergibt sich aus dem Ensemble.</font>
+
+385
+00:24:40,520 --> 00:24:42,720
+<font color="#00FF00">Ohne den Fünfer ist es wertlos.</font>
+
+386
+00:24:42,960 --> 00:24:45,640
+<font color="#FFFF00">Und mit dem Fünfer ...? </font>
+<font color="#00FF00">142.000.</font>
+
+387
+00:24:46,400 --> 00:24:48,400
+<font color="#00FF00">Und es wird gleich abgeholt.</font>
+
+388
+00:24:48,520 --> 00:24:49,880
+<font color="#FFFFFF">* Telefonklingeln *</font>
+
+389
+00:24:50,840 --> 00:24:52,200
+<font color="#00FF00">JA! Bitte!</font>
+
+390
+00:24:52,280 --> 00:24:55,640
+<font color="#00FF00">Nein, ist nicht aufgetaucht!</font>
+<font color="#00FF00">Ich WEISS es nicht!</font>
+
+391
+00:24:57,400 --> 00:25:00,400
+<font color="#00FF00">Ja, vielleicht</font>
+<font color="#00FF00">überlegst du dir mal was!</font>
+
+392
+00:25:05,480 --> 00:25:09,40
+<font color="#FFFF00">Ich brauch den Fünfer wieder!</font>
+<font color="#00FFFF">Nur gegen Currywurst!</font>
+
+393
+00:25:09,80 --> 00:25:11,80
+<font color="#FFFF00">Ohne Scheiß, ich brauch den!</font>
+
+394
+00:25:11,280 --> 00:25:15,160
+<font color="#FFFF00">Wechselgeld hol ich später.</font>
+<font color="#00FFFF">Nee, kann dir 'nen andern geben.</font>
+
+395
+00:25:15,240 --> 00:25:19,400
+<font color="#FFFF00">Nee, den mit dem Gekritzel! </font>
+<font color="#00FFFF">Warum?</font>
+<font color="#FFFF00">Erklär ich später! Mach!</font>
+
+396
+00:25:22,920 --> 00:25:24,240
+<font color="#00FFFF">Nö. </font>
+<font color="#FFFF00">Was?</font>
+
+397
+00:25:24,400 --> 00:25:27,360
+<font color="#00FFFF">Hab ich rausgegeben.</font>
+<font color="#FFFF00">WA! An wen denn?!</font>
+
+398
+00:25:29,00 --> 00:25:31,720
+<font color="#00FFFF">Vorhin hat einer</font>
+<font color="#00FFFF">mit 'nem 20er bezahlt.</font>
+
+399
+00:25:32,40 --> 00:25:34,200
+<font color="#FFFF00">Und wo is der hin? </font>
+<font color="#00FFFF">Da lang.</font>
+
+400
+00:25:36,920 --> 00:25:38,600
+<font color="#FFFF00">Was hatte der an?!</font>
+
+401
+00:25:38,760 --> 00:25:40,360
+<font color="#00FFFF">Jacke, Hose, normal.</font>
+
+402
+00:25:43,400 --> 00:25:44,920
+<font color="#FFFF00">Nix Auffälliges?</font>
+
+403
+00:25:45,360 --> 00:25:46,640
+<font color="#00FFFF">Moped.</font>
+
+404
+00:25:55,960 --> 00:25:57,440
+<font color="#FFFF00">Ach, Scheiße.</font>
+
+405
+00:25:57,920 --> 00:25:59,640
+<font color="#FFFF00">Oh, so eine Scheiße.</font>
+
+406
+00:26:00,720 --> 00:26:02,00
+<font color="#FFFF00">Superscheiße.</font>
+
+407
+00:26:02,560 --> 00:26:04,560
+<font color="#FFFF00">Scheiße, Scheiße, Scheiße.</font>
+
+408
+00:26:05,240 --> 00:26:07,200
+<font color="#FFFF00">Boah, is das 'ne Scheiße.</font>
+
+409
+00:26:07,480 --> 00:26:09,00
+<font color="#FFFF00">Verdammte Scheiße!</font>
+
+410
+00:26:09,760 --> 00:26:11,200
+<font color="#FFFF00">Scheißdreck.</font>
+
+411
+00:26:12,880 --> 00:26:14,360
+<font color="#FFFF00">Ach, du Scheiße.</font>
+
+412
+00:26:16,560 --> 00:26:18,280
+<font color="#FFFF00">Ich glaub, ich m...</font>
+
+413
+00:26:20,520 --> 00:26:23,360
+<font color="#FFFF00">Ich muss was beichten -</font>
+<font color="#FFFF00">wegen dem Fünfer.</font>
+
+414
+00:26:24,320 --> 00:26:28,160
+<font color="#00FF00">Ist wieder aufgetaucht. </font>
+<font color="#FFFF00">Wa?!</font>
+<font color="#00FF00">Unter den Tresen gefallen.</font>
+
+415
+00:26:28,280 --> 00:26:29,720
+<font color="#FFFF00">Ja, aber ... der ...</font>
+
+416
+00:26:29,840 --> 00:26:31,840
+<font color="#FFFF00">Das ... </font>
+<font color="#00FF00">Ist ein Riesenglück.</font>
+
+417
+00:26:32,760 --> 00:26:35,120
+<font color="#00FF00">Ich dachte, er wär gestohlen.</font>
+
+418
+00:26:40,520 --> 00:26:42,600
+<font color="#00FF00">Sie Sie fertig mit der Pause?</font>
+
+419
+00:26:43,480 --> 00:26:44,640
+<font color="#FFFF00">Joa.</font>
+
+420
+00:26:44,720 --> 00:26:45,880
+<font color="#FFFF00">Moin.</font>
+
+421
+00:26:46,80 --> 00:26:47,400
+<font color="#00FF00">So.</font>
+
+422
+00:26:47,640 --> 00:26:50,280
+<font color="#00FF00">Von Ihnen kriege ich</font>
+<font color="#00FF00">eine Unterschrift</font>
+
+423
+00:26:50,360 --> 00:26:53,440
+<font color="#00FF00">über den Empfang</font>
+<font color="#00FF00">und den Haftungsausschluss.</font>
+
+424
+00:26:54,720 --> 00:26:57,80
+<font color="#00FF00">Wirklich ein besonderes Geschenk.</font>
+
+425
+00:26:57,120 --> 00:26:59,40
+<font color="#00FF00">Ihr Mann wird Freude haben.</font>
+
+426
+00:26:59,80 --> 00:27:03,240
+<font color="#FFFFFF">Sonst kriegt er wieder</font>
+<font color="#FFFFFF">einen Aschenbecher - wie jedes Jahr.</font>
+
+427
+00:27:03,400 --> 00:27:05,200
+<font color="#FFFFFF">Wiedersehen. </font>
+<font color="#00FF00">Wiedersehen.</font>
+
+428
+00:27:11,320 --> 00:27:12,480
+<font color="#FFFF00">Frau Ravenbach?</font>
+
+429
+00:27:12,600 --> 00:27:14,880
+<font color="#FFFF00">Ich ... ich bin dann wech, ne.</font>
+
+430
+00:27:16,560 --> 00:27:17,880
+<font color="#00FF00">Warten Sie.</font>
+
+431
+00:27:19,480 --> 00:27:22,40
+<font color="#00FF00">So, bitte. </font>
+<font color="#FFFF00">Oh, danke.</font>
+
+432
+00:27:22,880 --> 00:27:27,200
+<font color="#FFFF00">Zum Glück ist der Sculatti-Fünfer</font>
+<font color="#FFFF00">wieder da. </font>
+<font color="#00FF00">Sie sagen es.</font>
+
+433
+00:27:27,280 --> 00:27:29,800
+<font color="#FFFF00">Sonst wären Sie in Schwierigkeiten.</font>
+
+434
+00:27:30,120 --> 00:27:33,760
+<font color="#00FF00">Der, der ihn entwendet hat,</font>
+<font color="#00FF00">wäre in Schwierigkeiten.</font>
+
+435
+00:27:36,120 --> 00:27:38,960
+<font color="#FFFF00">Auf jeden Fall</font>
+<font color="#FFFF00">hab ich 'ne Menge gelernt.</font>
+
+436
+00:27:39,00 --> 00:27:41,00
+<font color="#FFFF00">Über Kunst und Originale ...</font>
+
+437
+00:27:41,40 --> 00:27:45,40
+<font color="#FFFF00">Das ist das Schöne an meinem Beruf:</font>
+<font color="#FFFF00">Man lernt immer dazu.</font>
+
+438
+00:27:45,120 --> 00:27:47,640
+<font color="#FFFF00">Vielleicht schreib ich mal 'n Buch.</font>
+
+439
+00:27:47,760 --> 00:27:49,00
+<font color="#00FF00">Übrigens:</font>
+
+440
+00:27:49,80 --> 00:27:52,440
+<font color="#00FF00">Das Bild, für das Sie sich</font>
+<font color="#00FF00">interessieren ... </font>
+<font color="#FFFF00">Ja?</font>
+
+441
+00:27:52,560 --> 00:27:55,680
+<font color="#00FF00">Ich möchte mit Kircherlichs Tod</font>
+<font color="#00FF00">nichts verdienen.</font>
+
+442
+00:27:55,800 --> 00:27:59,360
+<font color="#FFFF00">Das überrascht mich.</font>
+<font color="#00FF00">Für 5 Euro können Sie's haben.</font>
+
+443
+00:27:59,560 --> 00:28:00,840
+<font color="#FFFF00">Gebongt. Nehm ich.</font>
+
+444
+00:28:02,40 --> 00:28:04,400
+<font color="#00FFFF">Hier! Hasse noch ma Glück gehabt!</font>
+
+445
+00:28:04,560 --> 00:28:08,400
+<font color="#00FFFF">Der mitm Moped kam zurück,</font>
+<font color="#00FFFF">ich hinterher gesprintet ...</font>
+
+446
+00:28:08,640 --> 00:28:11,80
+<font color="#FFFF00">Welches Moped? Wovon sprechen Sie?</font>
+
+447
+00:28:11,320 --> 00:28:12,720
+<font color="#00FFFF">Der Mopedfahrer!</font>
+
+448
+00:28:12,840 --> 00:28:15,360
+<font color="#00FFFF">Mit dem Fünfer...</font>
+<font color="#FFFF00">Ich hab kein Moped!</font>
+
+449
+00:28:16,640 --> 00:28:20,280
+<font color="#00FFFF">Du hast doch grade ...</font>
+<font color="#FFFF00">Was soll ich mit 'nem Moped?!</font>
+
+450
+00:28:20,560 --> 00:28:21,800
+<font color="#FFFF00">Eben auch schon.</font>
+
+451
+00:28:21,880 --> 00:28:24,320
+<font color="#FFFF00">Moped, Moped, ich will kein Moped!</font>
+
+452
+00:28:25,520 --> 00:28:29,160
+<font color="#00FFFF">Sie haben mir gerade ...</font>
+<font color="#FFFF00">Das ham Sie missverstanden.</font>
+
+453
+00:28:29,240 --> 00:28:31,600
+<font color="#FFFF00">Muss ich's wohl deutlicher sagen.</font>
+
+454
+00:28:33,120 --> 00:28:35,200
+<font color="#FFFF00">Sie sind nicht mein Typ!</font>
+
+455
+00:28:35,480 --> 00:28:37,00
+<font color="#FFFF00">Gehen Sie bitte.</font>
+
+456
+00:28:39,40 --> 00:28:41,560
+<font color="#00FFFF">Aber ... </font>
+<font color="#FFFF00">Ich lass mich nicht kaufen.</font>
+
+457
+00:28:41,680 --> 00:28:43,120
+<font color="#00FF00">Darf ich? </font>
+<font color="#FFFF00">Nein.</font>
+
+458
+00:28:44,280 --> 00:28:47,240
+<font color="#00FF00">Schaut aus wie</font>
+<font color="#00FF00">eine Unterschrift von Scolatti.</font>
+
+459
+00:28:47,320 --> 00:28:49,280
+<font color="#FFFF00">Was?! Das gibt's doch nicht.</font>
+
+460
+00:28:49,400 --> 00:28:51,520
+<font color="#FFFF00">Das ist ... tatsächlich ...</font>
+
+461
+00:28:52,80 --> 00:28:55,520
+<font color="#FFFF00">Das ... muss ja aber dann ...</font>
+<font color="#FFFF00">'ne Fälschung sein.</font>
+
+462
+00:28:56,160 --> 00:28:59,520
+<font color="#FFFF00">Der Original-Sculatti ist ja ...</font>
+<font color="#00FF00">In dem Glasset.</font>
+
+463
+00:28:59,760 --> 00:29:01,680
+<font color="#00FF00">Ja, das ist eine Fälschung.</font>
+
+464
+00:29:02,360 --> 00:29:04,520
+<font color="#00FF00">Noch dazu eine dilettantische.</font>
+
+465
+00:29:04,640 --> 00:29:06,800
+<font color="#00FF00">Haben Sie das gefälscht? </font>
+<font color="#00FFFF">ICH?!</font>
+
+466
+00:29:06,880 --> 00:29:08,720
+<font color="#00FFFF">Ich hab überhaupt nich ...</font>
+
+467
+00:29:08,760 --> 00:29:11,400
+<font color="#00FF00">Bieten Sie</font>
+<font color="#00FF00">keinen gefälschten Scolatti</font>
+
+468
+00:29:11,480 --> 00:29:14,320
+<font color="#00FF00">in betrügerischer Absicht</font>
+<font color="#00FF00">zum Verkauf an.</font>
+
+469
+00:29:14,520 --> 00:29:18,00
+<font color="#00FFFF">Ich hör wohl nicht recht,</font>
+<font color="#00FFFF">ich hab ... </font>
+<font color="#00FF00">Wiedersehen.</font>
+
+470
+00:29:19,960 --> 00:29:21,400
+<font color="#FFFF00">Wiedersehen!</font>
+
+471
+00:29:27,800 --> 00:29:31,80
+<font color="#FFFFFF">* Quietschende Schuhe *</font>
+
+472
+00:29:34,200 --> 00:29:35,680
+<font color="#FFFF00">Leute gibt das.</font>
+
+473
+00:29:37,80 --> 00:29:39,120
+<font color="#FFFFFF">* Musik *</font>
+
+474
+00:29:59,240 --> 00:30:01,400
+<font color="#0000FF">Copyright Untertitel: NDR 2018</font>
+

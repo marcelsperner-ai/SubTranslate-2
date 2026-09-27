@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from flask import render_template
 from flask import send_file
 from app.prompt_manager import load_prompts, get_edtech_instruction, get_system_instruction
-
+import yaml
 from app.db import (
     create_translation, get_translation_by_id, update_translation, 
     get_db_logs, get_all_translations
@@ -26,6 +26,32 @@ def index():
     """Lädt das Haupt-Frontend."""
     return render_template('index.html')
 
+def get_episode_summary(profile_key, episode_key):
+    base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    summaries_path = os.path.join(base_dir, 'summaries.yaml')
+    if not episode_key or not os.path.exists(summaries_path):
+        return ""
+
+    try:
+        with open(summaries_path, 'r', encoding='utf-8') as summaries_file:
+            summaries_data = yaml.safe_load(summaries_file) or {}
+        return summaries_data.get(profile_key, {}).get(episode_key, "")
+    except Exception as e:
+        print(f"Fehler beim Lesen der summaries.yaml: {e}")
+        return ""
+
+def build_prompt_payload(profile_key, episode_summary, custom_translation_prompt=''):
+    prompts_data = load_prompts()
+    base_prompt = get_system_instruction(prompts_data, profile_key)
+    trans_prompt = custom_translation_prompt or (
+        f"{base_prompt}\n\nZUSAMMENFASSUNG DIESER EPISODE:\n{episode_summary}"
+        if episode_summary else base_prompt
+    )
+    return {
+        "translation_prompt": trans_prompt,
+        "edtech_prompt": get_edtech_instruction(prompts_data, profile_key)
+    }
+
 @main_bp.route('/api/upload', methods=['POST'])
 def upload_file():
     """Nimmt eine SRT entgegen, speichert Einstellungen und legt ein Projekt an."""
@@ -34,11 +60,20 @@ def upload_file():
         
     file = request.files['file']
     profile_key = request.form.get('profile_key', 'default')
+    episode_key = request.form.get('episode', '')
+    custom_translation_prompt = request.form.get('custom_translation_prompt', '')
+    episode_summary_override = request.form.get('episode_summary_override', '')
     sync_offset = int(request.form.get('sync_offset', 0))
-    episode_summary = request.form.get('episode_summary', '') # NEU aus dem FormData
+    batch_size = int(request.form.get('batch_size', 40))
     
     if file.filename == '':
         return jsonify({"error": "Dateiname leer"}), 400
+
+    real_summary = (
+        episode_summary_override.strip()
+        if episode_key == '__custom__'
+        else get_episode_summary(profile_key, episode_key)
+    )
         
     filename = secure_filename(file.filename)
     file_path = os.path.join(current_app.config['UPLOADS_DIR'], filename)
@@ -51,8 +86,14 @@ def upload_file():
         
     t_id = create_translation(filename, len(subs), sync_offset, profile_key)
     
-    # NEU: Die Zusammenfassung sofort speichern
-    save_project_settings(t_id, {'episode_summary': episode_summary})
+    # Zusammenfassung und Upload-Einstellungen gemeinsam speichern.
+    save_project_settings(t_id, {
+        'batch_size': batch_size,
+        'custom_translation_prompt': custom_translation_prompt,
+        'episode_summary': real_summary,
+        'profile_key': profile_key,
+        'sync_offset': sync_offset
+    })
     
     return jsonify({"message": "Projekt angelegt", "id": t_id}), 201
 
@@ -176,6 +217,8 @@ def generate_edtech(t_id):
         
         # Sicherstellen, dass fehlende Checkbox-Werte als 'False' gewertet werden!
         generate_csv_only = str_to_bool(data.get('generate_csv_only', False))
+        force_csv_regeneration = str_to_bool(data.get('force_csv_regeneration', False))
+        ignore_validation_errors = str_to_bool(data.get('ignore_validation_errors', False))
         hl_bold = str_to_bool(data.get('hl_bold', False))
         hl_underline = str_to_bool(data.get('hl_underline', False))
         hl_color = str_to_bool(data.get('hl_color', False))
@@ -204,6 +247,19 @@ def generate_edtech(t_id):
         german_srt = os.path.join(current_app.config['UPLOADS_DIR'], t['original_filename'])
         farsi_srt = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_FA.srt'))
         ass_file = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_Interaktiv.ass'))
+        csv_file = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_Vokabeln.csv'))
+
+        if not generate_csv_only:
+            if not os.path.exists(csv_file):
+                return jsonify({"error": "CSV muss vor der ASS-Erstellung generiert werden."}), 409
+            _, ts_mismatches, kw_mismatches, _ = validate_csv_timestamps(farsi_srt, csv_file)
+            if (ts_mismatches or kw_mismatches) and not ignore_validation_errors:
+                return jsonify({
+                    "error": "CSV-Prüfung muss bestanden oder explizit ignoriert werden.",
+                    "status": "validation_required",
+                    "ts_mismatches": ts_mismatches,
+                    "kw_mismatches": kw_mismatches
+                }), 409
         
         prompts_data = load_prompts()
         custom_edtech = get_edtech_instruction(prompts_data, merged_settings.get('profile_key', 'default'))
@@ -216,6 +272,7 @@ def generate_edtech(t_id):
             api_key=os.getenv("GEMINI_API_KEY"),
             custom_system_instruction=custom_edtech,
             generate_csv_only=generate_csv_only,
+            force_csv_regeneration=force_csv_regeneration,
             infobox_duration=infobox_duration,
             highlight_bold=hl_bold,
             highlight_underline=hl_underline,
@@ -253,17 +310,24 @@ def get_prompts(t_id):
     if not t:
         return jsonify({"error": "Projekt nicht gefunden"}), 404
         
-    prompts_data = load_prompts()
-    base_prompt = get_system_instruction(prompts_data, t.get('profile_key', 'default'))
     episode_summary = t.get('episode_summary', '').strip()
-    
-    trans_prompt = f"{base_prompt}\n\nZUSAMMENFASSUNG DIESER EPISODE:\n{episode_summary}" if episode_summary else base_prompt
-    edtech_prompt = get_edtech_instruction(prompts_data, t.get('profile_key', 'default'))
-    
-    return jsonify({
-        "translation_prompt": trans_prompt,
-        "edtech_prompt": edtech_prompt
-    })
+    return jsonify(build_prompt_payload(
+        t.get('profile_key', 'default'),
+        episode_summary,
+        t.get('custom_translation_prompt', '')
+    ))
+
+@main_bp.route('/api/prompts/preview', methods=['GET', 'POST'])
+def preview_prompts():
+    data = request.get_json(silent=True) or {}
+    profile_key = data.get('profile_key', request.args.get('profile_key', 'default'))
+    episode_key = data.get('episode', request.args.get('episode', ''))
+    episode_summary = (
+        data.get('episode_summary', request.args.get('episode_summary', '')).strip()
+        if episode_key == '__custom__'
+        else get_episode_summary(profile_key, episode_key)
+    )
+    return jsonify(build_prompt_payload(profile_key, episode_summary))
 
 @main_bp.route('/api/download/<int:t_id>', methods=['GET'])
 def download_file(t_id):
@@ -287,3 +351,32 @@ def download_file(t_id):
     if os.path.exists(path):
         return send_file(path, as_attachment=True)
     return jsonify({"error": "Datei existiert noch nicht"}), 404
+@main_bp.route('/api/metadata', methods=['GET'])
+def get_metadata():
+    """Liest prompts.yaml und summaries.yaml aus und liefert sie für die UI-Dropdowns."""
+    base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    prompts_path = os.path.join(base_dir, 'prompts.yaml')
+    summaries_path = os.path.join(base_dir, 'summaries.yaml')
+    
+    prompts_data = {}
+    summaries_data = {}
+    
+    try:
+        if os.path.exists(prompts_path):
+            with open(prompts_path, 'r', encoding='utf-8') as f:
+                prompts_data = yaml.safe_load(f) or {}
+        if os.path.exists(summaries_path):
+            with open(summaries_path, 'r', encoding='utf-8') as f:
+                summaries_data = yaml.safe_load(f) or {}
+    except Exception as e:
+        print(f"YAML Parse Fehler: {e}")
+
+    profiles = {}
+    # Baue eine Liste aller Profile (außer 'default', das dient nur als Fallback)
+    for key, data in prompts_data.items():
+        profiles[key] = {
+            "name": data.get("label", data.get("name", key.capitalize())),
+            "episodes": list(summaries_data.get(key, {}).keys()) if key in summaries_data else []
+        }
+            
+    return jsonify({"profiles": profiles, "summaries": summaries_data})

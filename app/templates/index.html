@@ -210,7 +210,7 @@
                 <ul class="nav nav-tabs border-0" id="transTabs" role="tablist">
                     <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#trans-main">Main</a></li>
                     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#trans-settings">Settings</a></li>
-                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#trans-prompts">Prompts</a></li>
+                    <li class="nav-item"><a class="nav-link disabled" id="transPromptsTab" data-bs-toggle="tab" href="#trans-prompts" aria-disabled="true" tabindex="-1">Prompts</a></li>
                 </ul>
             </div>
 
@@ -221,21 +221,33 @@
                     <div class="upload-section shadow-sm" id="uploadFormSection">
                         <form id="newProjectForm">
                             <div class="row g-2 align-items-center">
-                                <!-- Verstecktes Feld für den Profil-Key (kann später dynamisch werden) -->
-                                <input type="hidden" name="profile_key" value="default">
-                                <input type="hidden" name="sync_offset" value="0">
-                                
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control form-control-sm" name="series" placeholder="Serie (z.B. Charité)" required>
+                                <div class="col-md-3">
+                                    <!-- Dropdown für die Serie (Profil) -->
+                                    <select class="form-select form-select-sm" name="profile_key" id="seriesSelect" required>
+                                        <option value="">Serie wählen...</option>
+                                    </select>
                                 </div>
-                                <div class="col-md-2">
-                                    <input type="text" class="form-control form-control-sm" name="episode" placeholder="Ep. (z.B. 1.2)">
+                                <div class="col-md-3">
+                                    <!-- Dropdown für die Episode -->
+                                    <select class="form-select form-select-sm" name="episode" id="episodeSelect" required disabled>
+                                        <option value="">Episode...</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-4 hide-on-lock">
                                     <input type="file" class="form-control form-control-sm" name="file" accept=".srt" required>
                                 </div>
                                 <div class="col-md-2 text-end hide-on-lock">
-                                    <button type="submit" class="btn btn-sm btn-custom w-100" id="startBtn">Start</button>
+                                    <button type="submit" class="btn btn-sm btn-custom w-100" id="startBtn" disabled>Start</button>
+                                </div>
+                            </div>
+                            <div class="row mt-2 d-none" id="episodeSummarySection">
+                                <div class="col-12">
+                                    <label class="form-label small" for="episodeSummaryInput">Eigene Episodenzusammenfassung (optional)</label>
+                                    <textarea id="episodeSummaryInput" class="form-control form-control-sm" rows="4" dir="auto" placeholder="Zusammenfassung eingeben oder leer lassen"></textarea>
+                                </div>
+                                <div class="col-12 d-flex align-items-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveEpisodeSummary">Zusammenfassung speichern</button>
+                                    <span id="episodeSummarySaveStatus" class="text-muted small" aria-live="polite"></span>
                                 </div>
                             </div>
                         </form>
@@ -271,10 +283,27 @@
                 </div>
                 
                 <div class="tab-pane fade" id="trans-settings">
-                    <p class="text-muted small">Einstellungen für Sync-Shift und Batch-Größe...</p>
+                    <!-- ECHTES FORMULAR FÜR ÜBERSETZUNGS-SETTINGS -->
+                    <form id="transSettingsForm" class="mt-2">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small">Sync-Offset (ms) vor Start</label>
+                                <input type="number" name="sync_offset" class="form-control form-control-sm" value="0">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small">Batch-Größe (Zeilen pro API-Call)</label>
+                                <input type="number" name="batch_size" class="form-control form-control-sm" value="40">
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="tab-pane fade" id="trans-prompts">
-                    <p class="text-muted small">Aktiver System-Prompt...</p>
+                    <label class="form-label small" for="translationPromptInput">Übersetzungsprompt</label>
+                    <textarea id="translationPromptInput" class="form-control font-monospace" rows="14" dir="auto" spellcheck="false" disabled placeholder="Serie und Episode auswählen"></textarea>
+                    <div class="mt-2 d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveTranslationPrompt" disabled>Prompt speichern</button>
+                        <span id="translationPromptSaveStatus" class="text-muted small" aria-live="polite">Noch kein Prompt geladen.</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -311,7 +340,7 @@
                                 <input class="form-check-input" type="checkbox" id="generateCsvOnly" name="generate_csv_only">
                                 <label class="form-check-label" for="generateCsvOnly">Nur neue CSV (Vokabeln) generieren, keine ASS</label>
                             </div>
-                            <button type="submit" id="btnGenerateEdtech" class="btn btn-success w-100" disabled>ASS &amp; CSV Generieren</button>
+                            <button type="submit" id="btnGenerateEdtech" class="btn btn-success w-100" disabled>CSV generieren</button>
                         </form>
 
                         <!-- DOWNLOAD LINKS (werden dynamisch eingeblendet) -->

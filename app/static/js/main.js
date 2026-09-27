@@ -1,10 +1,22 @@
 let currentProjectId = null;
 let pollInterval = null;
+let generateAssAfterValidation = false;
 
 // DOM Elemente
 const form = document.getElementById('newProjectForm');
 const formSection = document.getElementById('uploadFormSection');
 const startBtn = document.getElementById('startBtn');
+const seriesSelect = document.getElementById('seriesSelect');
+const episodeSelect = document.getElementById('episodeSelect');
+const transSettingsForm = document.getElementById('transSettingsForm');
+const transPromptsTab = document.getElementById('transPromptsTab');
+const translationPromptInput = document.getElementById('translationPromptInput');
+const translationPromptSaveButton = document.getElementById('btnSaveTranslationPrompt');
+const translationPromptSaveStatus = document.getElementById('translationPromptSaveStatus');
+const episodeSummarySection = document.getElementById('episodeSummarySection');
+const episodeSummaryInput = document.getElementById('episodeSummaryInput');
+const episodeSummarySaveButton = document.getElementById('btnSaveEpisodeSummary');
+const episodeSummarySaveStatus = document.getElementById('episodeSummarySaveStatus');
 const sidebarList = document.getElementById('sidebarProjectList');
 const projectTitle = document.getElementById('currentProjectTitle');
 const progressBar = document.getElementById('progressBar');
@@ -27,10 +39,148 @@ const edtechSettingsForm = document.getElementById('edtechSettingsForm');
 const fixModal = new bootstrap.Modal(document.getElementById('fixModal'));
 const btnApplyFix = document.getElementById('btnApplyFix');
 const archiveTableBody = document.querySelector('#archiveModal tbody');
+let yamlMetadata = {};
+let promptPreviewRequest = 0;
+let promptPreviewLoaded = false;
+let promptSaved = false;
+let episodeSummarySaved = true;
 
 // 1. INITIALISIERUNG
 document.addEventListener("DOMContentLoaded", () => {
+    loadMetadata();
     loadProjects();
+    updateSelectionAvailability();
+});
+
+function setPromptTabEnabled(enabled) {
+    transPromptsTab.classList.toggle('disabled', !enabled);
+    transPromptsTab.setAttribute('aria-disabled', String(!enabled));
+    if (enabled) {
+        transPromptsTab.removeAttribute('tabindex');
+    } else {
+        transPromptsTab.setAttribute('tabindex', '-1');
+    }
+}
+
+function renderPromptTabs(promptData, editable = false) {
+    translationPromptInput.value = promptData.translation_prompt || '';
+    translationPromptInput.disabled = !editable;
+    translationPromptSaveButton.disabled = !editable || promptSaved;
+    translationPromptSaveStatus.textContent = editable
+        ? (promptSaved ? 'Prompt gespeichert.' : 'Änderungen noch nicht gespeichert.')
+        : 'Prompt-Vorschau';
+
+    const edTab = document.getElementById('ed-prompts');
+    if (edTab) {
+        const pre = document.createElement('pre');
+        pre.className = 'bg-light p-3 border rounded font-monospace';
+        pre.style.cssText = 'white-space: pre-wrap; font-size: 0.85em;';
+        pre.textContent = promptData.edtech_prompt || '';
+        edTab.replaceChildren(pre);
+    }
+}
+
+function hasValidNewProjectSelection() {
+    const profileKey = seriesSelect.value;
+    if (!yamlMetadata[profileKey]) return false;
+    const validEpisode = profileKey === 'default' || Boolean(episodeSelect.value);
+    const validSummary = !isCustomEpisodeSelected() || episodeSummarySaved;
+    return validEpisode && validSummary;
+}
+
+function isCustomEpisodeSelected() {
+    return seriesSelect.value !== 'default' && episodeSelect.value === '__custom__';
+}
+
+function updateSelectionAvailability() {
+    const ready = hasValidNewProjectSelection();
+    startBtn.disabled = !ready || !promptPreviewLoaded || !translationPromptInput.value.trim();
+    setPromptTabEnabled(ready);
+    return ready;
+}
+
+async function loadPromptPreview() {
+    const requestId = ++promptPreviewRequest;
+    promptPreviewLoaded = false;
+    promptSaved = false;
+    const profileKey = seriesSelect.value;
+    const episodeKey = episodeSelect.value;
+
+    if (!hasValidNewProjectSelection()) {
+        const message = isCustomEpisodeSelected()
+            ? 'Zusammenfassung eingeben und speichern, um den Prompt zu laden.'
+            : profileKey
+                ? 'Episode auswählen, um den Prompt anzuzeigen.'
+                : 'Serie auswählen, um den Prompt anzuzeigen.';
+        renderPromptTabs({ translation_prompt: message, edtech_prompt: message });
+        updateSelectionAvailability();
+        return;
+    }
+
+    startBtn.disabled = true;
+    renderPromptTabs({
+        translation_prompt: 'Prompt wird geladen...',
+        edtech_prompt: 'Prompt wird geladen...'
+    });
+
+    try {
+        const response = await fetch('/api/prompts/preview', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                profile_key: profileKey,
+                episode: episodeKey,
+                episode_summary: isCustomEpisodeSelected() ? episodeSummaryInput.value : ''
+            })
+        });
+        if (!response.ok) throw new Error('Prompt-Vorschau konnte nicht geladen werden.');
+        const promptData = await response.json();
+
+        if (requestId === promptPreviewRequest && profileKey === seriesSelect.value && episodeKey === episodeSelect.value) {
+            promptPreviewLoaded = true;
+            promptSaved = true;
+            renderPromptTabs(promptData, true);
+            updateSelectionAvailability();
+        }
+    } catch (error) {
+        if (requestId === promptPreviewRequest) {
+            renderPromptTabs({
+                translation_prompt: 'Prompt konnte nicht geladen werden.',
+                edtech_prompt: 'Prompt konnte nicht geladen werden.'
+            });
+            promptPreviewLoaded = false;
+            promptSaved = false;
+            updateSelectionAvailability();
+            console.error(error);
+        }
+    }
+}
+
+translationPromptInput.addEventListener('input', () => {
+    promptSaved = false;
+    translationPromptSaveButton.disabled = !promptPreviewLoaded;
+    translationPromptSaveStatus.textContent = 'Änderungen noch nicht gespeichert.';
+    updateSelectionAvailability();
+});
+
+translationPromptSaveButton.addEventListener('click', () => {
+    promptSaved = true;
+    translationPromptSaveButton.disabled = true;
+    translationPromptSaveStatus.textContent = 'Prompt gespeichert; wird beim Start verwendet.';
+    updateSelectionAvailability();
+});
+
+episodeSummaryInput.addEventListener('input', () => {
+    episodeSummarySaved = false;
+    episodeSummarySaveStatus.textContent = 'Zusammenfassung noch nicht gespeichert.';
+    updateSelectionAvailability();
+});
+
+episodeSummarySaveButton.addEventListener('click', () => {
+    episodeSummarySaved = true;
+    episodeSummarySaveStatus.textContent = 'Zusammenfassung gespeichert.';
+    updateSelectionAvailability();
+    loadPromptPreview();
 });
 
 function escapeHtml(unsafe) {
@@ -41,6 +191,64 @@ function escapeHtml(unsafe) {
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;");
 }
+
+async function loadMetadata() {
+    try {
+        const response = await fetch('/api/metadata');
+        if (!response.ok) throw new Error('Metadaten konnten nicht geladen werden.');
+
+        const data = await response.json();
+        yamlMetadata = data.profiles || {};
+        Object.entries(yamlMetadata).forEach(([key, profile]) => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = profile.name || key;
+            seriesSelect.appendChild(option);
+        });
+        updateSelectionAvailability();
+    } catch (error) {
+        console.error('Fehler beim Laden der Serien-Metadaten', error);
+    }
+}
+
+seriesSelect.addEventListener('change', () => {
+    episodeSelect.replaceChildren(new Option('Episode...', ''));
+    const profile = yamlMetadata[seriesSelect.value];
+
+    const needsEpisode = Boolean(profile) && seriesSelect.value !== 'default';
+    episodeSelect.required = needsEpisode;
+    episodeSelect.disabled = !needsEpisode;
+    episodeSummarySection.classList.add('d-none');
+    episodeSummaryInput.value = '';
+    episodeSummarySaved = true;
+    episodeSummarySaveStatus.textContent = '';
+
+    if (needsEpisode) {
+        profile.episodes.forEach((episodeKey) => {
+            const option = document.createElement('option');
+            option.value = episodeKey;
+            option.textContent = episodeKey;
+            episodeSelect.appendChild(option);
+        });
+        episodeSelect.add(new Option('Eigene Episode', '__custom__'));
+        episodeSelect.disabled = false;
+    }
+
+    updateSelectionAvailability();
+    loadPromptPreview();
+});
+
+episodeSelect.addEventListener('change', () => {
+    const useCustomSummary = isCustomEpisodeSelected();
+    episodeSummarySection.classList.toggle('d-none', !useCustomSummary);
+    episodeSummaryInput.value = '';
+    episodeSummarySaved = !useCustomSummary;
+    episodeSummarySaveStatus.textContent = useCustomSummary
+        ? 'Zusammenfassung eingeben; sie darf leer bleiben.'
+        : '';
+    updateSelectionAvailability();
+    loadPromptPreview();
+});
 
 function openProjectFromElement(projectElement) {
     const projectId = Number(projectElement.dataset.projectId);
@@ -139,6 +347,7 @@ async function loadProjectToMain(id, title, status) {
     
     formSection.classList.add('locked');
     startBtn.textContent = 'Gesperrt';
+    startBtn.disabled = true;
     updatePauseResumeButton(status);
     
     // Projektdaten für Settings abrufen
@@ -159,24 +368,8 @@ async function loadProjectToMain(id, title, status) {
         let promptRes = await fetch(`/api/prompts/${id}`);
         if(promptRes.ok) {
             let promptData = await promptRes.json();
-
-            const createSafePre = (text) => {
-                let pre = document.createElement('pre');
-                pre.className = 'bg-light p-3 border rounded font-monospace';
-                pre.style.cssText = 'white-space: pre-wrap; font-size: 0.85em;';
-                pre.textContent = text;
-                return pre;
-            };
-
-            const transTab = document.getElementById('trans-prompts');
-            transTab.innerHTML = '';
-            transTab.appendChild(createSafePre(promptData.translation_prompt));
-
-            const edTab = document.getElementById('ed-prompts');
-            if (edTab) {
-                edTab.innerHTML = '';
-                edTab.appendChild(createSafePre(promptData.edtech_prompt));
-            }
+            renderPromptTabs(promptData);
+            setPromptTabEnabled(true);
         }
     } catch(e) {
         console.error("Fehler beim Laden der Projektdetails", e);
@@ -202,10 +395,21 @@ form.addEventListener('submit', async (e) => {
     progressSection.style.display = 'block';
     
     const formData = new FormData(form);
-    let serie = formData.get('series');
-    let ep = formData.get('episode');
-    formData.append('episode_summary', `${serie} - ${ep}`);
-    projectTitle.textContent = `${serie} - ${ep}`;
+    const settingsData = new FormData(transSettingsForm);
+    for (const [key, value] of settingsData.entries()) {
+        formData.append(key, value);
+    }
+
+    const profileKey = formData.get('profile_key');
+    const episodeKey = formData.get('episode');
+    const profile = yamlMetadata[profileKey];
+    const profileName = profile?.name || profileKey;
+    const projectTitleText = episodeKey ? `${profileName} - ${episodeKey}` : profileName;
+    formData.set('custom_translation_prompt', translationPromptInput.value);
+    if (isCustomEpisodeSelected()) {
+        formData.set('episode_summary_override', episodeSummaryInput.value);
+    }
+    projectTitle.textContent = projectTitleText;
 
     try {
         let uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
@@ -216,12 +420,11 @@ form.addEventListener('submit', async (e) => {
             const startRes = await fetch(`/api/start/${currentProjectId}`, { method: 'POST' });
             if (!startRes.ok) {
                 const startData = await startRes.json();
-                loadProjectToMain(currentProjectId, `${serie} - ${ep}`, 'pausiert');
+                loadProjectToMain(currentProjectId, projectTitleText, 'pausiert');
                 alert("Projekt wurde angelegt, konnte aber nicht gestartet werden: " + startData.error);
                 return;
             }
-            startPolling();
-            loadProjects();
+            loadProjectToMain(currentProjectId, projectTitleText, 'laufend');
         } else {
             alert("Upload fehlgeschlagen: " + uploadData.error);
             formSection.classList.remove('locked');
@@ -302,7 +505,16 @@ btnNewProject.addEventListener('click', () => {
     projectTitle.textContent = "Neues Projekt";
     formSection.classList.remove('locked');
     form.reset();
+    episodeSelect.replaceChildren(new Option('Episode...', ''));
+    episodeSelect.disabled = true;
+    episodeSelect.required = false;
+    translationPromptInput.value = '';
+    translationPromptInput.disabled = true;
+    promptPreviewLoaded = false;
+    setPromptTabEnabled(false);
+    loadPromptPreview();
     startBtn.textContent = "Start";
+    startBtn.disabled = true;
     statusBadge.textContent = 'WARTET';
     progressBar.style.width = '0%';
     progressText.textContent = '0 / 0 Zeilen';
@@ -343,42 +555,97 @@ function unlockEdtech() {
     edtechZone.classList.remove('disabled-overlay');
     edtechStatusBox.style.display = 'none';
     edtechActiveBox.style.display = 'block';
+    btnGenerateEdtech.disabled = false;
+    btnGenerateEdtech.textContent = 'CSV generieren';
     
     document.getElementById('linkSrt').href = `/api/download/${currentProjectId}?type=srt`;
     document.getElementById('linkAss').href = `/api/download/${currentProjectId}?type=ass`;
     document.getElementById('linkCsv').href = `/api/download/${currentProjectId}?type=csv`;
 }
 
-btnValidateEdtech.addEventListener('click', async () => {
+function showValidationMismatches(data) {
+    const msg = `Gefunden: ${data.ts_mismatches.length} Zeitstempel-Fehler und ${data.kw_mismatches.length} Keyword-Fehler.`;
+    document.getElementById('fixMessage').textContent = msg;
+    document.getElementById('fixMethodSelect').value = data.kw_mismatches.length > 0 ? 'gemini' : 'python';
+    fixModal.show();
+}
+
+async function generateAss(ignoreValidationErrors = false) {
+    btnGenerateEdtech.disabled = true;
+    btnGenerateEdtech.textContent = 'Erstelle ASS...';
+    const settingsData = new FormData(edtechSettingsForm);
+    const payload = Object.fromEntries(settingsData.entries());
+    payload.generate_csv_only = false;
+    payload.ignore_validation_errors = ignoreValidationErrors;
+
+    try {
+        const response = await fetch(`/api/edtech/generate/${currentProjectId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (response.status === 409 && result.status === 'validation_required') {
+            showValidationMismatches(result);
+            return;
+        }
+        if (!response.ok) throw new Error(result.error || 'ASS-Generierung fehlgeschlagen.');
+
+        document.getElementById('downloadLinks').classList.remove('d-none');
+        document.getElementById('linkAss').style.display = 'inline-block';
+        validationResult.className = 'alert alert-success';
+        validationResult.textContent = 'CSV geprüft; ASS erfolgreich erstellt.';
+        validationResult.classList.remove('d-none');
+        loadProjects();
+    } catch (error) {
+        validationResult.className = 'alert alert-danger';
+        validationResult.textContent = error.message || 'ASS-Generierung fehlgeschlagen.';
+        validationResult.classList.remove('d-none');
+    } finally {
+        btnGenerateEdtech.disabled = false;
+        btnGenerateEdtech.textContent = 'CSV generieren';
+    }
+}
+
+async function validateEdtech() {
     btnValidateEdtech.disabled = true;
     btnValidateEdtech.textContent = "Prüfe...";
     validationResult.classList.add('d-none');
     
     try {
-        let res = await fetch(`/api/edtech/validate/${currentProjectId}`);
-        let data = await res.json();
+        const res = await fetch(`/api/edtech/validate/${currentProjectId}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Validierung fehlgeschlagen.');
         
         if (data.status === 'no_csv_yet') {
-            validationResult.className = "alert alert-info";
-            validationResult.textContent = "Keine CSV vorhanden. Bei 'Generieren' wird Gemini eine neue Liste erstellen.";
-            btnGenerateEdtech.disabled = false;
+            validationResult.className = 'alert alert-info';
+            validationResult.textContent = 'Keine CSV vorhanden. Bitte zuerst generieren.';
         } else if (data.ts_mismatches.length === 0 && data.kw_mismatches.length === 0) {
-            validationResult.className = "alert alert-success";
-            validationResult.textContent = "100% Match! Keine Abweichungen zwischen SRT und CSV.";
-            btnGenerateEdtech.disabled = false;
+            validationResult.className = 'alert alert-success';
+            validationResult.textContent = 'CSV geprüft: keine Abweichungen gefunden.';
+            if (generateAssAfterValidation) {
+                generateAssAfterValidation = false;
+                await generateAss();
+            }
         } else {
-            let msg = `Gefunden: ${data.ts_mismatches.length} Zeitstempel-Fehler und ${data.kw_mismatches.length} Keyword-Fehler.`;
-            document.getElementById('fixMessage').textContent = msg;
-            document.getElementById('fixMethodSelect').value = data.kw_mismatches.length > 0 ? 'gemini' : 'python';
-            fixModal.show();
+            validationResult.className = 'alert alert-warning';
+            validationResult.textContent = 'CSV enthält Abweichungen. Bitte korrigieren oder ausdrücklich ignorieren.';
+            showValidationMismatches(data);
         }
-    } catch (e) {
-        alert("Fehler bei der Validierung.");
+    } catch (error) {
+        validationResult.className = 'alert alert-danger';
+        validationResult.textContent = error.message || 'Fehler bei der Validierung.';
     } finally {
         btnValidateEdtech.disabled = false;
         btnValidateEdtech.textContent = "CSV Validieren";
         validationResult.classList.remove('d-none');
     }
+}
+
+btnValidateEdtech.addEventListener('click', () => {
+    generateAssAfterValidation = false;
+    validateEdtech();
 });
 
 btnApplyFix.addEventListener('click', async () => {
@@ -396,11 +663,15 @@ btnApplyFix.addEventListener('click', async () => {
         if (res.ok) {
             fixModal.hide();
             if (method === 'ignore') {
-                validationResult.className = "alert alert-warning";
-                validationResult.textContent = "Fehler ignoriert. Die Generierung kann fortgesetzt werden.";
-                btnGenerateEdtech.disabled = false;
+                validationResult.className = 'alert alert-warning';
+                validationResult.textContent = 'Abweichungen ausdrücklich ignoriert.';
+                validationResult.classList.remove('d-none');
+                if (generateAssAfterValidation) {
+                    generateAssAfterValidation = false;
+                    await generateAss(true);
+                }
             } else {
-                btnValidateEdtech.click(); // Nur bei echten Korrekturen neu validieren
+                await validateEdtech();
             }
         } else {
             alert("Fehler bei der Reparatur.");
@@ -416,11 +687,14 @@ btnApplyFix.addEventListener('click', async () => {
 generateEdtechForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     btnGenerateEdtech.disabled = true;
-    btnGenerateEdtech.textContent = "Generiere...";
+    btnGenerateEdtech.textContent = 'Generiere CSV...';
+    generateAssAfterValidation = !document.getElementById('generateCsvOnly').checked;
+    document.getElementById('linkAss').style.display = 'none';
     
     const settingsData = new FormData(edtechSettingsForm);
     const payload = Object.fromEntries(settingsData.entries());
-    payload.generate_csv_only = document.getElementById('generateCsvOnly').checked;
+    payload.generate_csv_only = true;
+    payload.force_csv_regeneration = true;
     
     try {
         let res = await fetch(`/api/edtech/generate/${currentProjectId}`, {
@@ -431,18 +705,20 @@ generateEdtechForm.addEventListener('submit', async (e) => {
         let result = await res.json();
         
         if (res.ok) {
-            alert("Erfolgreich generiert!");
             document.getElementById('downloadLinks').classList.remove('d-none');
-            const isCsvOnly = document.getElementById('generateCsvOnly').checked;
-            document.getElementById('linkAss').style.display = isCsvOnly ? 'none' : 'inline-block';
-            loadProjects(); 
+            validationResult.className = 'alert alert-info';
+            validationResult.textContent = 'CSV erstellt. Prüfung läuft...';
+            validationResult.classList.remove('d-none');
+            await validateEdtech();
         } else {
-            alert("Fehler: " + result.error);
+            throw new Error(result.error || 'CSV-Generierung fehlgeschlagen.');
         }
-    } catch (e) {
-        alert("Netzwerkfehler.");
+    } catch (error) {
+        validationResult.className = 'alert alert-danger';
+        validationResult.textContent = error.message || 'Netzwerkfehler bei der CSV-Generierung.';
+        validationResult.classList.remove('d-none');
     } finally {
         btnGenerateEdtech.disabled = false;
-        btnGenerateEdtech.textContent = "ASS & CSV Generieren";
+        btnGenerateEdtech.textContent = 'CSV generieren';
     }
 });

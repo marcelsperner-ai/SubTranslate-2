@@ -1,0 +1,1788 @@
+1
+00:00:02,420 --> 00:00:04,400
+<font color="blue">Musik</font>
+
+2
+00:00:21,140 --> 00:00:24,000
+Oma, Opa!  - Hallo.
+- Hallo.
+
+3
+00:00:27,300 --> 00:00:30,280
+Tschüs.
+<font color="cyan">Ich wünsch dir 'ne gute Zeit.</font>
+
+4
+00:00:46,980 --> 00:00:48,960
+<font color="blue">Dramatische Musik</font>
+
+5
+00:01:02,580 --> 00:01:04,360
+<font color="cyan">Nein...</font>
+
+6
+00:01:08,420 --> 00:01:10,400
+<font color="blue">Sie schluchzt.</font>
+
+7
+00:01:12,640 --> 00:01:14,120
+<font color="cyan">Nein!</font>
+
+8
+00:01:19,340 --> 00:01:21,320
+<font color="blue">Dramatische Musik</font>
+
+9
+00:01:34,700 --> 00:01:36,680
+<font color="blue">Spannende Musik</font>
+
+10
+00:02:03,060 --> 00:02:05,640
+<font color="yellow">Dr. Friedrich Kronberg</font>
+
+11
+00:02:14,980 --> 00:02:17,960
+<font color="cyan">Alexandra Leuffer</font>
+<font color="green">Thomas Leuffer</font>
+
+12
+00:02:28,940 --> 00:02:30,920
+<font color="blue">Musik</font>
+
+13
+00:02:50,140 --> 00:02:53,680
+(Mann) Der Haftrichter geht
+von Mord aus. Ich seh das genauso.
+
+14
+00:02:53,780 --> 00:02:56,760
+Bei uns gibt's wenig Morde,
+aber dieser ist glasklar.
+
+15
+00:02:56,860 --> 00:02:59,440
+Schauen Sie mal.
+
+16
+00:03:00,540 --> 00:03:04,520
+Alexandra Leuffer hat Samstagnacht
+ihren Mann erschlagen.
+
+17
+00:03:05,620 --> 00:03:07,400
+Im Schlaf.
+
+18
+00:03:07,620 --> 00:03:09,800
+<font color="yellow">Und das wurde</font>
+<font color="yellow">zweifelsfrei nachgewiesen?</font>
+
+19
+00:03:09,900 --> 00:03:13,160
+Der Mann lag aufm Rücken,
+keine Abwehrspuren an den Händen.
+
+20
+00:03:13,260 --> 00:03:15,840
+Da hat's keinen Kampf gegeben.
+
+21
+00:03:16,340 --> 00:03:20,160
+Außerdem hat Frau Leuffer
+'n Geständnis abgelegt.
+
+22
+00:03:22,180 --> 00:03:24,520
+<font color="yellow">'n Geständnis?</font>
+Ja.
+
+23
+00:03:24,620 --> 00:03:27,040
+Daran ändert auch 'n Anwalt
+aus Berlin nichts.
+
+24
+00:03:27,140 --> 00:03:31,140
+Ich werd sie wegen Mordes anklagen.
+'ne Kopie der Akte bekommen Sie.
+
+25
+00:03:31,240 --> 00:03:34,200
+<font color="yellow">Stellen Sie mir bitte</font>
+<font color="yellow">'n Sprechschein aus.</font>
+
+26
+00:03:34,300 --> 00:03:37,320
+<font color="yellow">Ich kläre alles Weitere</font>
+<font color="yellow">mit Frau Leuffer.</font>
+
+27
+00:03:37,420 --> 00:03:58,480
+<font color="blue">Musik</font>
+
+28
+00:04:07,820 --> 00:04:10,400
+<font color="yellow">Guten Tag.</font>
+
+29
+00:04:11,060 --> 00:04:13,640
+<font color="yellow">Danke.</font>
+Bitte.
+
+30
+00:04:20,540 --> 00:04:22,320
+Bitte.
+
+31
+00:04:22,540 --> 00:04:24,200
+<font color="yellow">Danke.</font>
+
+32
+00:04:24,300 --> 00:04:27,000
+<font color="yellow">Guten Tag, Frau Leuffer.</font>
+
+33
+00:04:27,100 --> 00:04:30,160
+<font color="yellow">Kronberg ist mein Name.</font>
+<font color="yellow">Ich bin Anwalt.</font>
+
+34
+00:04:30,260 --> 00:04:33,120
+<font color="yellow">Setzen Sie sich doch.</font>
+
+35
+00:04:44,380 --> 00:04:48,360
+<font color="yellow">Ihre Eltern haben mich gebeten,</font>
+<font color="yellow">Sie zu verteidigen.</font>
+
+36
+00:04:54,460 --> 00:04:58,440
+<font color="yellow">Dazu müssten Sie bitte</font>
+<font color="yellow">die Vollmacht unterschreiben.</font>
+
+37
+00:05:04,060 --> 00:05:05,840
+<font color="yellow">Danke.</font>
+
+38
+00:05:15,540 --> 00:05:18,760
+<font color="yellow">Ich werd's Ihnen nicht</font>
+<font color="yellow">ersparen können. Sie...</font>
+
+39
+00:05:18,860 --> 00:05:21,840
+<font color="yellow">müssen mir erzählen,</font>
+<font color="yellow">was passiert ist.</font>
+
+40
+00:05:25,140 --> 00:05:28,120
+<font color="cyan">Das hab ich doch schon</font>
+<font color="cyan">alles erzählt.</font>
+
+41
+00:05:28,620 --> 00:05:31,040
+<font color="yellow">Nicht wirklich.</font>
+<font color="yellow">Sie legten ein Geständnis ab.</font>
+
+42
+00:05:31,140 --> 00:05:35,720
+<font color="yellow">Das ist etwas anderes und macht's</font>
+<font color="yellow">für mich nicht grad leichter.</font>
+
+43
+00:05:37,900 --> 00:05:42,280
+<font color="yellow">Was Sie aber nicht erzählten, ist,</font>
+<font color="yellow">wo Sie diese Verletzungen herhaben.</font>
+
+44
+00:05:42,380 --> 00:05:45,240
+<font color="yellow">Wer hat Sie so zugerichtet?</font>
+
+45
+00:05:53,980 --> 00:05:57,960
+<font color="yellow">Ich glaube, wir sollten das</font>
+<font color="yellow">dokumentieren lassen.</font>
+
+46
+00:06:00,980 --> 00:06:03,200
+<font color="yellow">Frau Leuffer, hören Sie mir mal zu.</font>
+
+47
+00:06:03,300 --> 00:06:07,360
+<font color="yellow">Ich bin nicht an dem interessiert,</font>
+<font color="yellow">was Sie belastet, wie die Polizei.</font>
+
+48
+00:06:07,480 --> 00:06:11,320
+<font color="yellow">Ich bin Ihr Anwalt,</font>
+<font color="yellow">und ich möchte Ihnen helfen.</font>
+
+49
+00:06:11,700 --> 00:06:15,300
+<font color="yellow">Aber dafür müssen Sie</font>
+<font color="yellow">mit mir sprechen.</font>
+
+50
+00:06:16,140 --> 00:06:20,720
+<font color="yellow">Erzählen Sie von Anfang an.</font>
+<font color="yellow">Wie Sie Ihren Mann kennenlernten.</font>
+
+51
+00:06:26,820 --> 00:06:29,400
+<font color="cyan">Da war ich 19.</font>
+
+52
+00:06:34,860 --> 00:06:37,560
+<font color="green">Fährt sich doch ganz gut, oder?</font>
+
+53
+00:06:37,660 --> 00:06:39,440
+<font color="cyan">Sehr.</font>
+
+54
+00:06:44,660 --> 00:06:46,640
+<font color="blue">Sie lachen.</font>
+
+55
+00:06:47,340 --> 00:06:51,040
+<font color="green">Das ist 'ne gute Wahl.</font>
+<font color="green">Das Auto hat ein Jahr Garantie.</font>
+
+56
+00:06:51,140 --> 00:06:54,120
+<font color="green">Wenn irgendwas ist,</font>
+<font color="green">was ich nicht hoffe...</font>
+
+57
+00:06:54,220 --> 00:06:58,200
+<font color="green">oder vielleicht doch hoffe,</font>
+<font color="green">dann kommen Sie einfach vorbei.</font>
+
+58
+00:06:59,020 --> 00:07:00,800
+<font color="cyan">Danke.</font>
+
+59
+00:07:10,980 --> 00:07:48,000
+<font color="blue">Musik</font>
+
+60
+00:08:06,700 --> 00:08:09,280
+<font color="green">Auf dich.</font>
+<font color="cyan">Auf uns.</font>
+
+61
+00:08:17,140 --> 00:08:20,000
+Die ist für euch, meine Süße.
+
+62
+00:08:20,300 --> 00:08:22,880
+<font color="cyan">Danke, Opa.</font>
+
+63
+00:08:28,220 --> 00:08:30,120
+Cheese...
+
+64
+00:08:37,140 --> 00:08:40,120
+Würden Sie bitte Ihr Hemd ausziehen?
+
+65
+00:08:47,540 --> 00:08:50,120
+Leber längs.
+
+66
+00:08:53,700 --> 00:08:56,000
+Linker Unterarm.
+
+67
+00:08:56,100 --> 00:08:58,680
+Linker Oberschenkel.
+
+68
+00:09:03,260 --> 00:09:06,240
+Könnten Sie sich bitte umdrehen?
+
+69
+00:09:29,580 --> 00:09:32,160
+<font color="cyan">Na, Schatz?</font>
+
+70
+00:09:33,740 --> 00:09:36,240
+<font color="cyan">Hast du getrunken?</font>
+<font color="green">Na und?</font>
+
+71
+00:09:36,340 --> 00:09:38,440
+<font color="cyan">Ich weiß ja nicht...</font>
+
+72
+00:09:38,540 --> 00:09:41,680
+<font color="cyan">Zieh doch erst mal deine Jacke aus.</font>
+<font color="green">Was soll 'n das?</font>
+
+73
+00:09:41,780 --> 00:09:44,360
+<font color="cyan">Was ist denn los?</font>
+
+74
+00:10:19,940 --> 00:10:22,800
+<font color="green">Kaffee ist gleich fertig.</font>
+
+75
+00:10:23,980 --> 00:10:27,840
+<font color="green">Es tut mir wirklich leid</font>
+<font color="green">wegen gestern. Bitte, verzeih mir.</font>
+
+76
+00:10:27,940 --> 00:10:30,800
+<font color="green">Ich hab zu viel getrunken.</font>
+
+77
+00:10:35,380 --> 00:10:40,560
+<font color="green">Verzeih mir, ich... ich werd nie,</font>
+<font color="green">nie mehr trinken, nie mehr trinken.</font>
+
+78
+00:10:41,340 --> 00:10:43,640
+<font color="green">Bitte, verzeih.</font>
+
+79
+00:10:43,740 --> 00:10:47,320
+<font color="green">Bitte.</font>
+
+80
+00:11:02,340 --> 00:11:04,520
+<font color="yellow">Herr Richter Falk.</font>
+
+81
+00:11:04,620 --> 00:11:07,640
+<font color="yellow">Guten Tag, Kronberg mein Name.</font>
+<font color="yellow">Ich vertrete Frau Leuffer.</font>
+
+82
+00:11:07,740 --> 00:11:09,800
+Schön, Sie kennenzulernen.
+<font color="yellow">Gleichfalls.</font>
+
+83
+00:11:09,900 --> 00:11:12,520
+<font color="yellow">Die Staatsanwaltschaft klagt ja</font>
+<font color="yellow">wegen Mordes an.</font>
+
+84
+00:11:12,620 --> 00:11:15,900
+<font color="yellow">Können Sie sich vorstellen,</font>
+<font color="yellow">dass man's auch anders sehen kann.</font>
+
+85
+00:11:15,980 --> 00:11:18,960
+<font color="yellow">Es wirkt ganz so, als wäre sie</font>
+<font color="yellow">unmittelbar vor der Tat</font>
+
+86
+00:11:19,060 --> 00:11:22,840
+<font color="yellow">misshandelt worden von ihrem Mann.</font>
+Der Mann hat geschlafen.
+
+87
+00:11:22,940 --> 00:11:26,920
+Wie der Bundesgerichtshof in
+so Fällen entscheidet, wissen Sie.
+
+88
+00:11:27,020 --> 00:11:28,480
+<font color="yellow">Ja...</font>
+
+89
+00:11:28,900 --> 00:11:31,480
+Tut mir leid.
+
+90
+00:11:37,980 --> 00:11:39,960
+<font color="blue">Unverständliches Stimmengemurmel</font>
+
+91
+00:11:44,980 --> 00:11:47,560
+<font color="yellow">Guten Tag.</font>
+
+92
+00:11:56,780 --> 00:11:59,640
+Ich eröffne die Sitzung
+vor der 2. Großen Strafkammer
+
+93
+00:11:59,740 --> 00:12:02,600
+des Landgerichts Oldenburg.
+
+94
+00:12:05,500 --> 00:12:07,480
+Das Gericht tagt in der Besetzung,
+
+95
+00:12:07,580 --> 00:12:11,520
+wie sie den Beteiligten bereits
+schriftlich mitgeteilt worden ist.
+
+96
+00:12:11,620 --> 00:12:14,600
+Die Angeklagte,
+Frau Alexandra Leuffer,
+
+97
+00:12:14,700 --> 00:12:18,680
+ist im Beisein ihres Anwalts
+Friedrich Kronberg erschienen,
+
+98
+00:12:19,380 --> 00:12:23,360
+die Anklage wird vertreten
+durch Staatsanwalt Dr. Kaulbach.
+
+99
+00:12:23,980 --> 00:12:27,480
+Sie sind Alexandra Leuffer,
+geboren in Delmenhorst
+
+100
+00:12:27,580 --> 00:12:32,080
+am 5. Februar 1982,
+wohnhaft in Oldenburg.
+
+101
+00:12:32,580 --> 00:12:35,560
+Sie waren mit dem Opfer verheiratet?
+
+102
+00:12:37,900 --> 00:12:41,480
+Herr Staatsanwalt,
+ich erteile Ihnen das Wort.
+
+103
+00:12:41,820 --> 00:12:45,800
+Alexandra Leuffer wird angeklagt,
+am 12. April diesen Jahres
+
+104
+00:12:45,900 --> 00:12:49,280
+in Oldenburg ihren Ehemann
+Thomas Leuffer erschlagen zu haben.
+
+105
+00:12:49,380 --> 00:12:51,440
+Da das Opfer
+zum Tatzeitpunkt schlief,
+
+106
+00:12:51,540 --> 00:12:54,040
+sehen wir
+das Mordmerkmal der Heimtücke
+
+107
+00:12:54,140 --> 00:12:57,120
+nach Paragraf 211 Abs. 2
+als erfüllt an.
+
+108
+00:12:58,340 --> 00:13:00,320
+<font color="blue">Musik</font>
+
+109
+00:13:02,740 --> 00:13:07,320
+(Richter) Frau Leuffer? Möchten Sie
+sich zum Tatvorwurf äußern?
+
+110
+00:13:11,020 --> 00:13:14,600
+<font color="yellow">Meine Mandantin</font>
+<font color="yellow">wird sich nicht äußern.</font>
+
+111
+00:13:22,900 --> 00:13:24,880
+<font color="blue">Musik</font>
+
+112
+00:13:31,540 --> 00:13:34,120
+<font color="cyan">Wie schön.</font>
+
+113
+00:13:53,740 --> 00:13:55,720
+<font color="blue">Musik</font>
+
+114
+00:14:12,140 --> 00:14:16,320
+(Richter) Herr Dr. Meier, wie sind
+Ihre Erkenntnisse zum Tathergang?
+
+115
+00:14:16,420 --> 00:14:20,240
+Wir fanden das Opfer im Bett vor.
+Der Schädel war eingeschlagen.
+
+116
+00:14:20,340 --> 00:14:22,840
+Feststellbar waren
+Frakturen und Splitterungen
+
+117
+00:14:22,940 --> 00:14:25,840
+infolge schwerer Gewalteinwirkung.
+
+118
+00:14:25,940 --> 00:14:29,240
+Die dahinter liegenden Gehirnpartien
+wurden so beschädigt,
+
+119
+00:14:29,340 --> 00:14:32,640
+dass der Tod sofort eintrat.
+- (Dr. Kaulbach) Mehrere Schläge?
+
+120
+00:14:32,740 --> 00:14:37,320
+Nein, die Stanzmarke aufm Schädel
+spricht für einen einzigen Schlag.
+
+121
+00:14:37,420 --> 00:14:40,880
+Wurden die Blutspritzer
+dem Ablauf eindeutig zugeordnet?
+
+122
+00:14:40,980 --> 00:14:45,200
+(Meier) Es gab keine Blutspritzer,
+die etwas anderes belegen könnten.
+
+123
+00:14:45,300 --> 00:14:48,280
+(Dr. Kaulbach) Und die Tatwaffe?
+(Meier) Es handelt sich
+
+124
+00:14:48,380 --> 00:14:52,360
+um eine figürliche Statue aus Stein,
+die ein Paar darstellt.
+
+125
+00:14:53,380 --> 00:14:59,760
+<font color="blue">Telefon-Freizeichen</font>
+
+126
+00:15:01,540 --> 00:15:05,800
+<font color="green">(Mailbox) Hier ist Thomas Leuffer,</font>
+<font color="green">bitte sprechen Sie nach dem Piep.</font>
+
+127
+00:15:05,900 --> 00:15:09,880
+<font color="cyan">Thomas, wir sind's. Wo bist du 'n?</font>
+<font color="cyan">Wir warten auf dich.</font>
+
+128
+00:15:09,980 --> 00:15:12,560
+<font color="cyan">Bis gleich.</font>
+
+129
+00:15:19,140 --> 00:15:21,720
+<font color="cyan">Hilfst du Mama?</font>
+
+130
+00:15:24,460 --> 00:15:26,680
+(Sie singen)
+Stille Nacht!
+
+131
+00:15:27,300 --> 00:15:29,760
+Heilige Nacht!
+
+132
+00:15:30,300 --> 00:15:32,640
+Alles schläft,
+
+133
+00:15:32,900 --> 00:15:35,480
+einsam wacht
+
+134
+00:15:35,820 --> 00:15:40,360
+nur das traute hoch heilige Paar.
+
+135
+00:15:41,140 --> 00:15:45,440
+"Holder Knabe im lockigen Haar,
+
+136
+00:15:46,180 --> 00:15:50,760
+schlaf in himmlischer Ruh..."
+
+137
+00:15:53,260 --> 00:15:55,880
+<font color="cyan">Gute Nacht, mein Schatz.</font>
+Gute Nacht.
+
+138
+00:15:55,980 --> 00:15:58,560
+<font color="cyan">Schlaf schön.</font>
+
+139
+00:16:01,060 --> 00:16:03,640
+Wo ist Papa?
+
+140
+00:16:06,140 --> 00:16:10,120
+<font color="cyan">Morgen früh, wenn du aufwachst,</font>
+<font color="cyan">ist er wieder da.</font>
+
+141
+00:16:15,140 --> 00:16:17,120
+<font color="blue">Tür wird aufgeschlossen.</font>
+
+142
+00:16:27,380 --> 00:16:29,960
+<font color="cyan">Na, auch schon da?</font>
+
+143
+00:16:31,060 --> 00:16:33,640
+<font color="green">Was heißt 'n das?</font>
+
+144
+00:16:33,740 --> 00:16:35,340
+<font color="green">Hm?</font>
+
+145
+00:16:36,020 --> 00:16:38,880
+<font color="green">Was soll das heißen? Was?</font>
+
+146
+00:16:54,700 --> 00:16:56,680
+<font color="blue">Sie weint.</font>
+
+147
+00:16:59,740 --> 00:17:01,920
+(Richter)
+Fragen an den Sachverständigen?
+
+148
+00:17:02,020 --> 00:17:04,720
+<font color="yellow">Herr Doktor,</font>
+<font color="yellow">erläutern Sie uns bitte,</font>
+
+149
+00:17:04,820 --> 00:17:10,000
+<font color="yellow">in welchem Zustand Sie Frau Leuffer</font>
+<font color="yellow">bei Ihrer Untersuchung vorfanden.</font>
+
+150
+00:17:10,940 --> 00:17:14,760
+Am Körper der Angeklagten
+stellte ich, zwei Tage nach der Tat,
+
+151
+00:17:14,860 --> 00:17:19,440
+erhebliche Verletzungen infolge
+stumpfer Gewalteinwirkung fest.
+
+152
+00:17:19,620 --> 00:17:24,200
+Die Leber war auf einer Länge
+von vier Zentimetern eingerissen.
+
+153
+00:17:25,340 --> 00:17:29,920
+Die Nieren waren so gequetscht,
+dass Blutungen ausgetreten sind.
+
+154
+00:17:30,020 --> 00:17:33,120
+Neben diesen Verletzungen
+befanden sich unter der Haut
+
+155
+00:17:33,220 --> 00:17:37,200
+großflächige Einblutungen über
+den gesamten Oberkörper verteilt.
+
+156
+00:17:37,300 --> 00:17:40,760
+Auf diesem Röntgenbild sehen Sie
+vier angebrochene Rippen.
+
+157
+00:17:40,860 --> 00:17:43,320
+Sechs weitere Rippenbrüche
+sind verheilt.
+
+158
+00:17:43,420 --> 00:17:46,600
+Es ist davon auszugehen,
+dass diese Verletzungen drei bis...
+
+159
+00:17:46,700 --> 00:17:49,560
+sieben Jahre zurückliegen.
+
+160
+00:18:00,420 --> 00:18:02,420
+<font color="blue">Toilettenspülung</font>
+
+161
+00:18:21,980 --> 00:18:24,880
+<font color="cyan">Mäuschen, komm, aufwachen.</font>
+<font color="cyan">Komm, aufstehen.</font>
+
+162
+00:18:24,980 --> 00:18:26,960
+<font color="cyan">Wir gehen zu Oma und Opa,</font>
+<font color="cyan">Gänseessen.</font>
+
+163
+00:18:27,060 --> 00:18:29,840
+Wieso hast du mich nicht
+früher geweckt?
+
+164
+00:18:29,940 --> 00:18:34,520
+Ich will noch mit Sofia spielen.
+<font color="cyan">Das können wir doch da machen.</font>
+
+165
+00:18:34,820 --> 00:18:37,400
+<font color="cyan">Die nehmen wir mit.</font>
+
+166
+00:18:39,140 --> 00:18:40,920
+<font color="cyan">Komm.</font>
+
+167
+00:18:43,940 --> 00:18:47,800
+<font color="cyan">So, hier, Mütze anziehen.</font>
+<font color="cyan">Geh schon mal raus.</font>
+
+168
+00:18:56,620 --> 00:18:59,200
+<font color="cyan">Komm, los.</font>
+
+169
+00:19:02,420 --> 00:19:07,600
+<font color="green">Wo wollt ihr denn hin?  </font> <font color="white">Zu Oma,</font>
+Gänseessen. Hast du das vergessen?
+
+170
+00:19:08,220 --> 00:19:11,360
+<font color="green">Du, Oma hat angerufen.</font>
+<font color="green">Ihr geht's nicht so gut.</font>
+
+171
+00:19:11,460 --> 00:19:14,440
+<font color="green">Das Gänseessen fällt leider aus.</font>
+
+172
+00:19:15,460 --> 00:19:19,120
+<font color="green">Was hat 'n der Weihnachtsmann</font>
+<font color="green">gebracht?  </font> <font color="white">Sofia.</font>
+
+173
+00:19:19,220 --> 00:19:22,800
+<font color="green">Hallo, Sofia. Sollen wir spielen?</font>
+Au ja.
+
+174
+00:19:40,980 --> 00:19:43,960
+<font color="green">Du gehst nirgendwohin, verstanden?</font>
+
+175
+00:19:49,260 --> 00:19:51,240
+<font color="blue">Dramatische Musik</font>
+
+176
+00:20:06,540 --> 00:20:09,720
+Herr Dr. Bahnert, war bei der
+Angeklagten zum Tatzeitpunkt
+
+177
+00:20:09,820 --> 00:20:13,800
+eine eingeschränkte Einsichts-
+und Steuerungsfähigkeit feststellbar?
+
+178
+00:20:13,900 --> 00:20:17,880
+Ich stellte keine relevanten
+psychiatrischen Erkrankungen fest,
+
+179
+00:20:17,980 --> 00:20:19,960
+die einer Schuldunfähigkeit
+
+180
+00:20:20,060 --> 00:20:24,040
+bzw. verminderten Schuldfähigkeit
+zugeordnet werden können.
+
+181
+00:20:24,220 --> 00:20:27,200
+Danke.
+Ich hab keine weiteren Fragen.
+
+182
+00:20:29,220 --> 00:20:31,960
+Herr Verteidiger, noch Fragen?
+<font color="yellow">Ja, Herr Bahnert,</font>
+
+183
+00:20:32,060 --> 00:20:36,040
+<font color="yellow">ich würd Sie gerne fragen, wie Sie</font>
+<font color="yellow">die Misshandlungen beurteilen,</font>
+
+184
+00:20:36,140 --> 00:20:39,280
+<font color="yellow">die Frau Leuffer während ihrer Ehe</font>
+<font color="yellow">erdulden musste?</font>
+
+185
+00:20:39,380 --> 00:20:41,800
+(Bahnert) Sie unterlag gewiss
+zum Tatzeitpunkt
+
+186
+00:20:41,900 --> 00:20:44,080
+einer posttraumatischen
+Belastungsstörung.
+
+187
+00:20:44,180 --> 00:20:48,160
+Mehr kann ich dazu nicht sagen.
+<font color="yellow">Auch ältere Verletzungen wurden</font>
+
+188
+00:20:48,260 --> 00:20:51,920
+<font color="yellow">bei Frau Leuffer nachgewiesen.</font>
+<font color="yellow">Könnte es sein, dass diese ihr</font>
+
+189
+00:20:52,020 --> 00:20:55,800
+<font color="yellow">vom Ehemann beigebracht wurden?</font>
+Das kann ich nicht beurteilen.
+
+190
+00:20:55,900 --> 00:20:58,880
+<font color="yellow">Keine weiteren Fragen.</font>
+(Richter) Gut.
+
+191
+00:20:59,140 --> 00:21:03,120
+Danke, Herr Dr. Bahnert,
+Sie sind als Zeuge entlassen.
+
+192
+00:21:06,620 --> 00:21:08,600
+<font color="blue">Dramatische Musik</font>
+
+193
+00:21:45,900 --> 00:21:47,880
+<font color="blue">Musik</font>
+
+194
+00:21:51,740 --> 00:21:55,320
+<font color="green">Hast du gar keinen Hunger?</font>
+(Saskia) Nein.
+
+195
+00:21:55,420 --> 00:21:58,000
+<font color="green">Wollen wir los?</font>
+Ja.
+
+196
+00:22:03,700 --> 00:22:07,300
+Danke.
+<font color="cyan">Tschüs, Schatz, 'n schönen Tag dir.</font>
+
+197
+00:22:13,900 --> 00:22:16,640
+<font color="green">Die Jacke ist da drin, ne?</font>
+Ja.
+
+198
+00:22:16,740 --> 00:22:18,720
+<font color="blue">Die Tür fällt ins Schloss.</font>
+
+199
+00:22:24,180 --> 00:22:28,760
+<font color="yellow">Jetzt lassen Sie das nicht einfach</font>
+<font color="yellow">alles so über sich ergehen.</font>
+
+200
+00:22:31,220 --> 00:22:34,320
+<font color="yellow">Sie müssen morgen</font>
+<font color="yellow">in aller Ausführlichkeit</font>
+
+201
+00:22:34,420 --> 00:22:38,400
+<font color="yellow">über die Gewalttätigkeiten</font>
+<font color="yellow">Ihres Mannes aussagen.</font>
+
+202
+00:22:39,020 --> 00:22:44,200
+<font color="yellow">Und warum Sie sich nicht wehrten.</font>
+<font color="yellow">Sonst wird Sie niemand verstehen.</font>
+
+203
+00:22:45,860 --> 00:22:48,720
+<font color="yellow">Darf ich Sie eins fragen?</font>
+
+204
+00:22:48,820 --> 00:22:52,800
+<font color="yellow">Warum haben Sie sich</font>
+<font color="yellow">von Ihrem Mann nicht getrennt?</font>
+
+205
+00:22:56,380 --> 00:23:00,360
+<font color="cyan">Ich wollte es noch aushalten,</font>
+<font color="cyan">bis Saskia alt genug ist.</font>
+
+206
+00:23:02,620 --> 00:23:06,240
+<font color="cyan">Das wollte ich noch schaffen.</font>
+<font color="yellow">Dann sagen Sie genau das aus!</font>
+
+207
+00:23:06,340 --> 00:23:09,680
+<font color="cyan">Ich kann nicht. </font> <font color="yellow">Frau Leuffer,</font>
+<font color="yellow">verstehen Sie denn nicht?</font>
+
+208
+00:23:09,780 --> 00:23:12,160
+<font color="yellow">Sie sind wegen Mordes angeklagt!</font>
+
+209
+00:23:12,260 --> 00:23:15,520
+<font color="yellow">Das bedeutet:</font>
+<font color="yellow">eine lebenslängliche Haftstrafe.</font>
+
+210
+00:23:15,620 --> 00:23:18,080
+<font color="yellow">Der Richter ist auf Ihrer Seite,</font>
+<font color="yellow">garantiert!</font>
+
+211
+00:23:18,180 --> 00:23:21,760
+<font color="yellow">Aber Sie müssen ihm etwas</font>
+<font color="yellow">in die Hand geben.</font>
+
+212
+00:23:30,380 --> 00:23:33,960
+<font color="yellow">Jetzt hören Sie damit auf,</font>
+<font color="yellow">Frau Leuffer.</font>
+
+213
+00:23:34,940 --> 00:23:37,800
+<font color="yellow">Das bringt Sie nicht weiter.</font>
+
+214
+00:23:49,500 --> 00:23:52,480
+<font color="yellow">Sie werden morgen aussagen müssen.</font>
+
+215
+00:23:57,140 --> 00:23:58,680
+<font color="blue">Er klopft an die Tür.</font>
+
+216
+00:24:01,820 --> 00:24:05,400
+<font color="yellow">Frau Leuffer,</font>
+<font color="yellow">denken Sie an Ihre Tochter.</font>
+
+217
+00:24:06,220 --> 00:24:08,800
+<font color="yellow">Die wartet auf Sie.</font>
+
+218
+00:25:03,940 --> 00:25:06,080
+<font color="cyan">Na?</font>
+Kannst du den mit hochnehmen?
+
+219
+00:25:06,180 --> 00:25:09,320
+Ich geh noch kurz zu Lea.
+<font color="cyan">Aber in 'ner Stunde gibt's Essen,</font>
+
+220
+00:25:09,420 --> 00:25:12,280
+<font color="cyan">da bist du wieder da, ja?</font>
+
+221
+00:25:13,300 --> 00:25:15,680
+Darf ich helfen?
+
+222
+00:25:15,780 --> 00:25:18,360
+<font color="cyan">Danke.</font>
+Gern.
+
+223
+00:25:18,980 --> 00:25:21,840
+Ich heiße übrigens Felix.
+
+224
+00:25:22,060 --> 00:25:24,640
+Sonnenberg. Ich wohne über Ihnen.
+
+225
+00:25:24,740 --> 00:25:27,120
+Vielleicht können Sie ja
+mal klingeln.
+
+226
+00:25:27,220 --> 00:25:29,800
+<font color="cyan">Gern, danke.</font>
+
+227
+00:25:41,420 --> 00:25:43,400
+<font color="blue">Musik</font>
+
+228
+00:26:13,140 --> 00:26:14,600
+<font color="blue">Es klingelt.</font>
+
+229
+00:26:18,140 --> 00:26:20,720
+Haben Sie Salz?
+<font color="cyan">Ja.</font>
+
+230
+00:26:21,740 --> 00:26:24,320
+Nee, ich...
+
+231
+00:26:24,700 --> 00:26:28,120
+Ich weiß, es ist 'ne blöde Ausrede,
+ich...
+
+232
+00:26:28,220 --> 00:26:32,200
+Haben Sie zufällig Lust,
+mit mir 'n Kaffee trinken zu gehen?
+
+233
+00:26:35,140 --> 00:26:38,000
+<font color="cyan">Ja. Ich hol meine Jacke.</font>
+
+234
+00:26:45,740 --> 00:26:48,720
+(Richter) Frau Leuffer,
+Sie haben jetzt die Gelegenheit,
+
+235
+00:26:48,820 --> 00:26:52,800
+dem Gericht zu erzählen,
+wie Sie den Tathergang erlebten.
+
+236
+00:26:55,460 --> 00:26:58,440
+<font color="yellow">(Flüstert) Frau Leuffer,</font>
+<font color="yellow">ich rate Ihnen, sagen Sie was.</font>
+
+237
+00:26:58,540 --> 00:27:01,400
+(Richter) Frau Leuffer?
+
+238
+00:27:02,940 --> 00:27:04,920
+Dem Gericht
+liegt das Geständnis vor,
+
+239
+00:27:05,020 --> 00:27:09,360
+das die Angeklagte zu Protokoll gab.
+Das könnte man alternativ verlesen.
+
+240
+00:27:09,460 --> 00:27:12,280
+Das hatte ich nicht gemeint.
+Herr Anwalt?
+
+241
+00:27:12,380 --> 00:27:15,280
+<font color="yellow">Herr Vorsitzender,</font>
+<font color="yellow">meine Mandantin ist aufgrund ihrer</font>
+
+242
+00:27:15,380 --> 00:27:19,280
+<font color="yellow">posttraumatischen Belastungsstörung</font>
+<font color="yellow">nicht imstande auszusagen.</font>
+
+243
+00:27:19,380 --> 00:27:22,960
+Gut, dann verlesen wir jetzt
+das Geständnis.
+
+244
+00:27:24,700 --> 00:27:27,560
+"Protokoll vom 13.4.2014.
+
+245
+00:27:28,300 --> 00:27:30,280
+Befragung durch
+Staatsanwalt Kaulbach
+
+246
+00:27:30,380 --> 00:27:34,360
+mit der Angeklagten Alexandra
+Leuffer im Fall Thomas Leuffer:
+
+247
+00:27:34,820 --> 00:27:39,240
+Thomas und ich brachten Saskia,
+unsere Tochter, zu meinen Eltern.
+
+248
+00:27:39,340 --> 00:27:41,680
+Kaum waren wir..."
+<font color="cyan">"Kaum waren wir zu Hause,</font>
+
+249
+00:27:41,780 --> 00:27:45,360
+<font color="cyan">hat Thomas mich geschlagen</font>
+<font color="cyan">und vergewaltigt.</font>
+
+250
+00:27:49,900 --> 00:27:54,500
+<font color="cyan">Als er fertig war, stieß er mich</font>
+<font color="cyan">mit den Füßen auf den Boden."</font>
+
+251
+00:27:59,820 --> 00:28:02,480
+<font color="green">Saskia ist bald zehn.</font>
+<font color="cyan">"Dann hat er mir gesagt,</font>
+
+252
+00:28:02,580 --> 00:28:07,520
+<font color="cyan">Saskia sei dafür reif, das Gleiche</font>
+<font color="cyan">mit ihr zu machen wie mit mir.</font>
+
+253
+00:28:07,620 --> 00:28:11,280
+<font color="cyan">Ich wollte mich wehren,</font>
+<font color="cyan">da trat er mir in den Bauch.</font>
+
+254
+00:28:11,380 --> 00:28:14,240
+<font color="cyan">Ich musste mich übergeben.</font>
+
+255
+00:28:16,060 --> 00:28:20,040
+<font color="cyan">Ich wischte das Erbrochene weg</font>
+<font color="cyan">und wartete, bis er schlief.</font>
+
+256
+00:28:29,140 --> 00:28:32,120
+<font color="cyan">Ich musste immer an Saskia denken.</font>
+
+257
+00:28:32,620 --> 00:28:35,480
+<font color="cyan">Sie ist doch erst neun.</font>
+
+258
+00:28:43,340 --> 00:28:46,320
+<font color="cyan">Ich habe die Statue genommen</font>
+<font color="cyan">und...</font>
+
+259
+00:28:46,420 --> 00:28:49,280
+<font color="cyan">habe ihn damit erschlagen."</font>
+
+260
+00:29:02,820 --> 00:29:05,720
+Hohes Gericht.
+Bei der Tötung eines Schlafenden
+
+261
+00:29:05,820 --> 00:29:08,800
+ist nach ständiger Rechtsprechung
+des Bundesgerichtshofes
+
+262
+00:29:08,900 --> 00:29:11,880
+das Mordmerkmal Heimtücke
+immer gegeben.
+
+263
+00:29:12,420 --> 00:29:16,320
+Daher kommen meines Erachtens nach
+auch keine mildernden Umstände
+
+264
+00:29:16,420 --> 00:29:19,720
+wegen der erduldeten Misshandlungen
+zum Tragen.
+
+265
+00:29:19,820 --> 00:29:24,880
+Die Angeklagte handelte vorsätzlich,
+sie erschlug ihren Mann im Schlaf.
+
+266
+00:29:24,980 --> 00:29:29,560
+Daher ist sie zu lebenslanger
+Freiheitsstrafe zu verurteilen.
+
+267
+00:29:31,740 --> 00:29:34,600
+(Richter) Ich vertage
+die Verhandlung auf morgen früh.
+
+268
+00:29:34,700 --> 00:29:37,240
+Beginn: 9.30 Uhr.
+
+269
+00:29:37,340 --> 00:29:39,360
+Kollegen...
+
+270
+00:29:39,460 --> 00:29:43,040
+Ich möchte Sie gern kurz sprechen,
+Sie beide.
+
+271
+00:29:52,740 --> 00:29:54,960
+Dr. Kaulbach, Sie sahen doch,
+
+272
+00:29:55,060 --> 00:29:58,440
+wie die Frau am Abend vor der Tat
+zugerichtet war?
+
+273
+00:29:58,540 --> 00:30:02,600
+Ja, natürlich hab ich das gesehen.
+- Können Sie sich auch vorstellen,
+
+274
+00:30:02,700 --> 00:30:07,280
+was der Mann sonst noch mit ihr tat?
+- Ja, aber sie sagt ja nichts.
+
+275
+00:30:07,380 --> 00:30:10,720
+<font color="yellow">Sie ist traumatisiert.</font>
+<font color="yellow">Das kann man sich doch denken.</font>
+
+276
+00:30:10,820 --> 00:30:14,160
+Der BGH entscheidet
+in solchen Fällen sehr eindeutig.
+
+277
+00:30:14,260 --> 00:30:17,240
+Das Opfer schlief,
+also ist es Mord mit Heimtücke.
+
+278
+00:30:17,340 --> 00:30:21,320
+<font color="yellow">Das ist 'n Begriff aus der NS-Zeit!</font>
+Sie erwarten doch nicht ernsthaft,
+
+279
+00:30:21,420 --> 00:30:25,400
+dass ich diese Frau lebenslänglich
+ins Gefängnis schicke?
+
+280
+00:30:26,780 --> 00:30:29,280
+Herr Kronberg...
+
+281
+00:30:29,380 --> 00:30:32,800
+Ich möchte morgen
+etwas Vernünftiges von Ihnen hören.
+
+282
+00:30:32,900 --> 00:30:34,680
+Bitte.
+
+283
+00:30:36,900 --> 00:30:39,480
+<font color="yellow">Ich geb mir Mühe.</font>
+
+284
+00:30:42,460 --> 00:30:45,440
+Tschüs, Mama.
+<font color="cyan">Tschüs, mein Schatz.</font>
+
+285
+00:30:45,900 --> 00:30:48,480
+Tschüs.
+<font color="cyan">Dein Helm?</font>
+
+286
+00:30:52,060 --> 00:30:53,840
+Tschüs.
+
+287
+00:30:56,220 --> 00:30:58,200
+<font color="blue">Handy vibriert.</font>
+
+288
+00:31:07,700 --> 00:32:13,040
+<font color="blue">Musik</font>
+
+289
+00:32:18,860 --> 00:32:20,640
+<font color="cyan">Warte.</font>
+
+290
+00:32:37,820 --> 00:32:39,800
+<font color="blue">Musik</font>
+
+291
+00:33:01,340 --> 00:33:37,040
+<font color="blue">Dramatische Musik</font>
+
+292
+00:33:40,220 --> 00:33:44,280
+Ich würde gleich dort ansetzen,
+wo wir gestern unterbrochen haben
+
+293
+00:33:44,380 --> 00:33:47,120
+und bitte die Verteidigung
+um ihr Plädoyer.
+
+294
+00:33:47,220 --> 00:33:50,200
+<font color="yellow">Hohes Gericht, Herr Staatsanwalt.</font>
+
+295
+00:33:50,300 --> 00:33:53,520
+<font color="yellow">Menschen, die, wie meine Mandantin</font>
+<font color="yellow">Alexandra Leuffer,</font>
+
+296
+00:33:53,620 --> 00:33:56,360
+<font color="yellow">über Jahre</font>
+<font color="yellow">unter häuslicher Gewalt leiden,</font>
+
+297
+00:33:56,460 --> 00:34:00,440
+<font color="yellow">leben nicht wie andere Menschen.</font>
+<font color="yellow">Und man sollte sich hier fragen,</font>
+
+298
+00:34:00,540 --> 00:34:03,680
+<font color="yellow">ob man von heimtückischer Tötung</font>
+<font color="yellow">sprechen kann.</font>
+
+299
+00:34:03,780 --> 00:34:07,220
+<font color="yellow">Selbst wenn, und da geb ich</font>
+<font color="yellow">Ihnen recht, Herr Staatsanwalt,</font>
+
+300
+00:34:07,340 --> 00:34:11,280
+<font color="yellow">es nach ständiger Rechtsprechung</font>
+<font color="yellow">ausreicht, dass das Opfer schläft,</font>
+
+301
+00:34:11,380 --> 00:34:14,380
+<font color="yellow">um das Mordmerkmal der Heimtücke</font>
+<font color="yellow">zu erfüllen,</font>
+
+302
+00:34:14,460 --> 00:34:17,440
+<font color="yellow">hat der BGH für extrem</font>
+<font color="yellow">gelagerte Fälle anerkannt,</font>
+
+303
+00:34:17,540 --> 00:34:19,840
+<font color="yellow">dass nicht jede</font>
+<font color="yellow">heimtückische Tötung</font>
+
+304
+00:34:19,940 --> 00:34:24,240
+<font color="yellow">zu einer lebenslangen Haftstrafe</font>
+<font color="yellow">führen muss. Ich zitier das mal:</font>
+
+305
+00:34:24,340 --> 00:34:28,920
+<font color="yellow">"Wenn die sogenannte Heimtücke mit</font>
+<font color="yellow">Entlastungsmomenten zusammentrifft,</font>
+
+306
+00:34:29,020 --> 00:34:32,000
+<font color="yellow">kann die Verhängung</font>
+<font color="yellow">einer lebenslangen Haftstrafe</font>
+
+307
+00:34:32,100 --> 00:34:34,960
+<font color="yellow">unverhältnismäßig wirken."</font>
+
+308
+00:34:35,180 --> 00:34:39,160
+<font color="yellow">Ein solcher Fall ist hier</font>
+<font color="yellow">offensichtlich gegeben.</font>
+
+309
+00:34:39,260 --> 00:34:43,240
+<font color="yellow">Frau Leuffer ist über Jahre</font>
+<font color="yellow">von ihrem Ehemann gedemütigt</font>
+
+310
+00:34:43,340 --> 00:34:46,320
+<font color="yellow">und misshandelt worden.</font>
+<font color="yellow">Sie hat sich nicht getraut,</font>
+
+311
+00:34:46,420 --> 00:34:49,400
+<font color="yellow">sich jemandem anzuvertrauen</font>
+<font color="yellow">oder sich zu wehren.</font>
+
+312
+00:34:49,500 --> 00:34:52,640
+<font color="yellow">Das Ganze wäre sicher noch lange</font>
+<font color="yellow">so weitergegangen, wenn...</font>
+
+313
+00:34:52,740 --> 00:34:54,720
+<font color="yellow">ihr Ehemann, Herr Leuffer,</font>
+
+314
+00:34:54,820 --> 00:34:57,240
+<font color="yellow">am Tatabend nicht angedroht hätte,</font>
+
+315
+00:34:57,340 --> 00:35:01,320
+<font color="yellow">der gemeinsamen Tochter Saskia</font>
+<font color="yellow">das Gleiche anzutun.</font>
+
+316
+00:35:02,460 --> 00:35:06,440
+<font color="yellow">Und ich glaube, genau hier ist der</font>
+<font color="yellow">Schlüssel zu diesem Fall zu suchen.</font>
+
+317
+00:35:06,540 --> 00:35:09,040
+<font color="yellow">Frau Leuffer musste davon ausgehen,</font>
+
+318
+00:35:09,140 --> 00:35:11,120
+<font color="yellow">dass er diese Drohung wahrmachte,</font>
+
+319
+00:35:11,220 --> 00:35:14,120
+<font color="yellow">so wie er alle andern Drohungen</font>
+<font color="yellow">wahrgemacht hat,</font>
+
+320
+00:35:14,220 --> 00:35:16,720
+<font color="yellow">die er bis dahin ausgesprochen hat.</font>
+
+321
+00:35:16,820 --> 00:35:19,320
+<font color="yellow">Thomas Leuffer selbst</font>
+<font color="yellow">muss man in diesem Fall</font>
+
+322
+00:35:19,420 --> 00:35:23,560
+<font color="yellow">als "permanenten, unmittelbar</font>
+<font color="yellow">bevorstehenden Angriff" sehen.</font>
+
+323
+00:35:23,660 --> 00:35:27,440
+<font color="yellow">Selbst wenn Herr Leuffer</font>
+<font color="yellow">zum Tatzeitpunkt geschlafen hat,</font>
+
+324
+00:35:27,540 --> 00:35:30,400
+<font color="yellow">stand ein Angriff</font>
+<font color="yellow">unmittelbar bevor.</font>
+
+325
+00:35:30,500 --> 00:35:33,400
+<font color="yellow">Frau Leuffer hat</font>
+<font color="yellow">in Notwehr gehandelt.</font>
+
+326
+00:35:33,500 --> 00:35:36,040
+<font color="yellow">Sie hat ihre Tochter...</font>
+
+327
+00:35:36,140 --> 00:35:38,920
+<font color="yellow">vor einem Übergriff,</font>
+<font color="yellow">einer Vergewaltigung</font>
+
+328
+00:35:39,020 --> 00:35:42,600
+<font color="yellow">durch Herrn Leuffer</font>
+<font color="yellow">bewahrt und beschützt.</font>
+
+329
+00:35:45,540 --> 00:35:47,520
+<font color="yellow">Hohes Gericht, Herr Staatsanwalt,</font>
+
+330
+00:35:47,620 --> 00:35:51,880
+<font color="yellow">die Verteidigung fordert daher den</font>
+<font color="yellow">Freispruch für Alexandra Leuffer.</font>
+
+331
+00:35:57,940 --> 00:36:00,160
+Die Angeklagte hat das letzte Wort.
+
+332
+00:36:00,260 --> 00:36:02,840
+Frau Leuffer?
+
+333
+00:36:08,500 --> 00:36:12,360
+Das Gericht zieht sich
+jetzt zur Beratung zurück.
+
+334
+00:36:13,380 --> 00:36:16,240
+(Felix) Da ist ein Strand.
+
+335
+00:36:19,500 --> 00:36:22,080
+Und Palmen.
+
+336
+00:36:25,180 --> 00:36:28,040
+Und da ist es ganz heiß.
+
+337
+00:36:29,180 --> 00:36:32,160
+Dort wäre ich jetzt gern mit dir.
+
+338
+00:36:32,260 --> 00:36:35,120
+<font color="cyan">Du bist ja kitschig.</font>
+
+339
+00:36:39,300 --> 00:36:42,840
+<font color="cyan">Wo ist denn meine Unterhose? </font> <font color="white">Was?</font>
+<font color="cyan">Meine Unterhose.</font>
+
+340
+00:36:42,940 --> 00:36:44,720
+Warte.
+
+341
+00:36:50,740 --> 00:36:53,320
+Was ist denn das?
+
+342
+00:36:56,960 --> 00:36:59,520
+War das dein Mann?
+
+343
+00:37:00,060 --> 00:37:01,840
+Alex...
+
+344
+00:37:03,660 --> 00:37:06,520
+Wir müssen zur Polizei.
+<font color="cyan">Nein.</font>
+
+345
+00:37:07,980 --> 00:37:10,840
+<font color="cyan">Wenn Saskia groß genug ist.</font>
+
+346
+00:37:14,740 --> 00:37:16,520
+<font color="cyan">Hey...</font>
+
+347
+00:37:29,340 --> 00:37:33,320
+(Richter) Im Namen des Volkes
+ergeht folgendes Urteil:
+
+348
+00:37:33,420 --> 00:37:36,400
+Die Angeklagte,
+Frau Alexandra Leuffer,
+
+349
+00:37:37,300 --> 00:37:41,280
+wird vom Vorwurf des Mordes
+an Thomas Leuffer freigesprochen.
+
+350
+00:37:42,900 --> 00:37:44,880
+<font color="blue">Unverständliches Gemurmel</font>
+
+351
+00:37:48,220 --> 00:37:50,880
+Das Urteil begründe ich wie folgt:
+
+352
+00:37:50,980 --> 00:37:53,960
+Frau Leuffer hat
+in Notwehr gehandelt.
+
+353
+00:37:54,220 --> 00:37:57,200
+Wer sich wehrt,
+wenn ein Angriff gerade stattfindet
+
+354
+00:37:57,300 --> 00:38:00,600
+oder unmittelbar bevorsteht,
+kann nicht bestraft werden.
+
+355
+00:38:00,700 --> 00:38:03,560
+Nichts anderes
+hat Frau Leuffer getan.
+
+356
+00:38:03,660 --> 00:38:06,640
+Sie musste davon ausgehen,
+dass ihr Mann
+
+357
+00:38:06,740 --> 00:38:09,720
+einen jederzeit
+realisierbaren Angriff für sie
+
+358
+00:38:09,820 --> 00:38:13,400
+und ihre
+minderjährige Tochter darstellt.
+
+359
+00:38:13,900 --> 00:38:16,880
+Dies ist eine
+Einzelfall-Entscheidung.
+
+360
+00:38:17,740 --> 00:38:21,720
+Das Gericht hebt den Haftbefehl
+gegen Frau Leuffer auf
+
+361
+00:38:22,300 --> 00:38:26,880
+und entlässt sie mit sofortiger
+Wirkung aus der Untersuchungshaft.
+
+362
+00:38:27,140 --> 00:38:30,120
+Die Verhandlung ist geschlossen.
+
+363
+00:38:30,420 --> 00:38:32,720
+<font color="yellow">Ich freu mich für Sie.</font>
+Danke, Herr Kronberg.
+
+364
+00:38:32,820 --> 00:38:34,720
+<font color="yellow">Sie sind frei.</font>
+
+365
+00:38:34,820 --> 00:38:37,400
+<font color="yellow">Kommen Sie.</font>
+
+366
+00:38:46,260 --> 00:38:48,840
+<font color="yellow">Alles Gute.</font>
+
+367
+00:38:51,260 --> 00:38:53,720
+Vielen Dank.
+<font color="yellow">Gern geschehen.</font>
+
+368
+00:38:53,820 --> 00:38:56,920
+Das war ein gutes Plädoyer.
+<font color="yellow">Vielen Dank.</font>
+
+369
+00:38:57,020 --> 00:39:01,000
+Dr. Kaulbach, bitte lassen Sie
+die Dinge auf sich beruhen.
+
+370
+00:39:01,540 --> 00:39:03,120
+Ja.
+
+371
+00:39:03,900 --> 00:39:06,760
+Alles Gute.
+<font color="yellow">Schönen Tag noch.</font>
+
+372
+00:39:13,640 --> 00:39:15,600
+<font color="blue">Unverständliches Stimmengewirr</font>
+
+373
+00:39:36,420 --> 00:39:38,400
+<font color="blue">Dramatische Musik</font>
+
+374
+00:39:57,020 --> 00:40:00,000
+<font color="cyan">"Ich hatte ein weißes Nachthemd an.</font>
+
+375
+00:40:01,340 --> 00:40:04,320
+<font color="cyan">Nein, ich habe nicht geduscht."</font>
+
+376
+00:40:08,260 --> 00:40:10,240
+<font color="blue">Dramatische Musik</font>
+
+377
+00:40:16,940 --> 00:40:21,520
+<font color="cyan">"Ich musste immer an Saskia denken.</font>
+<font color="cyan">Sie ist doch erst neun."</font>
+
+378
+00:40:23,740 --> 00:40:25,720
+<font color="blue">Dramatische Musik</font>
+
+379
+00:40:50,220 --> 00:40:53,800
+<font color="cyan">"Ich habe gewartet,</font>
+<font color="cyan">bis er geschlafen hat.</font>
+
+380
+00:40:59,140 --> 00:41:02,120
+<font color="cyan">Ich habe die Statue genommen...</font>
+
+381
+00:41:10,540 --> 00:41:13,520
+<font color="cyan">und habe ihn damit erschlagen."</font>
+
+382
+00:41:47,720 --> 00:41:49,680
+<font color="blue">Musik</font>
+
+383
+00:42:13,220 --> 00:42:15,720
+<font color="yellow">"Die Schuld eines Menschen</font>
+<font color="yellow">ist schwer zu wiegen.</font>
+
+384
+00:42:15,820 --> 00:42:17,960
+<font color="yellow">Wir streben unser Leben lang</font>
+<font color="yellow">nach Glück.</font>
+
+385
+00:42:18,060 --> 00:42:21,280
+<font color="yellow">Aber manchmal verlieren wir uns</font>
+<font color="yellow">und die Dinge gehen schief.</font>
+
+386
+00:42:21,380 --> 00:42:24,720
+<font color="yellow">Dann trennt uns nur noch das Recht</font>
+<font color="yellow">vom Chaos,</font>
+
+387
+00:42:24,820 --> 00:42:28,120
+<font color="yellow">eine dünne Schicht aus Eis,</font>
+<font color="yellow">darunter ist es kalt</font>
+
+388
+00:42:28,220 --> 00:42:30,360
+<font color="yellow">und man stirbt schnell."</font>
+
+389
+00:42:30,460 --> 00:42:32,440
+<font color="blue">Musik</font>
+

@@ -140,9 +140,13 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token):
             return
             
         prompts_data = load_prompts()
-        base_prompt = get_system_instruction(prompts_data, t.get('profile_key', 'default'))
+        custom_prompt = t.get('custom_translation_prompt', '') or ''
         episode_summary = t.get('episode_summary', '').strip()
-        final_system_prompt = f"{base_prompt}\n\nZUSAMMENFASSUNG DIESER EPISODE:\n{episode_summary}" if episode_summary else base_prompt
+        if custom_prompt.strip():
+            final_system_prompt = custom_prompt
+        else:
+            base_prompt = get_system_instruction(prompts_data, t.get('profile_key', 'default'))
+            final_system_prompt = f"{base_prompt}\n\nZUSAMMENFASSUNG DIESER EPISODE:\n{episode_summary}" if episode_summary else base_prompt
 
         client = genai.Client(api_key=api_key)
         batch_size = t.get('batch_size', 20)

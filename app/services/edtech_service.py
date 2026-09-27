@@ -127,6 +127,7 @@ REGELN:
 def generate_learning_subtitles(
     farsi_srt_path, ass_filepath, summary="", api_key=None, german_srt_path=None, 
     csv_filepath=None, generate_csv_only=False, custom_system_instruction=None,
+    force_csv_regeneration=False,
     infobox_duration=7, highlight_bold=False, highlight_underline=True,
     highlight_color=False, infobox_content="german_only", sync_offset_ms=0
 ):
@@ -134,9 +135,9 @@ def generate_learning_subtitles(
         csv_filepath = farsi_srt_path.replace("_FA.srt", "_Vokabeln.csv")
 
     # PHASE 1: CSV Einlesen oder neu von Gemini generieren lassen
-    if os.path.exists(csv_filepath):
+    if os.path.exists(csv_filepath) and not force_csv_regeneration:
         pass # Wir lesen sie später sauber mit csv.DictReader ein
-    elif german_srt_path and api_key and summary:
+    elif german_srt_path and api_key:
         client = genai.Client(api_key=api_key)
         
         try:
@@ -159,7 +160,7 @@ SPALTEN DER CSV-DATEI UND REGELN:
 5. "Erklärung im Kontext der Geschichte": Ein kurzer deutscher Satz zur Handlung.
 
 ZUSAMMENFASSUNG:
-{summary}
+{summary or 'Keine Episodenzusammenfassung angegeben.'}
 
 DEUTSCHE SRT:
 {de_srt}
