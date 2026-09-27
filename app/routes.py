@@ -26,13 +26,14 @@ def index():
 
 @main_bp.route('/api/upload', methods=['POST'])
 def upload_file():
-    """Nimmt eine SRT entgegen und legt ein pausiertes Projekt an."""
+    """Nimmt eine SRT entgegen, speichert Einstellungen und legt ein Projekt an."""
     if 'file' not in request.files:
         return jsonify({"error": "Keine Datei hochgeladen"}), 400
         
     file = request.files['file']
     profile_key = request.form.get('profile_key', 'default')
     sync_offset = int(request.form.get('sync_offset', 0))
+    episode_summary = request.form.get('episode_summary', '') # NEU aus dem FormData
     
     if file.filename == '':
         return jsonify({"error": "Dateiname leer"}), 400
@@ -47,6 +48,9 @@ def upload_file():
         subs = pysrt.open(file_path, encoding='iso-8859-1')
         
     t_id = create_translation(filename, len(subs), sync_offset, profile_key)
+    
+    # NEU: Die Zusammenfassung sofort speichern
+    save_project_settings(t_id, {'episode_summary': episode_summary})
     
     return jsonify({"message": "Projekt angelegt", "id": t_id}), 201
 
