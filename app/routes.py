@@ -4,6 +4,8 @@ from werkzeug.utils import secure_filename
 import pysrt
 from dotenv import load_dotenv
 from flask import render_template
+from flask import send_file
+from app.prompt_manager import load_prompts, get_edtech_instruction, get_system_instruction
 
 from app.db import (
     create_translation, get_translation_by_id, update_translation, 
@@ -159,9 +161,9 @@ def fix_edtech(t_id):
         return jsonify({"error": str(e)}), 500
 
 def str_to_bool(v):
-    """Konvertiert Strings wie 'false' oder '0' sicher in Booleans."""
+    """Konvertiert Strings wie 'false', '0' oder Checkbox 'on' sicher in Booleans."""
     if isinstance(v, bool): return v
-    return str(v).lower() in ("yes", "true", "t", "1")
+    return str(v).lower() in ("yes", "true", "t", "1", "on")
 
 @main_bp.route('/api/edtech/generate/<int:t_id>', methods=['POST'])
 def generate_edtech(t_id):
@@ -172,20 +174,19 @@ def generate_edtech(t_id):
             
         data = request.json or {}
         
-        # 1. Sicheres Parsing & Validierung VOR dem Speichern
+        # Sicherstellen, dass fehlende Checkbox-Werte als 'False' gewertet werden!
         generate_csv_only = str_to_bool(data.get('generate_csv_only', False))
-        try:
-            infobox_duration = int(data.get('infobox_duration', t.get('infobox_duration', 7)))
-            sync_offset_ms = int(data.get('ass_sync_offset', t.get('ass_sync_offset', 0)))
-        except (TypeError, ValueError) as exc:
-            return jsonify({"error": f"Ungültiger Zahlenwert übergeben: {exc}"}), 400
-        hl_bold = str_to_bool(data.get('hl_bold', t.get('hl_bold', False)))
-        hl_underline = str_to_bool(data.get('hl_underline', t.get('hl_underline', True)))
-        hl_color = str_to_bool(data.get('hl_color', t.get('hl_color', False)))
+        hl_bold = str_to_bool(data.get('hl_bold', False))
+        hl_underline = str_to_bool(data.get('hl_underline', False))
+        hl_color = str_to_bool(data.get('hl_color', False))
+        
+        # Für Text/Zahlen greifen wir weiterhin auf DB-Defaults zurück, falls das Feld fehlt
+        infobox_duration = int(data.get('infobox_duration', t.get('infobox_duration', 7)))
+        sync_offset_ms = int(data.get('ass_sync_offset', t.get('ass_sync_offset', 0)))
         infobox_content = data.get('infobox_content', t.get('infobox_content', 'german_only'))
         episode_summary = data.get('episode_summary', t.get('episode_summary', ''))
         profile_key = data.get('profile_key', t.get('profile_key', 'default'))
-        
+
         # 2. Sauberes Dictionary für die DB bauen und speichern
         merged_settings = {
             **t,
@@ -235,3 +236,54 @@ def generate_edtech(t_id):
             
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@main_bp.route('/api/project/<int:t_id>', methods=['GET'])
+def get_project(t_id):
+    """Liefert die Projektdaten und Settings für das Frontend."""
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    return jsonify(t)
+
+@main_bp.route('/api/prompts/<int:t_id>', methods=['GET'])
+def get_prompts(t_id):
+    """Liefert die zusammengesetzten Prompts für die UI-Ansicht (Tabs)."""
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+        
+    prompts_data = load_prompts()
+    base_prompt = get_system_instruction(prompts_data, t.get('profile_key', 'default'))
+    episode_summary = t.get('episode_summary', '').strip()
+    
+    trans_prompt = f"{base_prompt}\n\nZUSAMMENFASSUNG DIESER EPISODE:\n{episode_summary}" if episode_summary else base_prompt
+    edtech_prompt = get_edtech_instruction(prompts_data, t.get('profile_key', 'default'))
+    
+    return jsonify({
+        "translation_prompt": trans_prompt,
+        "edtech_prompt": edtech_prompt
+    })
+
+@main_bp.route('/api/download/<int:t_id>', methods=['GET'])
+def download_file(t_id):
+    """Liefert die fertig generierten Dateien aus."""
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+        
+    file_type = request.args.get('type')
+    base_name = t['original_filename'].replace('.srt', '')
+    
+    if file_type == 'srt':
+        path = os.path.join(current_app.config['OUTPUTS_DIR'], f"{base_name}_FA.srt")
+    elif file_type == 'ass':
+        path = os.path.join(current_app.config['OUTPUTS_DIR'], f"{base_name}_Interaktiv.ass")
+    elif file_type == 'csv':
+        path = os.path.join(current_app.config['OUTPUTS_DIR'], f"{base_name}_Vokabeln.csv")
+    else:
+        return jsonify({"error": "Ungültiger Dateityp"}), 400
+        
+    if os.path.exists(path):
+        return send_file(path, as_attachment=True)
+    return jsonify({"error": "Datei existiert noch nicht"}), 404
