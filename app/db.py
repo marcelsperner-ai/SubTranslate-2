@@ -41,6 +41,9 @@ def init_db():
         "infobox_content": "TEXT DEFAULT 'Nur deutsches Wort'",
         "episode_summary": "TEXT DEFAULT ''",
         "custom_translation_prompt": "TEXT DEFAULT ''",
+        "gemini_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
+        "export_path": "TEXT DEFAULT ''",
+        "archived": "INTEGER DEFAULT 0",
         # --- NEU FÜR DEN HEARTBEAT & LEASE ---
         "heartbeat_at": "REAL DEFAULT 0",
         "worker_token": "TEXT DEFAULT NULL"
@@ -73,7 +76,7 @@ def save_project_settings(t_id, settings_dict):
             batch_size = ?, infobox_duration = ?, ass_sync_offset = ?, 
             hl_bold = ?, hl_underline = ?, hl_color = ?, 
             infobox_content = ?, episode_summary = ?, custom_translation_prompt = ?,
-            sync_offset = ?, profile_key = ?
+            sync_offset = ?, profile_key = ?, gemini_model = ?, export_path = ?
         WHERE id = ?
     '''
     c.execute(query, (
@@ -88,6 +91,8 @@ def save_project_settings(t_id, settings_dict):
         settings_dict.get('custom_translation_prompt', ''),
         settings_dict.get('sync_offset', 0),
         settings_dict.get('profile_key', 'default'),
+        settings_dict.get('gemini_model', 'gemini-3.1-flash-lite'),
+        settings_dict.get('export_path', ''),
         t_id
     ))
     conn.commit()
@@ -177,6 +182,38 @@ def get_all_translations():
     rows = c.fetchall()
     conn.close()
     return [dict(row) for row in rows]
+
+def archive_translation(t_id):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("UPDATE translations SET archived = 1, last_updated = ? WHERE id = ?", (datetime.now().isoformat(), t_id))
+    success = c.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
+
+def update_translation_prompt(t_id, prompt):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("UPDATE translations SET custom_translation_prompt = ?, last_updated = ? WHERE id = ?", (prompt, datetime.now().isoformat(), t_id))
+    success = c.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
+
+def reset_translation_for_regeneration(t_id):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('''
+        UPDATE translations
+        SET status = 'pausiert', translated_lines = 0, edtech_done = 0,
+            worker_token = NULL, last_updated = ?
+        WHERE id = ? AND status IN ('abgeschlossen', 'Fehler', 'pausiert')
+    ''', (datetime.now().isoformat(), t_id))
+    success = c.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
 
 def get_latest_translation():
     conn = get_db_connection()

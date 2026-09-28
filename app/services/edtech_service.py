@@ -8,6 +8,7 @@ from google import genai
 from google.genai import types
 import pysrt
 from pydantic import BaseModel
+from app.prompt_manager import append_episode_summary
 
 class Vokabel(BaseModel):
     zeit: str
@@ -24,6 +25,14 @@ def normalize_persian(text):
     text = re.sub(r'[^\w\s]', '', text)
     text = re.sub(r'\s+', ' ', text).strip()
     return text
+
+def contains_persian_keyword(text, keyword):
+    normalized_text = normalize_persian(text)
+    normalized_keyword = normalize_persian(keyword)
+    if not normalized_keyword:
+        return False
+    pattern = rf"(?<![\w\u200c]){re.escape(normalized_keyword)}(?![\w\u200c])"
+    return re.search(pattern, normalized_text) is not None
 
 def validate_csv_timestamps(farsi_srt_path, csv_filepath):
     """Gibt Mismatches zurück, falls die CSV nicht 100% synchron zur SRT ist."""
@@ -43,7 +52,6 @@ def validate_csv_timestamps(farsi_srt_path, csv_filepath):
     
     for idx, row in enumerate(rows):
         keyword = row['Farsi_Keyword'].strip()
-        norm_keyword = normalize_persian(keyword)
         csv_time = row['Zeitstempel'].strip()
         
         exact_match_found = False
@@ -51,15 +59,8 @@ def validate_csv_timestamps(farsi_srt_path, csv_filepath):
         
         for sub in subs:
             s_time = f"{sub.start.hours:02d}:{sub.start.minutes:02d}:{sub.start.seconds:02d},{sub.start.milliseconds:03d}"
-            norm_sub_text = normalize_persian(sub.text)
             
-            if keyword in sub.text:
-                if s_time == csv_time:
-                    exact_match_found = True
-                    break
-                elif not fuzzy_match_time:
-                    fuzzy_match_time = s_time
-            elif norm_keyword and norm_keyword in norm_sub_text:
+            if contains_persian_keyword(sub.text, keyword):
                 if s_time == csv_time:
                     exact_match_found = True
                     break
@@ -129,7 +130,8 @@ def generate_learning_subtitles(
     csv_filepath=None, generate_csv_only=False, custom_system_instruction=None,
     force_csv_regeneration=False,
     infobox_duration=7, highlight_bold=False, highlight_underline=True,
-    highlight_color=False, infobox_content="german_only", sync_offset_ms=0
+    highlight_color=False, infobox_content="german_only", sync_offset_ms=0,
+    model="gemini-3.1-flash-lite"
 ):
     if not csv_filepath:
         csv_filepath = farsi_srt_path.replace("_FA.srt", "_Vokabeln.csv")
@@ -150,7 +152,10 @@ def generate_learning_subtitles(
         except UnicodeDecodeError:
             with open(farsi_srt_path, 'r', encoding='iso-8859-1') as f: fa_srt = f.read()
                 
-        base_instruction = custom_system_instruction if custom_system_instruction else "Du bist ein erfahrener Sprachdozent für Deutsch als Fremdsprache (B2/C1)..."       
+        base_instruction = append_episode_summary(
+            custom_system_instruction or "Du bist ein erfahrener Sprachdozent für Deutsch als Fremdsprache (B2/C1)...",
+            summary
+        )
         prompt = f"""{base_instruction}
 SPALTEN DER CSV-DATEI UND REGELN:
 1. "Zeitstempel": Nimm EXAKT den Start-Zeitstempel.
@@ -169,14 +174,14 @@ PERSISCHE SRT:
 {fa_srt}"""
         
         config = types.GenerateContentConfig(
-            system_instruction=custom_system_instruction,
+            system_instruction=base_instruction,
             temperature=0.3,
             response_schema=list[Vokabel],
             thinking_config=types.ThinkingConfig(thinking_budget=0)
         )
 
         response = client.models.generate_content(
-            model="gemini-3.1-flash-lite", contents=prompt, config=config
+            model=model, contents=prompt, config=config
         )
         
         if response.parsed:
@@ -222,16 +227,22 @@ Style: InfoBox,Arial,48,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,0,0,0,0,100,
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     vokabeln = []
+    seen_vocabulary = set()
     with open(csv_filepath, 'r', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            vokabeln.append({
+            vokabel = {
                 'zeit': row['Zeitstempel'].strip(), 
                 'keyword_farsi': row['Farsi_Keyword'].strip(),
                 'wort_deutsch': row['Deutsches_Wort'].strip(),
                 'erklaerung_farsi': row['Erklärung auf Farsi'].strip(),
                 'erklaerung_kontext': row['Erklärung im Kontext der Geschichte'].strip()
-            })
+            }
+            vocabulary_key = (vokabel['zeit'], normalize_persian(vokabel['keyword_farsi']))
+            if not vocabulary_key[1] or vocabulary_key in seen_vocabulary:
+                continue
+            seen_vocabulary.add(vocabulary_key)
+            vokabeln.append(vokabel)
 
     blocks = re.split(r'\n\s*\n', fa_srt.strip())
     ass_events = []
@@ -281,7 +292,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 if highlight_underline:
                     open_tags.append(r"\u1"); close_tags.append(r"\u0")
                 if highlight_color:
-                    open_tags.append(r"\c&HFFFF00&"); close_tags.append(r"\c")
+                    open_tags.append(r"\c&H00FFFF&"); close_tags.append(r"\c")
                 
                 if open_tags:
                     tag_string = "".join(open_tags).replace('\\', '\\\\')
@@ -290,8 +301,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 else:
                     highlight_tag = r"\1"
                     
-                regex_pattern = vokabel['keyword_farsi'].replace(' ', r'(\s+|\\N)')
-                text_farsi = re.sub(f"({regex_pattern})", highlight_tag, text_farsi)
+                regex_pattern = re.escape(vokabel['keyword_farsi']).replace(r'\ ', r'(?:\s+|\\N)')
+                keyword_pattern = re.compile(
+                    rf"(?:(?<=\\N)|(?<![\w\u200c]))({regex_pattern})(?![\w\u200c])"
+                )
+                text_farsi = keyword_pattern.sub(highlight_tag, text_farsi)
                                
                 if infobox_content == "german_and_farsi_keyword":
                     box_text = f"{{\\b1}}{vokabel['wort_deutsch']}{{\\b0}}\\N{{\\c&H00FFFF&}}{vokabel['keyword_farsi']}{{\\c}}"
@@ -313,7 +327,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         text_farsi = re.sub(r"(?:\s*\\N\s*)+", r"\\N", text_farsi)
         text_farsi = re.sub(r"^\\N|\\N$", "", text_farsi)
         
-        wrapped_lines = [f"\u202B{line.strip()}\u202C" for line in text_farsi.split(r"\N") if line.strip()]
+        wrapped_lines = []
+        for line in text_farsi.split(r"\N"):
+            line = line.strip()
+            if not line or line in {",", "،"}:
+                continue
+            wrapped_lines.append(f"\u202B{line}\u202C")
         text_farsi = r"\N".join(wrapped_lines)
         
         ass_events.append(f"Dialogue: 0,{start_ass},{end_ass},Standard,,0,0,0,,{text_farsi}")

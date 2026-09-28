@@ -5,11 +5,12 @@ import pysrt
 from dotenv import load_dotenv
 from flask import render_template
 from flask import send_file
-from app.prompt_manager import load_prompts, get_edtech_instruction, get_system_instruction
+from app.prompt_manager import load_prompts, get_edtech_instruction, get_system_instruction, append_episode_summary
 import yaml
 from app.db import (
     create_translation, get_translation_by_id, update_translation, 
-    get_db_logs, get_all_translations
+    get_db_logs, get_all_translations, archive_translation,
+    reset_translation_for_regeneration
 )
 from app.services.translation_service import start_translation_job
 
@@ -19,7 +20,13 @@ load_dotenv()
 @main_bp.route('/api/projects', methods=['GET'])
 def list_projects():
     """Gibt alle Projekte für die Archiv-Ansicht zurück."""
-    return jsonify(get_all_translations())
+    return jsonify([p for p in get_all_translations() if not p.get('archived')])
+
+@main_bp.route('/api/archive/<int:t_id>', methods=['POST'])
+def archive_project(t_id):
+    if archive_translation(t_id):
+        return jsonify({"message": "Projekt archiviert"})
+    return jsonify({"error": "Projekt nicht gefunden"}), 404
 
 @main_bp.route('/', methods=['GET'])
 def index():
@@ -43,13 +50,13 @@ def get_episode_summary(profile_key, episode_key):
 def build_prompt_payload(profile_key, episode_summary, custom_translation_prompt=''):
     prompts_data = load_prompts()
     base_prompt = get_system_instruction(prompts_data, profile_key)
-    trans_prompt = custom_translation_prompt or (
-        f"{base_prompt}\n\nZUSAMMENFASSUNG DIESER EPISODE:\n{episode_summary}"
-        if episode_summary else base_prompt
+    trans_prompt = append_episode_summary(custom_translation_prompt or base_prompt, episode_summary)
+    edtech_prompt = append_episode_summary(
+        get_edtech_instruction(prompts_data, profile_key), episode_summary
     )
     return {
         "translation_prompt": trans_prompt,
-        "edtech_prompt": get_edtech_instruction(prompts_data, profile_key)
+        "edtech_prompt": edtech_prompt
     }
 
 @main_bp.route('/api/upload', methods=['POST'])
@@ -92,7 +99,9 @@ def upload_file():
         'custom_translation_prompt': custom_translation_prompt,
         'episode_summary': real_summary,
         'profile_key': profile_key,
-        'sync_offset': sync_offset
+        'sync_offset': sync_offset,
+        'gemini_model': request.form.get('gemini_model', 'gemini-3-flash-preview'),
+        'export_path': request.form.get('export_path', '')
     })
     
     return jsonify({"message": "Projekt angelegt", "id": t_id}), 201
@@ -123,6 +132,38 @@ def pause_job(t_id):
     if pause_translation_job(t_id):
         return jsonify({"message": "Pause erfolgreich angefordert."}), 200
     return jsonify({"error": "Projekt konnte nicht pausiert werden (vielleicht nicht laufend)."}), 400
+
+@main_bp.route('/api/regenerate/<int:t_id>', methods=['POST'])
+def regenerate_translation(t_id):
+    """Startet eine SRT-Neugenerierung mit einem nur für diesen Lauf geltenden Prompt."""
+    t = get_translation_by_id(t_id)
+    data = request.get_json(silent=True) or {}
+    prompt = data.get('translation_prompt', '').strip()
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    if not prompt:
+        return jsonify({"error": "Der geänderte Prompt darf nicht leer sein."}), 400
+    if t.get('status') == 'laufend':
+        return jsonify({"error": "Die Übersetzung läuft bereits."}), 409
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return jsonify({"error": "GEMINI_API_KEY fehlt in .env"}), 500
+    if not reset_translation_for_regeneration(t_id):
+        return jsonify({"error": "Projekt kann derzeit nicht neu generiert werden."}), 409
+
+    base_name = t['original_filename'].replace('.srt', '')
+    for suffix in ('_FA.srt', '_Vokabeln.csv', '_Interaktiv.ass'):
+        output_file = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base_name}{suffix}')
+        if os.path.exists(output_file):
+            os.remove(output_file)
+
+    success = start_translation_job(
+        t_id, api_key, current_app.config['UPLOADS_DIR'],
+        current_app.config['OUTPUTS_DIR'], prompt_override=prompt
+    )
+    if not success:
+        return jsonify({"error": "Neugenerierung konnte nicht gestartet werden."}), 409
+    return jsonify({"message": "SRT-Neugenerierung gestartet"}), 202
 
 @main_bp.route('/api/status/<int:t_id>', methods=['GET'])
 def get_status(t_id):
@@ -229,6 +270,8 @@ def generate_edtech(t_id):
         infobox_content = data.get('infobox_content', t.get('infobox_content', 'german_only'))
         episode_summary = data.get('episode_summary', t.get('episode_summary', ''))
         profile_key = data.get('profile_key', t.get('profile_key', 'default'))
+        gemini_model = data.get('gemini_model', t.get('gemini_model', 'gemini-3.1-flash-lite'))
+        custom_edtech_prompt = data.get('custom_edtech_prompt', '').strip()
 
         # 2. Sauberes Dictionary für die DB bauen und speichern
         merged_settings = {
@@ -241,6 +284,7 @@ def generate_edtech(t_id):
             'infobox_content': infobox_content,
             'episode_summary': episode_summary,
             'profile_key': profile_key
+            , 'gemini_model': gemini_model
         }
         save_project_settings(t_id, merged_settings)
         
@@ -262,7 +306,9 @@ def generate_edtech(t_id):
                 }), 409
         
         prompts_data = load_prompts()
-        custom_edtech = get_edtech_instruction(prompts_data, merged_settings.get('profile_key', 'default'))
+        custom_edtech = custom_edtech_prompt or get_edtech_instruction(
+            prompts_data, merged_settings.get('profile_key', 'default')
+        )
         
         res_ass, res_csv = generate_learning_subtitles(
             farsi_srt_path=farsi_srt,
@@ -279,6 +325,7 @@ def generate_edtech(t_id):
             highlight_color=hl_color,
             infobox_content=merged_settings.get('infobox_content', 'german_only'),
             sync_offset_ms=sync_offset_ms
+            , model=gemini_model
         )
         
         if generate_csv_only:
@@ -324,6 +371,22 @@ def get_prompts(t_id):
         episode_summary,
         t.get('custom_translation_prompt', '')
     ))
+
+@main_bp.route('/api/edtech/preview/<int:t_id>', methods=['GET'])
+def preview_edtech_files(t_id):
+    t = get_translation_by_id(t_id)
+    if not t: return jsonify({"error": "Projekt nicht gefunden"}), 404
+    base = t['original_filename'].replace('.srt', '')
+    csv_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_Vokabeln.csv')
+    ass_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_Interaktiv.ass')
+    csv_rows = []
+    if os.path.exists(csv_path):
+        with open(csv_path, encoding='utf-8-sig', newline='') as f:
+            csv_rows = list(__import__('csv').DictReader(f))
+    ass_text = ''
+    if os.path.exists(ass_path):
+        with open(ass_path, encoding='utf-8') as f: ass_text = f.read()
+    return jsonify({'csv': csv_rows, 'ass': ass_text})
 
 @main_bp.route('/api/prompts/preview', methods=['GET', 'POST'])
 def preview_prompts():

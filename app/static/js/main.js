@@ -1,5 +1,8 @@
 let currentProjectId = null;
 let pollInterval = null;
+let projectListPollInterval = null;
+let projectListRequestActive = false;
+let projectLoadSequence = 0;
 let generateAssAfterValidation = false;
 let currentAvailableDownloads = { srt: false, ass: false, csv: false };
 
@@ -13,6 +16,7 @@ const transSettingsForm = document.getElementById('transSettingsForm');
 const transPromptsTab = document.getElementById('transPromptsTab');
 const translationPromptInput = document.getElementById('translationPromptInput');
 const translationPromptSaveButton = document.getElementById('btnSaveTranslationPrompt');
+const regenerateTranslationButton = document.getElementById('btnRegenerateTranslation');
 const translationPromptSaveStatus = document.getElementById('translationPromptSaveStatus');
 const episodeSummarySection = document.getElementById('episodeSummarySection');
 const episodeSummaryInput = document.getElementById('episodeSummaryInput');
@@ -28,6 +32,9 @@ const edtechZone = document.getElementById('edtechZone');
 const btnNewProject = document.getElementById('btnNewProject');
 const progressSection = document.getElementById('progressSection');
 const btnPauseResume = document.getElementById('btnPauseResume');
+const logbookCollapse = document.getElementById('logbookCollapse');
+const logbookToggleIcon = document.getElementById('logbookToggleIcon');
+const projectLoadingOverlay = document.getElementById('projectLoadingOverlay');
 
 // EdTech & Archiv Elemente
 const edtechStatusBox = document.getElementById('edtechStatusBox');
@@ -37,21 +44,64 @@ const btnGenerateEdtech = document.getElementById('btnGenerateEdtech');
 const btnRebuildAss = document.getElementById('btnRebuildAss');
 const generateEdtechForm = document.getElementById('generateEdtechForm');
 const edtechSettingsForm = document.getElementById('edtechSettingsForm');
+const edtechPromptInput = document.getElementById('edtechPromptInput');
+const edtechPromptSaveButton = document.getElementById('btnSaveEdtechPrompt');
+const regenerateEdtechPromptButton = document.getElementById('btnRegenerateEdtechPrompt');
+const edtechPromptSaveStatus = document.getElementById('edtechPromptSaveStatus');
 const fixModal = new bootstrap.Modal(document.getElementById('fixModal'));
-const btnApplyFix = document.getElementById('btnApplyFix');
+const timestampMismatchList = document.getElementById('timestampMismatchList');
+const keywordMismatchList = document.getElementById('keywordMismatchList');
+const btnFixKeywordsGemini = document.getElementById('btnFixKeywordsGemini');
+const btnFixTimestampsPython = document.getElementById('btnFixTimestampsPython');
+const btnIgnoreMismatches = document.getElementById('btnIgnoreMismatches');
 const archiveTableBody = document.querySelector('#archiveModal tbody');
 let yamlMetadata = {};
 let promptPreviewRequest = 0;
 let promptPreviewLoaded = false;
-let promptSaved = false;
+let translationPromptChanged = false;
+let translationPromptConfirmed = false;
 let episodeSummarySaved = true;
 let hasGeneratedAss = false;
 let savedEdtechSettings = null;
+let edtechPromptLoaded = false;
+let edtechPromptChanged = false;
+let edtechPromptConfirmed = false;
+
+function setProjectLoading(isLoading) {
+    if (!projectLoadingOverlay) return;
+    projectLoadingOverlay.classList.toggle('visible', isLoading);
+    projectLoadingOverlay.setAttribute('aria-hidden', String(!isLoading));
+}
+
+function updateTranslationPromptActions() {
+    const hasPromptChange = promptPreviewLoaded && translationPromptChanged && translationPromptInput.value.trim();
+    translationPromptSaveButton.disabled = !hasPromptChange || translationPromptConfirmed;
+    regenerateTranslationButton.disabled = !hasPromptChange || !translationPromptConfirmed || !currentProjectId || !currentAvailableDownloads.srt;
+}
+
+function updateEdtechPromptActions() {
+    const hasPromptChange = edtechPromptLoaded && edtechPromptChanged && edtechPromptInput.value.trim();
+    edtechPromptSaveButton.disabled = !hasPromptChange || edtechPromptConfirmed;
+    regenerateEdtechPromptButton.disabled = !hasPromptChange || !edtechPromptConfirmed || !currentProjectId || !currentAvailableDownloads.srt;
+}
+
+function setLogbookExpanded(expanded) {
+    if (!logbookCollapse) return;
+    logbookCollapse.classList.toggle('show', expanded);
+    logbookCollapse.setAttribute('aria-expanded', String(expanded));
+    if (logbookToggleIcon) logbookToggleIcon.textContent = expanded ? '▼' : '▶';
+}
+
+if (logbookCollapse) {
+    logbookCollapse.addEventListener('shown.bs.collapse', () => setLogbookExpanded(true));
+    logbookCollapse.addEventListener('hidden.bs.collapse', () => setLogbookExpanded(false));
+}
 
 // 1. INITIALISIERUNG
 document.addEventListener("DOMContentLoaded", () => {
     loadMetadata();
     loadProjects();
+    startProjectListPolling();
     updateSelectionAvailability();
 });
 
@@ -68,18 +118,23 @@ function setPromptTabEnabled(enabled) {
 function renderPromptTabs(promptData, editable = false) {
     translationPromptInput.value = promptData.translation_prompt || '';
     translationPromptInput.disabled = !editable;
-    translationPromptSaveButton.disabled = !editable || promptSaved;
+    updateTranslationPromptActions();
     translationPromptSaveStatus.textContent = editable
-        ? (promptSaved ? 'Prompt gespeichert.' : 'Änderungen noch nicht gespeichert.')
+        ? (translationPromptChanged
+            ? (translationPromptConfirmed ? 'Prompt geändert – gilt nur für dieses Projekt.' : 'Prompt geändert – noch nicht bestätigt.')
+            : 'Prompt aus YAML geladen.')
         : 'Prompt-Vorschau';
 
     const edTab = document.getElementById('ed-prompts');
     if (edTab) {
-        const pre = document.createElement('pre');
-        pre.className = 'bg-light p-3 border rounded font-monospace';
-        pre.style.cssText = 'white-space: pre-wrap; font-size: 0.85em;';
-        pre.textContent = promptData.edtech_prompt || '';
-        edTab.replaceChildren(pre);
+        edtechPromptInput.value = promptData.edtech_prompt || '';
+        edtechPromptInput.disabled = !editable || !currentAvailableDownloads.srt;
+        updateEdtechPromptActions();
+        edtechPromptSaveStatus.textContent = editable && currentAvailableDownloads.srt
+            ? (edtechPromptChanged
+                ? (edtechPromptConfirmed ? 'Prompt geändert – gilt nur für dieses Projekt.' : 'Prompt geändert – noch nicht bestätigt.')
+                : 'Prompt aus YAML geladen.')
+            : 'Prompt-Vorschau';
     }
 }
 
@@ -105,7 +160,11 @@ function updateSelectionAvailability() {
 async function loadPromptPreview() {
     const requestId = ++promptPreviewRequest;
     promptPreviewLoaded = false;
-    promptSaved = false;
+    translationPromptChanged = false;
+    translationPromptConfirmed = false;
+    edtechPromptLoaded = false;
+    edtechPromptChanged = false;
+    edtechPromptConfirmed = false;
     const profileKey = seriesSelect.value;
     const episodeKey = episodeSelect.value;
 
@@ -141,7 +200,8 @@ async function loadPromptPreview() {
 
         if (requestId === promptPreviewRequest && profileKey === seriesSelect.value && episodeKey === episodeSelect.value) {
             promptPreviewLoaded = true;
-            promptSaved = true;
+            translationPromptChanged = false;
+            translationPromptConfirmed = false;
             renderPromptTabs(promptData, true);
             updateSelectionAvailability();
         }
@@ -152,7 +212,8 @@ async function loadPromptPreview() {
                 edtech_prompt: 'Prompt konnte nicht geladen werden.'
             });
             promptPreviewLoaded = false;
-            promptSaved = false;
+            translationPromptChanged = false;
+            translationPromptConfirmed = false;
             updateSelectionAvailability();
             console.error(error);
         }
@@ -160,17 +221,73 @@ async function loadPromptPreview() {
 }
 
 translationPromptInput.addEventListener('input', () => {
-    promptSaved = false;
-    translationPromptSaveButton.disabled = !promptPreviewLoaded;
+    translationPromptChanged = true;
+    translationPromptConfirmed = false;
     translationPromptSaveStatus.textContent = 'Änderungen noch nicht gespeichert.';
+    updateTranslationPromptActions();
     updateSelectionAvailability();
 });
 
 translationPromptSaveButton.addEventListener('click', () => {
-    promptSaved = true;
-    translationPromptSaveButton.disabled = true;
-    translationPromptSaveStatus.textContent = 'Prompt gespeichert; wird beim Start verwendet.';
+    translationPromptConfirmed = true;
+    translationPromptSaveStatus.textContent = 'Prompt geändert – gilt nur für dieses Projekt.';
+    updateTranslationPromptActions();
     updateSelectionAvailability();
+});
+
+edtechPromptInput.addEventListener('input', () => {
+    edtechPromptChanged = true;
+    edtechPromptConfirmed = false;
+    edtechPromptSaveStatus.textContent = 'Änderungen noch nicht gespeichert.';
+    updateEdtechPromptActions();
+});
+
+edtechPromptSaveButton.addEventListener('click', () => {
+    edtechPromptConfirmed = true;
+    edtechPromptSaveStatus.textContent = 'Prompt geändert – gilt nur für dieses Projekt.';
+    updateEdtechPromptActions();
+});
+
+regenerateEdtechPromptButton.addEventListener('click', () => {
+    if (regenerateEdtechPromptButton.disabled) return;
+    const confirmed = window.confirm(
+        'Die bestehende CSV-Datei wird überschrieben. Die ASS-Datei muss anschließend neu erstellt werden. Fortfahren?'
+    );
+    if (!confirmed) return;
+    generateEdtechForm.requestSubmit();
+});
+
+regenerateTranslationButton.addEventListener('click', async () => {
+    if (regenerateTranslationButton.disabled || !currentProjectId) return;
+    const confirmed = window.confirm(
+        'Die bestehende SRT-Datei wird überschrieben. Die zugehörige CSV- und ASS-Datei werden ebenfalls entfernt und müssen neu erstellt werden. Fortfahren?'
+    );
+    if (!confirmed) return;
+
+    regenerateTranslationButton.disabled = true;
+    translationPromptSaveButton.disabled = true;
+    translationPromptSaveStatus.textContent = 'SRT-Neugenerierung wird gestartet...';
+    try {
+        const response = await fetch(`/api/regenerate/${currentProjectId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ translation_prompt: translationPromptInput.value })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'SRT-Neugenerierung fehlgeschlagen.');
+
+        currentAvailableDownloads = { srt: false, ass: false, csv: false };
+        hasGeneratedAss = false;
+        translationPromptChanged = false;
+        translationPromptConfirmed = false;
+        progressSection.style.display = 'block';
+        formSection.classList.add('locked');
+        translationPromptSaveStatus.textContent = 'SRT-Neugenerierung gestartet.';
+        startPolling();
+    } catch (error) {
+        translationPromptSaveStatus.textContent = error.message;
+        updateTranslationPromptActions();
+    }
 });
 
 episodeSummaryInput.addEventListener('input', () => {
@@ -308,8 +425,11 @@ archiveTableBody.addEventListener('click', (event) => {
 
 // 2. PROJEKTE & ARCHIV LADEN
 async function loadProjects() {
+    if (projectListRequestActive) return;
+    projectListRequestActive = true;
     try {
         const res = await fetch('/api/projects');
+        if (!res.ok) throw new Error('Projektliste konnte nicht geladen werden.');
         const projects = await res.json();
         
         sidebarList.innerHTML = '';
@@ -357,11 +477,20 @@ async function loadProjects() {
         });
     } catch (e) {
         console.error("Fehler beim Laden der Projekte", e);
+    } finally {
+        projectListRequestActive = false;
     }
+}
+
+function startProjectListPolling() {
+    if (projectListPollInterval) clearInterval(projectListPollInterval);
+    projectListPollInterval = setInterval(loadProjects, 1000);
 }
 
 // 3. PROJEKT-DATEN, SETTINGS & PROMPTS LADEN
 async function loadProjectToMain(id, title, status) {
+    const loadSequence = ++projectLoadSequence;
+    setProjectLoading(true);
     currentProjectId = id;
     projectTitle.textContent = title; // XSS-Schutz
     progressSection.style.display = 'block';
@@ -377,11 +506,14 @@ async function loadProjectToMain(id, title, status) {
     // Projektdaten für Settings abrufen
     try {
         let pRes = await fetch(`/api/project/${id}`);
+        if (loadSequence !== projectLoadSequence) return;
         if(pRes.ok) {
             let pData = await pRes.json();
             availableDownloads = pData.available_downloads || availableDownloads;
             currentAvailableDownloads = availableDownloads;
             hasGeneratedAss = Boolean(availableDownloads.ass);
+            updateTranslationPromptActions();
+            updateEdtechPromptActions();
             // Formularfelder befüllen
             if (edtechSettingsForm.elements['infobox_duration']) edtechSettingsForm.elements['infobox_duration'].value = pData.infobox_duration || 9;
             if (edtechSettingsForm.elements['ass_sync_offset']) edtechSettingsForm.elements['ass_sync_offset'].value = pData.ass_sync_offset || 0;
@@ -395,14 +527,25 @@ async function loadProjectToMain(id, title, status) {
         
         // Prompts abrufen und in die Tabs schreiben
         let promptRes = await fetch(`/api/prompts/${id}`);
+        if (loadSequence !== projectLoadSequence) return;
         if(promptRes.ok) {
             let promptData = await promptRes.json();
-            renderPromptTabs(promptData);
+            promptPreviewLoaded = true;
+            translationPromptChanged = false;
+            translationPromptConfirmed = false;
+            edtechPromptLoaded = true;
+            edtechPromptChanged = false;
+            edtechPromptConfirmed = false;
+            renderPromptTabs(promptData, true);
             setPromptTabEnabled(true);
         }
     } catch(e) {
+        if (loadSequence !== projectLoadSequence) return;
         console.error("Fehler beim Laden der Projektdetails", e);
+        setProjectLoading(false);
     }
+
+    if (loadSequence !== projectLoadSequence) return;
     
     if (status === 'abgeschlossen') {
         unlockEdtech(availableDownloads);
@@ -478,7 +621,7 @@ function updatePauseResumeButton(status) {
 function startPolling() {
     if (pollInterval) clearInterval(pollInterval);
     
-    pollInterval = setInterval(async () => {
+    const pollStatus = async () => {
         if (!currentProjectId) return;
 
         try {
@@ -500,6 +643,12 @@ function startPolling() {
                     logContainer.appendChild(div);
                 });
             }
+
+            // Nur die aufgeklappte Logbuchfläche folgt dem neuesten Eintrag.
+            if (logbookCollapse) logbookCollapse.scrollTop = logbookCollapse.scrollHeight;
+
+            // Erst ausblenden, wenn Status, Fortschritt und Logbuch im aktuellen Projekt angekommen sind.
+            setProjectLoading(false);
             
             if (statusBadge) {
                 statusBadge.textContent = data.status.toUpperCase();
@@ -519,16 +668,25 @@ function startPolling() {
             }
             
             if (data.status === 'Fehler' || data.status === 'pausiert') {
+                if (data.status === 'Fehler') {
+                    const collapse = bootstrap.Collapse.getOrCreateInstance(logbookCollapse, { toggle: false });
+                    collapse.show();
+                    logbookCollapse.scrollTop = logbookCollapse.scrollHeight;
+                }
                 clearInterval(pollInterval);
             }
         } catch (e) {
             console.error("Polling Fehler", e);
         }
-    }, 2000);
+    };
+
+    pollStatus();
+    pollInterval = setInterval(pollStatus, 2000);
 }
 
 // 6. NEU BUTTON & PAUSE BUTTON
 btnNewProject.addEventListener('click', () => {
+    setProjectLoading(false);
     currentProjectId = null;
     if (pollInterval) clearInterval(pollInterval);
     
@@ -541,6 +699,13 @@ btnNewProject.addEventListener('click', () => {
     translationPromptInput.value = '';
     translationPromptInput.disabled = true;
     promptPreviewLoaded = false;
+    translationPromptChanged = false;
+    translationPromptConfirmed = false;
+    edtechPromptLoaded = false;
+    edtechPromptChanged = false;
+    edtechPromptConfirmed = false;
+    updateTranslationPromptActions();
+    updateEdtechPromptActions();
     setPromptTabEnabled(false);
     loadPromptPreview();
     startBtn.textContent = "Start";
@@ -549,6 +714,7 @@ btnNewProject.addEventListener('click', () => {
     progressBar.style.width = '0%';
     progressText.textContent = '0 / 0 Zeilen';
     logContainer.innerHTML = '';
+    setLogbookExpanded(false);
     
     progressSection.style.display = 'none';
     edtechZone.classList.add('disabled-overlay');
@@ -600,13 +766,40 @@ function unlockEdtech(availableDownloads = currentAvailableDownloads) {
         'd-none',
         !Object.values(availableDownloads).some(Boolean)
     );
+    updateEdtechPromptActions();
 }
 
 function showValidationMismatches(data) {
     const msg = `Gefunden: ${data.ts_mismatches.length} Zeitstempel-Fehler und ${data.kw_mismatches.length} Keyword-Fehler.`;
     document.getElementById('fixMessage').textContent = msg;
-    document.getElementById('fixMethodSelect').value = data.kw_mismatches.length > 0 ? 'gemini' : 'python';
+    renderMismatchList(timestampMismatchList, data.ts_mismatches, 'Zeitstempel');
+    renderMismatchList(keywordMismatchList, data.kw_mismatches, 'Keyword');
+    btnFixKeywordsGemini.disabled = data.kw_mismatches.length === 0;
+    btnFixTimestampsPython.disabled = data.ts_mismatches.length === 0;
+    btnIgnoreMismatches.disabled = false;
     fixModal.show();
+}
+
+function renderMismatchList(container, mismatches, label) {
+    container.replaceChildren();
+    mismatches.forEach((mismatch) => {
+        const item = document.createElement('div');
+        item.className = 'border-bottom pb-2 mb-2';
+        item.textContent = `${label} #${Number(mismatch.index) + 1}: ${mismatch.keyword || 'Unbekannt'} | CSV: ${mismatch.csv_time || '-'} | SRT: ${mismatch.srt_time || '-'}`;
+        container.appendChild(item);
+    });
+}
+
+function setMismatchActionsBusy(isBusy) {
+    btnFixKeywordsGemini.disabled = isBusy;
+    btnFixTimestampsPython.disabled = isBusy;
+    btnIgnoreMismatches.disabled = isBusy;
+}
+
+function showMismatchProgress(message) {
+    validationResult.className = 'alert alert-info';
+    validationResult.innerHTML = `<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>${message}`;
+    validationResult.classList.remove('d-none');
 }
 
 async function generateAss(ignoreValidationErrors = false) {
@@ -684,10 +877,18 @@ async function validateEdtech() {
     }
 }
 
-btnApplyFix.addEventListener('click', async () => {
-    const method = document.getElementById('fixMethodSelect').value;
-    btnApplyFix.disabled = true;
-    btnApplyFix.textContent = "Repariere...";
+async function applyMismatchFix(method) {
+    setMismatchActionsBusy(true);
+    fixModal.hide();
+    const edtechMainTab = document.querySelector('[href="#ed-main"]');
+    if (edtechMainTab) bootstrap.Tab.getOrCreateInstance(edtechMainTab).show();
+    showMismatchProgress(
+        method === 'gemini'
+            ? 'Gemini prozessiert Korrekturanfrage ...'
+            : method === 'python'
+                ? 'Python korrigiert die Zeitstempel ...'
+                : 'Abweichungen werden ignoriert ...'
+    );
     
     try {
         let res = await fetch(`/api/edtech/fix/${currentProjectId}`, {
@@ -697,7 +898,6 @@ btnApplyFix.addEventListener('click', async () => {
         });
         
         if (res.ok) {
-            fixModal.hide();
             if (method === 'ignore') {
                 validationResult.className = 'alert alert-warning';
                 validationResult.textContent = 'Abweichungen ausdrücklich ignoriert.';
@@ -710,15 +910,21 @@ btnApplyFix.addEventListener('click', async () => {
                 await validateEdtech();
             }
         } else {
-            alert("Fehler bei der Reparatur.");
+            const result = await res.json().catch(() => ({}));
+            throw new Error(result.error || 'Fehler bei der Reparatur.');
         }
     } catch (e) {
-        alert("Netzwerkfehler.");
+        validationResult.className = 'alert alert-danger';
+        validationResult.textContent = e.message || 'Netzwerkfehler bei der Reparatur.';
+        validationResult.classList.remove('d-none');
     } finally {
-        btnApplyFix.disabled = false;
-        btnApplyFix.textContent = "Ausführen";
+        setMismatchActionsBusy(false);
     }
-});
+}
+
+btnFixKeywordsGemini.addEventListener('click', () => applyMismatchFix('gemini'));
+btnFixTimestampsPython.addEventListener('click', () => applyMismatchFix('python'));
+btnIgnoreMismatches.addEventListener('click', () => applyMismatchFix('ignore'));
 
 generateEdtechForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -731,6 +937,9 @@ generateEdtechForm.addEventListener('submit', async (e) => {
     const payload = Object.fromEntries(settingsData.entries());
     payload.generate_csv_only = true;
     payload.force_csv_regeneration = true;
+    if (edtechPromptConfirmed && edtechPromptInput.value.trim()) {
+        payload.custom_edtech_prompt = edtechPromptInput.value;
+    }
     
     try {
         let res = await fetch(`/api/edtech/generate/${currentProjectId}`, {
@@ -749,6 +958,9 @@ generateEdtechForm.addEventListener('submit', async (e) => {
             validationResult.className = 'alert alert-info';
             validationResult.textContent = 'CSV erstellt. Prüfung läuft...';
             validationResult.classList.remove('d-none');
+            edtechPromptSaveStatus.textContent = edtechPromptConfirmed
+                ? 'CSV mit dem geänderten Prompt erstellt.'
+                : 'CSV erstellt.';
             await validateEdtech();
         } else {
             throw new Error(result.error || 'CSV-Generierung fehlgeschlagen.');

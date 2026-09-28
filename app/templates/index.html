@@ -76,13 +76,134 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            position: relative;
+        }
+        .project-loading-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.65rem;
+            background: rgba(248, 249, 250, 0.82);
+            color: var(--text-dark);
+        }
+        .project-loading-overlay.visible {
+            display: flex;
         }
         .split-pane {
             flex: 1;
             display: flex;
             flex-direction: column;
             padding: 1rem 2rem;
-            overflow-y: auto; /* Jedes Fenster scrollt für sich allein */
+            min-height: 0;
+            overflow: hidden;
+        }
+        .translation-tab-content,
+        .main-tab-content,
+        .prompt-tab-content {
+            min-height: 0;
+        }
+        .translation-tab-content > .tab-pane {
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .main-tab-layout,
+        .prompt-tab-layout {
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-tab-header,
+        .prompt-tab-header {
+            flex: 0 0 auto;
+            background: var(--bg-gray);
+            position: relative;
+            z-index: 2;
+        }
+        .main-tab-content,
+        .prompt-tab-content {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            min-height: 0;
+        }
+        .main-tab-content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .main-tab-content .logbook-toggle {
+            flex: 0 0 auto;
+            padding: 0.25rem 0;
+        }
+        .main-tab-content #logbookCollapse {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+        }
+        .prompt-tab-content {
+            overflow: hidden;
+            display: flex;
+        }
+        .prompt-tab-content textarea {
+            flex: 1 1 auto;
+            min-height: 0;
+            resize: none;
+            overflow-y: auto;
+        }
+        .edtech-prompt-layout {
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        #edtechZone .tab-content,
+        #edtechZone .tab-pane {
+            min-height: 0;
+        }
+        #edtechZone .tab-pane {
+            height: 100%;
+        }
+        .edtech-prompt-header {
+            flex: 0 0 auto;
+        }
+        .edtech-prompt-content {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+        }
+        .edtech-prompt-content textarea {
+            flex: 1 1 auto;
+            min-height: 0;
+            resize: none;
+            overflow-y: auto;
+        }
+        .main-tab-header .upload-section {
+            margin-bottom: 0.75rem;
+        }
+        .main-tab-header #progressSection {
+            margin-bottom: 0.25rem;
+        }
+        #logContainer {
+            min-height: 4rem;
+            font-size: 0.85em;
+        }
+        .mismatch-list {
+            height: 9rem;
+            overflow-y: auto;
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            background: var(--bg-gray);
+            padding: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .mismatch-list:empty::before {
+            content: "Keine Abweichungen";
+            color: #6c757d;
         }
         .pane-top {
             border-bottom: 2px solid var(--border-gray);
@@ -202,6 +323,10 @@
 
     <!-- HAUPTBEREICH -->
     <div class="main-workspace">
+        <div id="projectLoadingOverlay" class="project-loading-overlay" role="status" aria-live="polite" aria-hidden="true">
+            <div class="spinner-border text-secondary" aria-hidden="true"></div>
+            <span>Projekt wird geladen ...</span>
+        </div>
         
         <!-- OBERES FENSTER: Translation -->
         <div class="split-pane pane-top">
@@ -214,69 +339,68 @@
                 </ul>
             </div>
 
-            <div class="tab-content flex-grow-1 mt-2">
+            <div class="tab-content translation-tab-content flex-grow-1 mt-2">
                 <div class="tab-pane fade show active" id="trans-main">
-                    
-                    <!-- UPLOAD FORMULAR -->
-                    <div class="upload-section shadow-sm" id="uploadFormSection">
-                        <form id="newProjectForm">
-                            <div class="row g-2 align-items-center">
-                                <div class="col-md-3">
-                                    <!-- Dropdown für die Serie (Profil) -->
-                                    <select class="form-select form-select-sm" name="profile_key" id="seriesSelect" required>
-                                        <option value="">Serie wählen...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <!-- Dropdown für die Episode -->
-                                    <select class="form-select form-select-sm" name="episode" id="episodeSelect" required disabled>
-                                        <option value="">Episode...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 hide-on-lock">
-                                    <input type="file" class="form-control form-control-sm" name="file" accept=".srt" required>
-                                </div>
-                                <div class="col-md-2 text-end hide-on-lock">
-                                    <button type="submit" class="btn btn-sm btn-custom w-100" id="startBtn" disabled>Start</button>
-                                </div>
+                    <div class="main-tab-layout">
+                        <div class="main-tab-header">
+                            <!-- UPLOAD FORMULAR -->
+                            <div class="upload-section shadow-sm" id="uploadFormSection">
+                                <form id="newProjectForm">
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col-md-3">
+                                            <select class="form-select form-select-sm" name="profile_key" id="seriesSelect" required>
+                                                <option value="">Serie wählen...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-select form-select-sm" name="episode" id="episodeSelect" required disabled>
+                                                <option value="">Episode...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 hide-on-lock">
+                                            <input type="file" class="form-control form-control-sm" name="file" accept=".srt" required>
+                                        </div>
+                                        <div class="col-md-2 text-end hide-on-lock">
+                                            <button type="submit" class="btn btn-sm btn-custom w-100" id="startBtn" disabled>Start</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 d-none" id="episodeSummarySection">
+                                        <div class="col-12">
+                                            <label class="form-label small" for="episodeSummaryInput">Eigene Episodenzusammenfassung (optional)</label>
+                                            <textarea id="episodeSummaryInput" class="form-control form-control-sm" rows="4" dir="auto" placeholder="Zusammenfassung eingeben oder leer lassen"></textarea>
+                                        </div>
+                                        <div class="col-12 d-flex align-items-center gap-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveEpisodeSummary">Zusammenfassung speichern</button>
+                                            <span id="episodeSummarySaveStatus" class="text-muted small" aria-live="polite"></span>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="row mt-2 d-none" id="episodeSummarySection">
-                                <div class="col-12">
-                                    <label class="form-label small" for="episodeSummaryInput">Eigene Episodenzusammenfassung (optional)</label>
-                                    <textarea id="episodeSummaryInput" class="form-control form-control-sm" rows="4" dir="auto" placeholder="Zusammenfassung eingeben oder leer lassen"></textarea>
-                                </div>
-                                <div class="col-12 d-flex align-items-center gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveEpisodeSummary">Zusammenfassung speichern</button>
-                                    <span id="episodeSummarySaveStatus" class="text-muted small" aria-live="polite"></span>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
 
-                    <!-- FORTSCHRITT & LOGBUCH (Initial versteckt) -->
-                    <div id="progressSection" style="display: none;"> 
-                        <div class="mb-1 d-flex justify-content-between align-items-center">
-                            <span id="statusBadge" class="badge bg-secondary">Wartet</span>
-                            <span id="progressText" class="text-muted small">0 / 0 Zeilen</span>
-                        </div>
-                        
-                        <div class="progress mb-2" style="height: 15px;">
-                            <div id="progressBar" class="progress-bar progress-bar-striped" style="background-color: var(--purple-accent); width: 0%;"></div>
-                        </div>
-                        
-                        <!-- Pfeil für Logbuch -->
-                        <div class="logbook-toggle" data-bs-toggle="collapse" data-bs-target="#logbookCollapse">
-                            <span class="me-1">▼</span> Live-Logbuch
-                        </div>
-                        
-                        <div class="collapse mt-2 show" id="logbookCollapse">
-                            <div id="logContainer" class="card card-body bg-dark text-light p-2" style="height: 150px; overflow-y: auto; font-size: 0.85em;">
+                            <!-- FORTSCHRITT -->
+                            <div id="progressSection" style="display: none;">
+                                <div class="mb-1 d-flex justify-content-between align-items-center">
+                                    <span id="statusBadge" class="badge bg-secondary">Wartet</span>
+                                    <span id="progressText" class="text-muted small">0 / 0 Zeilen</span>
+                                </div>
+                                <div class="progress mb-2" style="height: 15px;">
+                                    <div id="progressBar" class="progress-bar progress-bar-striped" style="background-color: var(--purple-accent); width: 0%;"></div>
+                                </div>
+                                <div class="mt-2 text-end">
+                                    <button id="btnPauseResume" class="btn btn-sm btn-outline-secondary" style="display: none;">⏸️ Pause</button>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- NEU: Pause/Resume Button Placeholder -->
-                        <div class="mt-2 text-end">
-                            <button id="btnPauseResume" class="btn btn-sm btn-outline-secondary" style="display: none;">⏸️ Pause</button>
+
+                        <div class="main-tab-content">
+                            <!-- LOGBUCH: standardmäßig minimiert, ohne eigene Scrollleiste -->
+                        <div class="logbook-toggle" data-bs-toggle="collapse" data-bs-target="#logbookCollapse">
+                            <span class="me-1" id="logbookToggleIcon">▶</span> Live-Logbuch
+                        </div>
+                        <div class="collapse mt-2" id="logbookCollapse">
+                            <div id="logContainer" class="card card-body bg-dark text-light p-2">
+                            </div>
+                        </div>
                         </div>
                     </div>
 
@@ -298,11 +422,20 @@
                     </form>
                 </div>
                 <div class="tab-pane fade" id="trans-prompts">
-                    <label class="form-label small" for="translationPromptInput">Übersetzungsprompt</label>
-                    <textarea id="translationPromptInput" class="form-control font-monospace" rows="14" dir="auto" spellcheck="false" disabled placeholder="Serie und Episode auswählen"></textarea>
-                    <div class="mt-2 d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveTranslationPrompt" disabled>Prompt speichern</button>
-                        <span id="translationPromptSaveStatus" class="text-muted small" aria-live="polite">Noch kein Prompt geladen.</span>
+                    <div class="prompt-tab-layout">
+                        <div class="prompt-tab-header pb-2">
+                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                <label class="form-label small mb-0" for="translationPromptInput">Übersetzungsprompt</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveTranslationPrompt" disabled>Prompt speichern</button>
+                                    <button type="button" class="btn btn-sm btn-warning" id="btnRegenerateTranslation" disabled>SRT neu generieren</button>
+                                    <span id="translationPromptSaveStatus" class="text-muted small" aria-live="polite">Noch kein Prompt geladen.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="prompt-tab-content">
+                            <textarea id="translationPromptInput" class="form-control font-monospace" dir="auto" spellcheck="false" disabled placeholder="Serie und Episode auswählen"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -389,7 +522,19 @@
                 </div>
                 <!-- EDTECH PROMPTS TAB -->
                 <div class="tab-pane fade" id="ed-prompts">
-                    <p class="text-muted small">Wird geladen...</p>
+                    <div class="edtech-prompt-layout">
+                        <div class="edtech-prompt-header d-flex align-items-center justify-content-between gap-2 pb-2">
+                            <label class="form-label small mb-0" for="edtechPromptInput">EdTech-Prompt</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveEdtechPrompt" disabled>Prompt speichern</button>
+                                <button type="button" class="btn btn-sm btn-warning" id="btnRegenerateEdtechPrompt" disabled>CSV neu berechnen</button>
+                                <span id="edtechPromptSaveStatus" class="text-muted small" aria-live="polite">Noch kein Prompt geladen.</span>
+                            </div>
+                        </div>
+                        <div class="edtech-prompt-content">
+                            <textarea id="edtechPromptInput" class="form-control font-monospace" dir="auto" spellcheck="false" disabled placeholder="SRT-Datei generieren, um den Prompt zu laden"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -430,23 +575,28 @@
 
     <!-- FIX MODAL FÜR MISMATCHES -->
     <div class="modal fade" id="fixModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Abweichungen gefunden</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p id="fixMessage"></p>
-                    <select id="fixMethodSelect" class="form-select mb-3">
-                        <option value="python">Python: Zeitstempel anpassen (sicher)</option>
-                        <option value="gemini">Gemini: Keywords neu übersetzen (teuer)</option>
-                        <option value="ignore">Ignorieren (ohne Infobox weiter)</option>
-                    </select>
+                    <p id="fixMessage" class="mb-3"></p>
+                    <section class="mb-3">
+                        <h6>Zeitstempel-Abweichungen</h6>
+                        <div id="timestampMismatchList" class="mismatch-list"></div>
+                    </section>
+                    <section>
+                        <h6>Keyword-Abweichungen</h6>
+                        <div id="keywordMismatchList" class="mismatch-list"></div>
+                    </section>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                    <button type="button" id="btnApplyFix" class="btn btn-primary">Ausführen</button>
+                    <button type="button" id="btnFixKeywordsGemini" class="btn btn-warning">Gemini: Keywords korrigieren</button>
+                    <button type="button" id="btnFixTimestampsPython" class="btn btn-primary">Python: Zeitstempel korrigieren</button>
+                    <button type="button" id="btnIgnoreMismatches" class="btn btn-outline-secondary">Ignorieren</button>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ from app.db import (
     update_heartbeat,
     set_translation_status
 )
-from app.prompt_manager import load_prompts, get_system_instruction
+from app.prompt_manager import load_prompts, get_system_instruction, append_episode_summary
 
 def send_email_with_attachments(receiver_email, subject, body, file_paths):
     sender_email = os.getenv("EMAIL_SENDER")
@@ -59,9 +59,15 @@ def send_email_with_attachments(receiver_email, subject, body, file_paths):
         return False, str(e)
 
 
-def translate_batch(client, text_batch, system_instruction, log_callback, max_retries=5):
+def translate_batch(client, text_batch, system_instruction, log_callback, model="gemini-3.1-flash-lite", max_retries=5):
+    batch_instruction = (
+        f"{system_instruction.rstrip()}\n\n"
+        f"Übersetze genau {len(text_batch)} Untertitel. Gib für jeden Eingabeeintrag genau einen "
+        "Übersetzungsstring zurück, in derselben Reihenfolge. Fasse niemals benachbarte "
+        "Untertitel zusammen. Bewahre Zeilenumbrüche innerhalb eines Untertitels."
+    )
     config = types.GenerateContentConfig(
-        system_instruction=system_instruction,
+        system_instruction=batch_instruction,
         temperature=0.3,
         response_schema=list[str],
         thinking_config=types.ThinkingConfig(thinking_budget=0)
@@ -71,7 +77,7 @@ def translate_batch(client, text_batch, system_instruction, log_callback, max_re
     for attempt in range(1, max_retries + 1):
         try:
             response = client.models.generate_content(
-                model="gemini-3.1-flash-lite", 
+                model=model,
                 contents=contents,
                 config=config
             )
@@ -82,6 +88,37 @@ def translate_batch(client, text_batch, system_instruction, log_callback, max_re
                 translated_batch = json.loads(response.text)
             
             if len(translated_batch) != len(text_batch):
+                candidates = getattr(response, "candidates", None) or []
+                finish_reasons = [str(getattr(candidate, "finish_reason", None)) for candidate in candidates]
+                usage = getattr(response, "usage_metadata", None)
+                raw_output = getattr(response, "text", None)
+                if not raw_output:
+                    raw_output = json.dumps(translated_batch, ensure_ascii=False)
+                diagnostic = (
+                    f"Gemini-Antwortdiagnose: Modell={model}, Eingaben={len(text_batch)}, "
+                    f"Ausgaben={len(translated_batch)}, Finish-Reason={finish_reasons}, Nutzung={usage!r}"
+                )
+                log_callback(f"🔎 {diagnostic} (Rohantwort folgt im Flask-Terminal)")
+                print(f"\n{diagnostic}\nRohantwort:\n{raw_output}\n", flush=True)
+                if len(text_batch) > 1:
+                    midpoint = len(text_batch) // 2
+                    log_callback(
+                        f"↪️ Batch mit {len(text_batch)} Einträgen wird wegen Längenabweichung "
+                        f"in {midpoint} und {len(text_batch) - midpoint} Einträge geteilt."
+                    )
+                    first_half = translate_batch(
+                        client, text_batch[:midpoint], system_instruction, log_callback,
+                        model=model, max_retries=max_retries
+                    )
+                    if first_half is None:
+                        return None
+                    second_half = translate_batch(
+                        client, text_batch[midpoint:], system_instruction, log_callback,
+                        model=model, max_retries=max_retries
+                    )
+                    if second_half is None:
+                        return None
+                    return first_half + second_half
                 raise ValueError(f"Längen-Mismatch! Erwartet: {len(text_batch)}, Erhalten: {len(translated_batch)}")
             
             cleaned_batch = []
@@ -110,7 +147,7 @@ def translate_batch(client, text_batch, system_instruction, log_callback, max_re
                 return None
 
 
-def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token):
+def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, prompt_override=None):
     # --- HEARTBEAT THREAD ---
     stop_heartbeat = threading.Event()
     lease_lost = threading.Event()  # NEU: Kill-Switch für die Hauptschleife
@@ -140,13 +177,11 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token):
             return
             
         prompts_data = load_prompts()
-        custom_prompt = t.get('custom_translation_prompt', '') or ''
+        custom_prompt = prompt_override if prompt_override is not None else (t.get('custom_translation_prompt', '') or '')
         episode_summary = t.get('episode_summary', '').strip()
-        if custom_prompt.strip():
-            final_system_prompt = custom_prompt
-        else:
-            base_prompt = get_system_instruction(prompts_data, t.get('profile_key', 'default'))
-            final_system_prompt = f"{base_prompt}\n\nZUSAMMENFASSUNG DIESER EPISODE:\n{episode_summary}" if episode_summary else base_prompt
+        gemini_model = t.get('gemini_model') or 'gemini-3.1-flash-lite'
+        base_prompt = custom_prompt or get_system_instruction(prompts_data, t.get('profile_key', 'default'))
+        final_system_prompt = append_episode_summary(base_prompt, episode_summary)
 
         client = genai.Client(api_key=api_key)
         batch_size = t.get('batch_size', 20)
@@ -181,7 +216,7 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token):
             log_cb(f"➤ Sende Zeilen {i+1} bis {min(i+batch_size, len(subs_work))} an API...")
             
             start_time = time.time()
-            translated_texts = translate_batch(client, text_batch, final_system_prompt, log_cb)
+            translated_texts = translate_batch(client, text_batch, final_system_prompt, log_cb, model=gemini_model)
             duration = time.time() - start_time
             
             if translated_texts:
@@ -220,20 +255,6 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token):
 
             set_translation_status(t_id, 'abgeschlossen', worker_token)
             log_cb("🎉 Datei vollständig übersetzt!")
-            
-            receiver = os.getenv("EMAIL_RECEIVER")
-            if receiver:
-                log_cb(f"✉️ Sende fertige Datei an {receiver}...")
-                success, error_msg = send_email_with_attachments(
-                    receiver,
-                    f"🎬 Übersetzung fertig: {final_t['original_filename']}",
-                    "Deine Untertitel-Übersetzung ist abgeschlossen.",
-                    [out_path]
-                )
-                if success:
-                    log_cb("✉️ E-Mail erfolgreich gesendet!")
-                else:
-                    log_cb(f"⚠️ E-Mail-Fehler: {error_msg}")
 
     except Exception as e:
         log_cb(f"❌ Systemfehler: {str(e)}")
@@ -245,7 +266,7 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token):
         if 'tmp_out_path' in locals() and os.path.exists(tmp_out_path):
             os.remove(tmp_out_path)
 
-def start_translation_job(t_id, api_key, uploads_dir, outputs_dir):
+def start_translation_job(t_id, api_key, uploads_dir, outputs_dir, prompt_override=None):
     worker_token = uuid.uuid4().hex 
     
     if not acquire_translation_lock(t_id, worker_token):
@@ -255,7 +276,7 @@ def start_translation_job(t_id, api_key, uploads_dir, outputs_dir):
         add_db_log(t_id, "▶️ Übersetzung gestartet (Lease erworben).")
         thread = threading.Thread(
             target=_translation_worker, 
-            args=(t_id, api_key, uploads_dir, outputs_dir, worker_token),
+            args=(t_id, api_key, uploads_dir, outputs_dir, worker_token, prompt_override),
             daemon=True
         )
         thread.start()

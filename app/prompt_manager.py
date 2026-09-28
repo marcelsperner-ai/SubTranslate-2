@@ -1,5 +1,15 @@
 import yaml
 
+EPISODE_SUMMARY_MARKER = "ZUSAMMENFASSUNG DIESER EPISODE:"
+
+def append_episode_summary(prompt, episode_summary):
+    """Fügt die Episodenzusammenfassung genau einmal an einen Prompt an."""
+    prompt = (prompt or '').rstrip()
+    episode_summary = (episode_summary or '').strip()
+    if not episode_summary or EPISODE_SUMMARY_MARKER in prompt:
+        return prompt
+    return f"{prompt}\n\n{EPISODE_SUMMARY_MARKER}\n{episode_summary}"
+
 def load_prompts(filepath="prompts.yaml"):
     """Lädt die YAML-Datei und gibt ein Dictionary zurück."""
     with open(filepath, "r", encoding="utf-8") as file:
