@@ -46,6 +46,7 @@ def init_db():
         "edtech_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
         "export_path": "TEXT DEFAULT ''",
         "archived": "INTEGER DEFAULT 0",
+        "translation_started": "INTEGER DEFAULT 0",
         # --- NEU FÜR DEN HEARTBEAT & LEASE ---
         "heartbeat_at": "REAL DEFAULT 0",
         "worker_token": "TEXT DEFAULT NULL"
@@ -65,6 +66,11 @@ def init_db():
             c.execute("UPDATE translations SET translation_model = gemini_model")
         if "edtech_model" not in existing_columns:
             c.execute("UPDATE translations SET edtech_model = gemini_model")
+    if "translation_started" not in existing_columns:
+        c.execute('''
+            UPDATE translations SET translation_started = 1
+            WHERE status != 'pausiert' OR translated_lines > 0 OR heartbeat_at > 0
+        ''')
             
     # NEU FÜR FLASK: Eine separate Tabelle für das Live-Logbuch
     c.execute('''
@@ -112,13 +118,26 @@ def save_project_settings(t_id, settings_dict):
     conn.commit()
     conn.close()
 
+def update_translation_runtime_settings(t_id, batch_size, translation_model):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('''
+        UPDATE translations
+        SET batch_size = ?, translation_model = ?, gemini_model = ?, last_updated = ?
+        WHERE id = ?
+    ''', (batch_size, translation_model, translation_model, datetime.now().isoformat(), t_id))
+    success = c.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
+
 def acquire_translation_lock(t_id, worker_token):
     """Sichert den Job mit einem einzigartigen Token und setzt den initialen Heartbeat."""
     conn = get_db_connection()
     c = conn.cursor()
     c.execute('''
         UPDATE translations 
-        SET status = 'laufend', last_updated = ?, heartbeat_at = ?, worker_token = ?
+        SET status = 'laufend', last_updated = ?, heartbeat_at = ?, worker_token = ?, translation_started = 1
         WHERE id = ? AND status IN ('pausiert', 'Fehler')
     ''', (datetime.now().isoformat(), time.time(), worker_token, t_id))
     success = c.rowcount > 0

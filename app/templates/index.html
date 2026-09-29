@@ -448,6 +448,7 @@
                             <div class="col-md-6">
                                 <label class="form-label small">Sync-Offset (ms) vor Start</label>
                                 <input type="number" name="sync_offset" class="form-control form-control-sm" value="0">
+                                <small id="syncOffsetFrozenNotice" class="form-text text-muted d-none">Nach dem Übersetzungsstart dauerhaft gesperrt.</small>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small">Batch-Größe (Zeilen pro API-Call)</label>
@@ -467,6 +468,7 @@
                                 </select>
                             </div>
                         </div>
+                        <div id="translationSettingsSaveStatus" class="small text-muted mt-2" aria-live="polite"></div>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="trans-prompts">
@@ -517,13 +519,13 @@
                             <button type="submit" id="btnGenerateEdtech" class="btn btn-success w-100" disabled>CSV generieren</button>
                         </form>
 
-                        <!-- DOWNLOAD LINKS (werden dynamisch eingeblendet) -->
-                        <div id="downloadLinks" class="mt-3 d-none">
-                            <p class="mb-1 fw-bold">Downloads:</p>
+                        <!-- Vorschauen der generierten Ausgabedateien -->
+                        <div id="previewLinks" class="mt-3 d-none">
+                            <p class="mb-1 fw-bold">Vorschauen:</p>
                             <div class="d-flex gap-2">
-                                <a href="#" id="linkSrt" class="btn btn-sm btn-outline-primary" download>SRT</a>
-                                <a href="#" id="linkAss" class="btn btn-sm btn-outline-primary" download>ASS</a>
-                                <a href="#" id="linkCsv" class="btn btn-sm btn-outline-primary" download>CSV</a>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-preview-type="srt">SRT</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-preview-type="ass">ASS</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-preview-type="csv">CSV</button>
                             </div>
                         </div>
                     </div>

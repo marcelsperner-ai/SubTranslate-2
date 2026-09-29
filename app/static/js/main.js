@@ -14,6 +14,8 @@ const seriesSelect = document.getElementById('seriesSelect');
 const episodeSelect = document.getElementById('episodeSelect');
 const transSettingsForm = document.getElementById('transSettingsForm');
 const translationModelSelect = document.getElementById('translationModelSelect');
+const translationSettingsSaveStatus = document.getElementById('translationSettingsSaveStatus');
+const syncOffsetFrozenNotice = document.getElementById('syncOffsetFrozenNotice');
 const transPromptsTab = document.getElementById('transPromptsTab');
 const translationPromptInput = document.getElementById('translationPromptInput');
 const translationPromptSaveButton = document.getElementById('btnSaveTranslationPrompt');
@@ -76,6 +78,8 @@ let savedEdtechSettings = null;
 let pendingArchiveProjectId = null;
 let loadedTranslationSyncOffset = translationSyncOffsetInput.value;
 let pendingTranslationSyncOffset = null;
+let translationSettingsSaveTimer = null;
+let translationSettingsSaveSequence = 0;
 let edtechPromptLoaded = false;
 let edtechPromptChanged = false;
 let edtechPromptConfirmed = false;
@@ -96,6 +100,46 @@ function setModelSelectValue(select, model) {
     const hasOption = Array.from(select.options).some(option => option.value === model);
     select.value = hasOption ? model : 'gemini-3.1-flash-lite';
 }
+
+function setTranslationStarted(started) {
+    translationSyncOffsetInput.disabled = started;
+    syncOffsetFrozenNotice.classList.toggle('d-none', !started);
+}
+
+async function saveTranslationRuntimeSettings() {
+    if (!currentProjectId) return;
+    const projectId = currentProjectId;
+    const saveSequence = ++translationSettingsSaveSequence;
+    translationSettingsSaveStatus.textContent = 'Einstellungen werden gespeichert ...';
+    try {
+        const response = await fetch(`/api/project/${projectId}/translation-settings`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                batch_size: transSettingsForm.elements['batch_size'].value,
+                translation_model: translationModelSelect.value
+            })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Einstellungen konnten nicht gespeichert werden.');
+        if (projectId === currentProjectId && saveSequence === translationSettingsSaveSequence) {
+            translationSettingsSaveStatus.textContent = result.message;
+        }
+    } catch (error) {
+        if (projectId === currentProjectId && saveSequence === translationSettingsSaveSequence) {
+            translationSettingsSaveStatus.textContent = error.message;
+        }
+    }
+}
+
+function scheduleTranslationSettingsSave() {
+    if (!currentProjectId) return;
+    window.clearTimeout(translationSettingsSaveTimer);
+    translationSettingsSaveTimer = window.setTimeout(saveTranslationRuntimeSettings, 300);
+}
+
+transSettingsForm.elements['batch_size'].addEventListener('change', scheduleTranslationSettingsSave);
+translationModelSelect.addEventListener('change', scheduleTranslationSettingsSave);
 
 function updateEdtechPromptActions() {
     const hasPromptChange = edtechPromptLoaded && edtechPromptChanged && edtechPromptInput.value.trim();
@@ -318,7 +362,9 @@ regenerateTranslationButton.addEventListener('click', async () => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 translation_prompt: translationPromptInput.value,
-                sync_offset: translationSyncOffsetInput.value
+                sync_offset: translationSyncOffsetInput.value,
+                translation_model: translationModelSelect.value,
+                batch_size: transSettingsForm.elements['batch_size'].value
             })
         });
         const result = await response.json();
@@ -603,10 +649,11 @@ function startProjectListPolling() {
 async function loadProjectToMain(id, title, status) {
     const loadSequence = ++projectLoadSequence;
     setProjectLoading(true);
+    setTranslationStarted(false);
     currentProjectId = id;
     projectTitle.textContent = title; // XSS-Schutz
     progressSection.style.display = 'block';
-    document.getElementById('downloadLinks').classList.add('d-none');
+    document.getElementById('previewLinks').classList.add('d-none');
     let availableDownloads = { srt: status === 'abgeschlossen', ass: false, csv: false };
     currentAvailableDownloads = availableDownloads;
     
@@ -623,8 +670,13 @@ async function loadProjectToMain(id, title, status) {
             let pData = await pRes.json();
             translationSyncOffsetInput.value = pData.sync_offset ?? 0;
             loadedTranslationSyncOffset = translationSyncOffsetInput.value;
+            setTranslationStarted(Boolean(pData.translation_started));
+            if (transSettingsForm.elements['batch_size']) transSettingsForm.elements['batch_size'].value = pData.batch_size || 40;
             setModelSelectValue(translationModelSelect, pData.translation_model || pData.gemini_model);
             setModelSelectValue(edtechModelSelect, pData.edtech_model || pData.gemini_model);
+            translationSettingsSaveStatus.textContent = pData.translation_started
+                ? 'Änderungen an Batch-Größe und Modell gelten beim nächsten Start oder Fortsetzen.'
+                : '';
             availableDownloads = pData.available_downloads || availableDownloads;
             currentAvailableDownloads = availableDownloads;
             hasGeneratedAss = Boolean(availableDownloads.ass);
@@ -804,6 +856,7 @@ function startPolling() {
 // 6. NEU BUTTON & PAUSE BUTTON
 btnNewProject.addEventListener('click', () => {
     setProjectLoading(false);
+    setTranslationStarted(false);
     currentProjectId = null;
     if (pollInterval) clearInterval(pollInterval);
     
@@ -864,6 +917,326 @@ btnPauseResume.addEventListener('click', async () => {
 });
 
 // --- EDTECH LOGIK ---
+const previewLinks = document.getElementById('previewLinks');
+
+function setPreviewAvailability(availableDownloads) {
+    previewLinks.querySelectorAll('[data-preview-type]').forEach((button) => {
+        button.style.display = availableDownloads[button.dataset.previewType] ? 'inline-block' : 'none';
+    });
+    previewLinks.classList.toggle('d-none', !Object.values(availableDownloads).some(Boolean));
+}
+
+function createPreviewWindow(type) {
+    const popup = window.open('', '_blank', 'popup=yes,width=1440,height=960,resizable=yes,scrollbars=yes');
+    if (!popup) {
+        alert('Das Vorschaufenster wurde vom Browser blockiert. Bitte Pop-ups für diese Seite erlauben.');
+        return null;
+    }
+    popup.document.open();
+    popup.document.write(`<!doctype html>
+        <html lang="de">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Vorschau</title>
+            <style>
+                :root { color-scheme: light; font: 15px/1.5 system-ui, sans-serif; color: #20262b; background: #f5f6f7; }
+                * { box-sizing: border-box; }
+                body { margin: 0; }
+                main { max-width: 1500px; margin: 0 auto; padding: 28px 32px 48px; }
+                h1 { margin: 0 0 16px; font-size: 1.5rem; font-weight: 650; }
+                #preview-status { margin: 12px 0; color: #59636c; }
+                .table-wrap { overflow: auto; max-height: calc(100vh - 120px); background: white; border: 1px solid #d9dee2; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 10px 12px; border-bottom: 1px solid #e5e8ea; text-align: left; vertical-align: top; }
+                th { position: sticky; top: 0; z-index: 1; background: #edf0f2; font-size: .84rem; white-space: nowrap; }
+                td { white-space: pre-wrap; overflow-wrap: anywhere; }
+                .timestamp { min-width: 210px; color: #4d5962; font: 13px/1.5 ui-monospace, monospace; white-space: nowrap; }
+                .subtitle { min-width: 380px; }
+                .srt-text { white-space: pre-wrap; unicode-bidi: plaintext; }
+                .ass-stage { width: min(100%, 782px); aspect-ratio: 16 / 9; padding: 3%; display: flex; overflow: hidden; background: #161a1d; color: white; }
+                .ass-line { width: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; }
+                .ass-line.align-left { text-align: left; }
+                .ass-line.align-center { text-align: center; }
+                .ass-line.align-right { text-align: right; }
+                .ass-line.valign-top { justify-content: flex-start; }
+                .ass-line.valign-middle { justify-content: center; }
+                .ass-line.valign-bottom { justify-content: flex-end; }
+                .empty { padding: 20px; color: #59636c; }
+                @media (max-width: 700px) { main { padding: 18px 12px 32px; } .timestamp { min-width: 170px; } .subtitle { min-width: 260px; } }
+            </style>
+        </head>
+        <body><main><h1 id="preview-title"></h1><div id="preview-status">Vorschau wird geladen ...</div><div id="preview-content"></div></main></body>
+        </html>`);
+    popup.document.close();
+    popup.document.title = `${type.toUpperCase()}-Vorschau`;
+    popup.document.getElementById('preview-title').textContent = `${type.toUpperCase()}-Vorschau`;
+    return popup;
+}
+
+function appendPreviewTable(popup, headings, rows) {
+    const document = popup.document;
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    const table = document.createElement('table');
+    const head = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    headings.forEach((heading) => {
+        const cell = document.createElement('th');
+        cell.scope = 'col';
+        cell.textContent = heading;
+        headRow.append(cell);
+    });
+    head.append(headRow);
+    const body = document.createElement('tbody');
+    rows.forEach((row) => body.append(row));
+    table.append(head, body);
+    wrap.append(table);
+    document.getElementById('preview-content').replaceChildren(wrap);
+    document.getElementById('preview-status').textContent = `${rows.length} Einträge`;
+}
+
+function showPreviewMessage(popup, message) {
+    if (popup.closed) return;
+    const status = popup.document.getElementById('preview-status');
+    status.textContent = message;
+}
+
+function renderCsvPreview(popup, rows) {
+    if (!rows.length) {
+        showPreviewMessage(popup, 'Keine CSV-Daten vorhanden.');
+        return;
+    }
+    const headings = Object.keys(rows[0]);
+    const tableRows = rows.map((record) => {
+        const row = popup.document.createElement('tr');
+        headings.forEach((heading) => {
+            const cell = popup.document.createElement('td');
+            cell.textContent = record[heading] ?? '';
+            row.append(cell);
+        });
+        return row;
+    });
+    appendPreviewTable(popup, headings, tableRows);
+}
+
+function parseSrtPreview(text) {
+    return text.trim().split(/\r?\n\s*\r?\n/).flatMap((block) => {
+        const lines = block.split(/\r?\n/);
+        const timeIndex = lines.findIndex((line) => line.includes('-->'));
+        if (timeIndex < 0) return [];
+        const [start, end] = lines[timeIndex].split('-->').map((stamp) => stamp.trim());
+        return [{start, end, text: lines.slice(timeIndex + 1).join('\n')}];
+    });
+}
+
+function renderSrtPreview(popup, text) {
+    const cues = parseSrtPreview(text);
+    const tableRows = cues.map((cue) => {
+        const row = popup.document.createElement('tr');
+        const timestamp = popup.document.createElement('td');
+        timestamp.className = 'timestamp';
+        timestamp.textContent = `${cue.start} – ${cue.end}`;
+        const subtitle = popup.document.createElement('td');
+        subtitle.className = 'subtitle srt-text';
+        subtitle.dir = 'auto';
+        subtitle.textContent = cue.text;
+        row.append(timestamp, subtitle);
+        return row;
+    });
+    if (!tableRows.length) {
+        showPreviewMessage(popup, 'Keine SRT-Untertitel vorhanden.');
+        return;
+    }
+    appendPreviewTable(popup, ['Zeitstempel', 'Untertitel'], tableRows);
+}
+
+function assColorToCss(value, fallback) {
+    const match = String(value || '').match(/&H([0-9A-F]{6,8})&?/i);
+    if (!match) return fallback;
+    const hex = match[1].padStart(8, '0');
+    const alpha = hex.length === 8 ? 255 - parseInt(hex.slice(0, 2), 16) : 255;
+    const blue = parseInt(hex.slice(-6, -4), 16);
+    const green = parseInt(hex.slice(-4, -2), 16);
+    const red = parseInt(hex.slice(-2), 16);
+    return `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
+}
+
+function parseAssFile(text) {
+    const styles = {};
+    const events = [];
+    let section = '';
+    let styleFields = [];
+    let eventFields = [];
+    let playResX = 1920;
+    let playResY = 1080;
+    text.split(/\r?\n/).forEach((line) => {
+        const trimmed = line.trim();
+        if (/^\[.*\]$/.test(trimmed)) {
+            section = trimmed.toLowerCase();
+        } else if (section === '[script info]') {
+            const [key, ...value] = trimmed.split(':');
+            if (key?.toLowerCase() === 'playresx') playResX = Number(value.join(':').trim()) || playResX;
+            if (key?.toLowerCase() === 'playresy') playResY = Number(value.join(':').trim()) || playResY;
+        } else if (section === '[v4+ styles]') {
+            if (trimmed.toLowerCase().startsWith('format:')) {
+                styleFields = trimmed.slice(trimmed.indexOf(':') + 1).split(',').map((field) => field.trim().toLowerCase());
+            } else if (trimmed.toLowerCase().startsWith('style:')) {
+                const values = trimmed.slice(trimmed.indexOf(':') + 1).split(',');
+                const style = Object.fromEntries(styleFields.map((field, index) => [field, (values[index] || '').trim()]));
+                if (style.name) styles[style.name] = style;
+            }
+        } else if (section === '[events]') {
+            if (trimmed.toLowerCase().startsWith('format:')) {
+                eventFields = trimmed.slice(trimmed.indexOf(':') + 1).split(',').map((field) => field.trim().toLowerCase());
+            } else if (trimmed.toLowerCase().startsWith('dialogue:')) {
+                const values = trimmed.slice(trimmed.indexOf(':') + 1).split(',');
+                if (eventFields.length) {
+                    const textIndex = eventFields.indexOf('text');
+                    const fields = values.slice(0, textIndex).concat([values.slice(textIndex).join(',')]);
+                    events.push(Object.fromEntries(eventFields.map((field, index) => [field, (fields[index] || '').trim()])));
+                }
+            }
+        }
+    });
+    return {styles, events, playResX, playResY};
+}
+
+function assStyleState(style, playResY) {
+    return {
+        fontname: style?.fontname || 'Arial',
+        fontsize: Number(style?.fontsize) || 50,
+        color: style?.primarycolour || '&H00FFFFFF&',
+        bold: Number(style?.bold || 0) !== 0,
+        italic: Number(style?.italic || 0) !== 0,
+        underline: Number(style?.underline || 0) !== 0,
+        strikeout: Number(style?.strikeout || 0) !== 0,
+        backcolour: style?.backcolour || '&H80000000&',
+        borderstyle: Number(style?.borderstyle) || 1,
+        outline: Number(style?.outline) || 0,
+        shadow: Number(style?.shadow) || 0,
+        alignment: Number(style?.alignment) || 2,
+        marginl: Number(style?.marginl) || 0,
+        marginr: Number(style?.marginr) || 0,
+        marginv: Number(style?.marginv) || 0,
+        playresy: playResY
+    };
+}
+
+function renderAssText(document, rawText, initialState, styles) {
+    const content = document.createDocumentFragment();
+    const renderScale = 440 / (initialState.playresy || 1080);
+    let state = {...initialState};
+    const appendText = (value) => {
+        const clean = value.replace(/[\u202A-\u202E\u2066-\u2069]/g, '')
+            .replace(/\\N|\\n/g, '\n').replace(/\\h/g, '\u00a0').replace(/\\\\/g, '\\');
+        clean.split('\n').forEach((part, index) => {
+            if (index) content.append(document.createElement('br'));
+            if (!part) return;
+            const span = document.createElement('span');
+            span.textContent = part;
+            span.dir = 'auto';
+            span.style.color = assColorToCss(state.color, '#fff');
+            span.style.fontFamily = `${state.fontname}, sans-serif`;
+            span.style.fontSize = `${state.fontsize * renderScale}px`;
+            span.style.fontWeight = state.bold ? 'bold' : 'normal';
+            span.style.fontStyle = state.italic ? 'italic' : 'normal';
+            span.style.textDecoration = [state.underline ? 'underline' : '', state.strikeout ? 'line-through' : ''].filter(Boolean).join(' ');
+            const outline = Math.max(0, Math.min(state.outline * renderScale, 8));
+            const shadow = Math.max(0, Math.min(state.shadow * renderScale, 8));
+            if (outline || shadow) {
+                const radius = outline + shadow;
+                span.style.textShadow = `-${radius}px 0 #000, ${radius}px 0 #000, 0 -${radius}px #000, 0 ${radius}px #000`;
+            }
+            if (state.borderstyle === 3) {
+                span.style.backgroundColor = assColorToCss(state.backcolour, 'transparent');
+                span.style.padding = `${Math.max(2, outline)}px`;
+            }
+            content.append(span);
+        });
+    };
+    const tokens = rawText.match(/\{[^}]*\}|[^{}]+/g) || [];
+    tokens.forEach((token) => {
+        if (!token.startsWith('{')) {
+            appendText(token);
+            return;
+        }
+        const tags = token.slice(1, -1).match(/\\(?:1?c|b|i|u|s|fs|fn|r|an|a)(?:[^\\]*)?/gi) || [];
+        tags.forEach((tag) => {
+            const match = tag.match(/^\\(1?c|b|i|u|s|fs|fn|r|an|a)(.*)$/i);
+            if (!match) return;
+            const name = match[1].toLowerCase();
+            const value = match[2].trim();
+            if (name === 'r') state = assStyleState(styles[value] || styles[initialState.stylename] || {}, initialState.playresy);
+            else if (name === 'c' || name === '1c') state.color = value ? value.replace(/&?$/, '&') : initialState.color;
+            else if (name === 'b') state.bold = Number(value) !== 0;
+            else if (name === 'i') state.italic = Number(value) !== 0;
+            else if (name === 'u') state.underline = Number(value) !== 0;
+            else if (name === 's') state.strikeout = Number(value) !== 0;
+            else if (name === 'fs') state.fontsize = Number(value) || state.fontsize;
+            else if (name === 'fn') state.fontname = value || state.fontname;
+            else if (name === 'an' || name === 'a') state.alignment = Number(value) || state.alignment;
+        });
+    });
+    return content;
+}
+
+function renderAssPreview(popup, text) {
+    const parsed = parseAssFile(text);
+    if (!parsed.events.length) {
+        showPreviewMessage(popup, 'Keine ASS-Events vorhanden.');
+        return;
+    }
+    const tableRows = parsed.events.map((event) => {
+        const row = popup.document.createElement('tr');
+        const timestamp = popup.document.createElement('td');
+        timestamp.className = 'timestamp';
+        timestamp.textContent = `${event.start} – ${event.end}`;
+        const subtitle = popup.document.createElement('td');
+        subtitle.className = 'subtitle';
+        const style = parsed.styles[event.style] || parsed.styles.Standard || {};
+        const state = assStyleState(style, parsed.playResY);
+        state.stylename = event.style;
+        state.color = style.primarycolour || '&H00FFFFFF&';
+        const alignment = state.alignment;
+        const stage = popup.document.createElement('div');
+        stage.className = 'ass-stage';
+        const rendered = popup.document.createElement('div');
+        rendered.className = 'ass-line';
+        rendered.classList.add([1, 4, 7].includes(alignment) ? 'align-left' : [3, 6, 9].includes(alignment) ? 'align-right' : 'align-center');
+        rendered.classList.add(alignment >= 7 ? 'valign-top' : alignment >= 4 ? 'valign-middle' : 'valign-bottom');
+        rendered.style.paddingLeft = `${(state.marginl / parsed.playResX) * 100}%`;
+        rendered.style.paddingRight = `${(state.marginr / parsed.playResX) * 100}%`;
+        rendered.style.paddingTop = `${(state.marginv / parsed.playResY) * 100}%`;
+        rendered.style.paddingBottom = `${(state.marginv / parsed.playResY) * 100}%`;
+        rendered.append(renderAssText(popup.document, event.text, state, parsed.styles));
+        stage.append(rendered);
+        subtitle.append(stage);
+        row.append(timestamp, subtitle);
+        return row;
+    });
+    appendPreviewTable(popup, ['Zeitstempel', 'Gerenderter Untertitel'], tableRows);
+}
+
+previewLinks.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-preview-type]');
+    if (!button || !currentProjectId) return;
+    const type = button.dataset.previewType;
+    const popup = createPreviewWindow(type);
+    if (!popup) return;
+    try {
+        const response = await fetch(`/api/edtech/preview/${currentProjectId}`);
+        const files = await response.json();
+        if (!response.ok) throw new Error(files.error || 'Vorschau konnte nicht geladen werden.');
+        if (popup.closed) return;
+        if (type === 'csv') renderCsvPreview(popup, files.csv || []);
+        else if (type === 'srt') renderSrtPreview(popup, files.srt || '');
+        else renderAssPreview(popup, files.ass || '');
+    } catch (error) {
+        showPreviewMessage(popup, error.message || 'Vorschau konnte nicht geladen werden.');
+    }
+});
+
 function unlockEdtech(availableDownloads = currentAvailableDownloads) {
     currentAvailableDownloads = availableDownloads;
     edtechZone.classList.remove('disabled-overlay');
@@ -872,17 +1245,7 @@ function unlockEdtech(availableDownloads = currentAvailableDownloads) {
     btnGenerateEdtech.disabled = false;
     btnGenerateEdtech.textContent = 'CSV generieren';
     
-    document.getElementById('linkSrt').href = `/api/download/${currentProjectId}?type=srt`;
-    document.getElementById('linkAss').href = `/api/download/${currentProjectId}?type=ass`;
-    document.getElementById('linkCsv').href = `/api/download/${currentProjectId}?type=csv`;
-
-    document.getElementById('linkSrt').style.display = availableDownloads.srt ? 'inline-block' : 'none';
-    document.getElementById('linkAss').style.display = availableDownloads.ass ? 'inline-block' : 'none';
-    document.getElementById('linkCsv').style.display = availableDownloads.csv ? 'inline-block' : 'none';
-    document.getElementById('downloadLinks').classList.toggle(
-        'd-none',
-        !Object.values(availableDownloads).some(Boolean)
-    );
+    setPreviewAvailability(availableDownloads);
     updateEdtechPromptActions();
 }
 
@@ -950,9 +1313,8 @@ async function generateAss(ignoreValidationErrors = false) {
         }
         if (!response.ok) throw new Error(result.error || 'ASS-Generierung fehlgeschlagen.');
 
-        document.getElementById('downloadLinks').classList.remove('d-none');
-        document.getElementById('linkAss').style.display = 'inline-block';
         currentAvailableDownloads = { srt: true, ass: true, csv: true };
+        setPreviewAvailability(currentAvailableDownloads);
         validationResult.className = 'alert alert-success';
         validationResult.textContent = 'CSV geprüft; ASS erfolgreich erstellt.';
         validationResult.classList.remove('d-none');
@@ -1057,7 +1419,7 @@ generateEdtechForm.addEventListener('submit', async (e) => {
     btnGenerateEdtech.disabled = true;
     btnGenerateEdtech.textContent = 'Generiere CSV...';
     generateAssAfterValidation = true;
-    document.getElementById('linkAss').style.display = 'none';
+    setPreviewAvailability({...currentAvailableDownloads, ass: false});
     
     const settingsData = new FormData(edtechSettingsForm);
     const payload = Object.fromEntries(settingsData.entries());
@@ -1080,7 +1442,7 @@ generateEdtechForm.addEventListener('submit', async (e) => {
             currentAvailableDownloads.ass = false;
             hasGeneratedAss = false;
             updateAssRebuildButton();
-            document.getElementById('downloadLinks').classList.remove('d-none');
+            setPreviewAvailability(currentAvailableDownloads);
             validationResult.className = 'alert alert-info';
             validationResult.textContent = 'CSV erstellt. Prüfung läuft...';
             validationResult.classList.remove('d-none');

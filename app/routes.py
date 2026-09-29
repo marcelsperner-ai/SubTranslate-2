@@ -10,12 +10,22 @@ import yaml
 from app.db import (
     create_translation, get_translation_by_id, update_translation, 
     get_db_logs, get_all_translations, archive_translation, unarchive_translation,
-    reset_translation_for_regeneration
+    reset_translation_for_regeneration, update_translation_runtime_settings
 )
 from app.services.translation_service import start_translation_job
 
 main_bp = Blueprint('main', __name__)
 load_dotenv()
+GEMINI_MODEL_IDS = {
+    'gemini-3.1-flash-lite',
+    'gemini-3-flash',
+    'gemini-3.8-flash',
+    'gemini-3.7-flash',
+    'gemini-3.6-flash',
+    'gemini-3.5-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-3.1-pro-preview',
+}
 
 @main_bp.route('/api/projects', methods=['GET'])
 def list_projects():
@@ -101,6 +111,10 @@ def upload_file():
     episode_summary_override = request.form.get('episode_summary_override', '')
     sync_offset = int(request.form.get('sync_offset', 0))
     batch_size = int(request.form.get('batch_size', 40))
+    translation_model = request.form.get('translation_model', request.form.get('gemini_model', 'gemini-3.1-flash-lite'))
+    edtech_model = request.form.get('edtech_model', 'gemini-3.1-flash-lite')
+    if translation_model not in GEMINI_MODEL_IDS or edtech_model not in GEMINI_MODEL_IDS:
+        return jsonify({"error": "Ungültige Gemini-Modellauswahl."}), 400
     
     if file.filename == '':
         return jsonify({"error": "Dateiname leer"}), 400
@@ -129,9 +143,9 @@ def upload_file():
         'episode_summary': real_summary,
         'profile_key': profile_key,
         'sync_offset': sync_offset,
-        'gemini_model': request.form.get('translation_model', request.form.get('gemini_model', 'gemini-3.1-flash-lite')),
-        'translation_model': request.form.get('translation_model', request.form.get('gemini_model', 'gemini-3.1-flash-lite')),
-        'edtech_model': request.form.get('edtech_model', 'gemini-3.1-flash-lite'),
+        'gemini_model': translation_model,
+        'translation_model': translation_model,
+        'edtech_model': edtech_model,
         'export_path': request.form.get('export_path', '')
     })
     
@@ -154,6 +168,29 @@ def start_job(t_id):
     if success:
         return jsonify({"message": "Job gestartet"}), 200
     return jsonify({"error": "Job läuft bereits oder Status ungültig"}), 400
+
+@main_bp.route('/api/project/<int:t_id>/translation-settings', methods=['POST'])
+def update_translation_settings(t_id):
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    data = request.get_json(silent=True) or {}
+    try:
+        batch_size = int(data.get('batch_size', t.get('batch_size', 40)))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Ungültige Batch-Größe."}), 400
+    translation_model = data.get('translation_model', t.get('translation_model') or t.get('gemini_model'))
+    if not 1 <= batch_size <= 500:
+        return jsonify({"error": "Die Batch-Größe muss zwischen 1 und 500 liegen."}), 400
+    if translation_model not in GEMINI_MODEL_IDS:
+        return jsonify({"error": "Ungültige Gemini-Modellauswahl."}), 400
+    if not update_translation_runtime_settings(t_id, batch_size, translation_model):
+        return jsonify({"error": "Projekt-Einstellungen konnten nicht gespeichert werden."}), 500
+    return jsonify({
+        "message": "Gespeichert; gilt beim nächsten Start oder Fortsetzen.",
+        "applies_on_next_start": True,
+        "translation_started": bool(t.get('translation_started')),
+    })
 
 @main_bp.route('/api/pause/<int:t_id>', methods=['POST'])
 def pause_job(t_id):
@@ -180,14 +217,24 @@ def regenerate_translation(t_id):
     if not api_key:
         return jsonify({"error": "GEMINI_API_KEY fehlt in .env"}), 500
     try:
-        sync_offset = int(data.get('sync_offset', t.get('sync_offset', 0)))
+        batch_size = int(data.get('batch_size', t.get('batch_size', 40)))
+        sync_offset = int(
+            t.get('sync_offset', 0)
+            if t.get('translation_started')
+            else data.get('sync_offset', t.get('sync_offset', 0))
+        )
     except (TypeError, ValueError):
-        return jsonify({"error": "Ungültiger Übersetzungs-Sync-Offset."}), 400
+        return jsonify({"error": "Ungültige Batch-Größe oder ungültiger Sync-Offset."}), 400
+    if not 1 <= batch_size <= 500:
+        return jsonify({"error": "Die Batch-Größe muss zwischen 1 und 500 liegen."}), 400
+    translation_model = data.get('translation_model', t.get('translation_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite')
+    if translation_model not in GEMINI_MODEL_IDS:
+        return jsonify({"error": "Ungültige Gemini-Modellauswahl."}), 400
     if not reset_translation_for_regeneration(t_id):
         return jsonify({"error": "Projekt kann derzeit nicht neu generiert werden."}), 409
-    translation_model = data.get('translation_model', t.get('translation_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite')
     save_project_settings(t_id, {
         **t,
+        'batch_size': batch_size,
         'sync_offset': sync_offset,
         'gemini_model': translation_model,
         'translation_model': translation_model,
@@ -440,8 +487,13 @@ def preview_edtech_files(t_id):
     t = get_translation_by_id(t_id)
     if not t: return jsonify({"error": "Projekt nicht gefunden"}), 404
     base = t['original_filename'].replace('.srt', '')
+    srt_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_FA.srt')
     csv_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_Vokabeln.csv')
     ass_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_Interaktiv.ass')
+    srt_text = ''
+    if os.path.exists(srt_path):
+        with open(srt_path, encoding='utf-8-sig', errors='replace') as f:
+            srt_text = f.read()
     csv_rows = []
     if os.path.exists(csv_path):
         with open(csv_path, encoding='utf-8-sig', newline='') as f:
@@ -449,7 +501,7 @@ def preview_edtech_files(t_id):
     ass_text = ''
     if os.path.exists(ass_path):
         with open(ass_path, encoding='utf-8') as f: ass_text = f.read()
-    return jsonify({'csv': csv_rows, 'ass': ass_text})
+    return jsonify({'srt': srt_text, 'csv': csv_rows, 'ass': ass_text})
 
 @main_bp.route('/api/prompts/preview', methods=['GET', 'POST'])
 def preview_prompts():
