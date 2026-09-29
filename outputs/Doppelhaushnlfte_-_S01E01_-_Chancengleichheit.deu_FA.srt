@@ -552,1429 +552,1429 @@
 
 121
 00:07:28,560 --> 00:07:31,880
-<font color="#00FF00">Doch, so hat er gemacht.</font>
-<font color="#00FF00">Das habe ich genau gesehen.</font>
+<font color="#00FF00">نه، اون این کارو کرد</font>
+<font color="#00FF00">قشنگ دیدم چیکار کرد</font>
 
 122
 00:07:32,760 --> 00:07:34,240
-<font color="#00FF00">Theo.</font>
+<font color="#00FF00">تئو</font>
 
 123
 00:07:35,360 --> 00:07:37,840
-<font color="#FFFFFF">Bitte schön.</font>
-<font color="#FFFFFF">- Eine kleine Aufmerksamkeit.</font>
+<font color="#FFFFFF">بفرمایید</font>
+<font color="#FFFFFF">- یه هدیه کوچیک</font>
 
 124
 00:07:38,000 --> 00:07:40,080
-<font color="#FFFF00">Das wäre nicht nötig gewesen.</font>
-<font color="#FFFFFF">Doch.</font>
+<font color="#FFFF00">واقعاً لازم نبود</font>
+<font color="#FFFFFF">چرا، لازم بود</font>
 
 125
 00:07:40,240 --> 00:07:43,560
-<font color="#00FF00">Nicht im Ernst?</font>
-<font color="#00FFFF">Vielleicht ist das eine Art Brauch.</font>
+<font color="#00FF00">جدی میگی؟</font>
+<font color="#00FFFF">شاید یه جور رسم و رسومه</font>
 
 126
 00:07:43,600 --> 00:07:45,120
-<font color="#00FFFF">Wie so ein Brot zum Einzug.</font>
+<font color="#00FFFF">مثل نون و نمک برای خونه جدید</font>
 
 127
 00:07:45,160 --> 00:07:47,640
-<font color="#00FF00">Das ist kein Brauch.</font>
-<font color="#00FF00">Das ist Bestechung.</font>
+<font color="#00FF00">این رسم و رسوم نیست</font>
+<font color="#00FF00">این رشوه دادنه</font>
 
 128
 00:07:47,680 --> 00:07:50,080
-<font color="#FFFF00">Hier ist der Vorgarten.</font>
-<font color="#FFFFFF">Ah ja.</font>
+<font color="#FFFF00">اینم حیاط جلویی</font>
+<font color="#FFFFFF">آهان</font>
 
 129
 00:07:50,120 --> 00:07:52,480
-<font color="#00FF00">Wir brauchen auch einen Wein.</font>
-<font color="#00FFFF">Woher denn?</font>
+<font color="#00FF00">ما باید شراب هم بگیریم</font>
+<font color="#00FFFF">از کجا؟</font>
 
 130
 00:07:52,520 --> 00:07:54,840
-<font color="#00FF00">Fahr einfach</font>
-<font color="#00FF00">zu irgendeinem Supermarkt.</font>
+<font color="#00FF00">فقط برو</font>
+<font color="#00FF00">یه سوپرمارکتی چیزی</font>
 
 131
 00:07:54,880 --> 00:07:56,560
-<font color="#00FFFF">Ich? Warum denn ich?</font>
-<font color="#00FF00">Theo.</font>
+<font color="#00FFFF">من؟ چرا من؟</font>
+<font color="#00FF00">تئو</font>
 
 132
 00:07:56,600 --> 00:07:58,920
-<font color="#FFFFFF">Bei uns ist es keine Bestechung,</font>
-<font color="#FFFFFF">oder wie?</font>
+<font color="#FFFFFF">برای ما رشوه حساب نمیشه</font>
+<font color="#FFFFFF">میشه؟</font>
 
 133
 00:07:59,080 --> 00:08:01,040
-<font color="#00FF00">Bei uns ist das Chancengleichheit.</font>
+<font color="#00FF00">برای ما این یعنی فرصت برابر</font>
 
 134
 00:08:01,080 --> 00:08:03,680
-<font color="#FFFF00">Was ist denn mit Ihnen jetzt?</font>
-<font color="#FFFF00">Rein oder raus.</font>
+<font color="#FFFF00">خب، بالاخره چیکار می‌کنید؟</font>
+<font color="#FFFF00">می‌اید تو یا نه</font>
 
 135
 00:08:04,280 --> 00:08:05,760
-<font color="#00FF00">Ähm...</font>
+<font color="#00FF00">ام...</font>
 
 136
 00:08:07,120 --> 00:08:09,680
-<font color="#FFFF00">Verstehen Sie sich mich überhaupt?</font>
-<font color="#00FF00">Wie bitte?</font>
+<font color="#FFFF00">اصلاً متوجه میشی چی میگم؟</font>
+<font color="#00FF00">ببخشید؟</font>
 
 137
 00:08:09,720 --> 00:08:13,640
-<font color="#00FFFF">Mari? Ich muss kurz zum Auto.</font>
-<font color="#00FFFF">Wir haben das Expose vergessen.</font>
+<font color="#00FFFF">ماری؟ باید یه سر برم سمت ماشین</font>
+<font color="#00FFFF">کاتالوگ رو یادمون رفت</font>
 
 138
 00:08:13,680 --> 00:08:15,240
-<font color="#00FF00">Du hast es doch in der Hand.</font>
+<font color="#00FF00">خب دستته دیگه</font>
 
 139
 00:08:16,240 --> 00:08:17,720
-<font color="#00FFFF">Das andere.</font>
+<font color="#00FFFF">اون یکی رو میگم</font>
 
 140
 00:08:18,520 --> 00:08:20,080
-<font color="#00FF00">Ach so, ja.</font>
+<font color="#00FF00">آهان، آره</font>
 
 141
 00:08:20,120 --> 00:08:22,600
-<font color="#00FF00">Ähm, ja. Dann hol das doch schnell.</font>
+<font color="#00FF00">خب، پس برو سریع بیارش</font>
 
 142
 00:08:22,640 --> 00:08:24,400
-<font color="#00FFFF">Ja, du hast den Autoschlüssel.</font>
+<font color="#00FFFF">آره، سوئیچ ماشین دست توئه</font>
 
 143
 00:08:24,440 --> 00:08:25,960
-<font color="#00FF00">Ach so, ja.</font>
+<font color="#00FF00">آهان، آره</font>
 
 144
 00:08:29,960 --> 00:08:31,560
-<font color="#00FFFF">Roten oder weißen?</font>
-<font color="#00FF00">Weiß.</font>
+<font color="#00FFFF">قرمز یا سفید؟</font>
+<font color="#00FF00">سفید</font>
 
 145
 00:08:32,200 --> 00:08:35,640
-<font color="#FFFFFF">Frag die Nazis da drüben,</font>
-<font color="#FFFFFF">ob sie 'nem Bruder aushelfen wollen.</font>
+<font color="#FFFFFF">از اون نازی‌های اون‌وری بپرس</font>
+<font color="#FFFFFF">ببین میتونن به یه برادر کمک کنن</font>
 
 146
 00:08:35,800 --> 00:08:37,800
-<font color="#FFFFFF">* Verspielte Musik *</font>
+<font color="#FFFFFF">* موسیقی بازیگوشانه *</font>
 
 147
 00:09:12,000 --> 00:09:13,880
-<font color="#00FFFF">Äh, hallo?</font>
+<font color="#00FFFF">اوه، سلام؟</font>
 
 148
 00:09:15,080 --> 00:09:17,280
-<font color="#00FFFF">Sind...</font>
-<font color="#00FFFF">Sind deine Eltern zufällig da?</font>
+<font color="#00FFFF">آیا...</font>
+<font color="#00FFFF">اتفاقی پدر و مادرت خونه‌ان؟</font>
 
 149
 00:09:21,600 --> 00:09:23,080
-<font color="#00FFFF">Nein?</font>
+<font color="#00FFFF">نیستن؟</font>
 
 150
 00:09:25,960 --> 00:09:27,960
-<font color="#FFFFFF">Da ist ein Afrikaner vor der Tür.</font>
+<font color="#FFFFFF">یه آفریقایی دم دره</font>
 
 151
 00:09:29,320 --> 00:09:31,360
-<font color="#FF00FF">(Berliner Dialekt)</font>
-<font color="#FF00FF">Und was will der?</font>
+<font color="#FF00FF">(لهجه برلینی)</font>
+<font color="#FF00FF">خب چی میخواد؟</font>
 
 152
 00:09:32,920 --> 00:09:34,840
-<font color="#FF00FF">Was er will, habe ich dich gefragt.</font>
+<font color="#FF00FF">میگم چی میخواد، از تو پرسیدم</font>
 
 153
 00:09:35,000 --> 00:09:36,720
-<font color="#FFFFFF">Ich habe nichts gemacht.</font>
+<font color="#FFFFFF">من کاری نکردم</font>
 
 154
 00:09:36,760 --> 00:09:38,760
-<font color="#FFFFFF">* Türklingel *</font>
+<font color="#FFFFFF">* صدای زنگ در *</font>
 
 155
 00:09:55,000 --> 00:09:56,880
-<font color="#00FFFF">Oh, hallo.</font>
+<font color="#00FFFF">اوه، سلام</font>
 
 156
 00:09:58,120 --> 00:09:59,640
-<font color="#00FFFF">Äh, ich bin Theo.</font>
+<font color="#00FFFF">اوه، من تئو هستم</font>
 
 157
 00:09:59,680 --> 00:10:02,360
-<font color="#00FFFF">Das klingt</font>
-<font color="#00FFFF">vielleicht ein bisschen komisch,</font>
+<font color="#00FFFF">شاید یه کم عجیب به نظر برسه</font>
+<font color="#00FFFF">ولی میخواستم بپرسم که شما...</font>
 
 158
 00:10:02,400 --> 00:10:04,400
-<font color="#00FFFF">aber ich wollte fragen, ob Sie...</font>
+<font color="#00FFFF">اصلاً متوجه میشی چی میگم؟</font>
 
 159
 00:10:04,960 --> 00:10:06,680
-<font color="#00FFFF">Verstehen Sie mich überhaupt?</font>
+<font color="#00FFFF">اصلاً متوجه میشی چی میگم؟</font>
 
 160
 00:10:06,720 --> 00:10:09,440
-<font color="#FF00FF">Wenn Sie nicht so rumstammeln,</font>
-<font color="#FF00FF">verstehe ich Sie.</font>
+<font color="#FF00FF">اگه این‌قدر من‌من نکنی</font>
+<font color="#FF00FF">می‌فهمم چی میگی</font>
 
 161
 00:10:09,480 --> 00:10:13,080
-<font color="#00FFFF">Ja, ich wollte fragen, ob Sie</font>
-<font color="#00FFFF">zufällig 'ne Flasche Wein dahaben,</font>
+<font color="#00FFFF">ببخشید، می‌خواستم بپرسم که</font>
+<font color="#00FFFF">اتفاقی یه بطری شراب اضافه ندارید؟</font>
 
 162
 00:10:13,120 --> 00:10:15,200
-<font color="#00FFFF">die Sie, ähm, entbehren könnten.</font>
+<font color="#00FFFF">که بتونید، خب، به ما بدید</font>
 
 163
 00:10:17,880 --> 00:10:19,400
-<font color="#00FFFF">Ich zahle natürlich dafür.</font>
+<font color="#00FFFF">البته پولش رو هم می‌دم</font>
 
 164
 00:10:20,640 --> 00:10:23,040
-<font color="#00FFFF">20? Wäre das in Ordnung?</font>
+<font color="#00FFFF">بیست تا خوبه؟</font>
 
 165
 00:10:26,600 --> 00:10:28,080
-<font color="#00FFFF">30?</font>
+<font color="#00FFFF">سی تا؟</font>
 
 166
 00:10:30,600 --> 00:10:32,560
-<font color="#FF00FF">Kommen Sie ruhig vor.</font>
+<font color="#FF00FF">راحت باشید، بیاید تو</font>
 
 167
 00:10:33,080 --> 00:10:36,800
-<font color="#FF00FF">Keine Angst, das Schild ist nur</font>
-<font color="#FF00FF">zur Abschreckung. Ich hasse Köter.</font>
+<font color="#FF00FF">نترسید، اون تابلو فقط برای ترسوندنه</font>
+<font color="#FF00FF">من از سگ جماعت متنفرم</font>
 
 168
 00:11:00,040 --> 00:11:02,360
-<font color="#FF00FF">Wein haben wir nicht, nur Bier.</font>
+<font color="#FF00FF">شراب نداریم، فقط آبجو هست</font>
 
 169
 00:11:02,520 --> 00:11:04,840
-<font color="#00FFFF">Ah, besser als nichts, ne?</font>
+<font color="#00FFFF">آه، از هیچی بهتره، نه؟</font>
 
 170
 00:11:06,880 --> 00:11:08,720
-<font color="#FF00FF">Wofür brauchen Sie das?</font>
+<font color="#FF00FF">اصلاً برای چی می‌خوایدش؟</font>
 
 171
 00:11:08,760 --> 00:11:12,600
-<font color="#00FFFF">Äh, für den Makler, wir sind gerade</font>
-<font color="#00FFFF">nebenan auf einer Besichtigung.</font>
+<font color="#00FFFF">خب، برای مشاور املاک، داریم</font>
+<font color="#00FFFF">همین بغل یه خونه رو بازدید می‌کنیم</font>
 
 172
 00:11:12,640 --> 00:11:14,120
-<font color="#FF00FF">Für den Makler?</font>
+<font color="#FF00FF">برای مشاور املاک؟</font>
 
 173
 00:11:15,520 --> 00:11:17,200
-<font color="#00FFFF">Hört sich komisch an, ne?</font>
-<font color="#FF00FF">Mhm.</font>
+<font color="#00FFFF">عجیب به نظر میاد، نه؟</font>
+<font color="#FF00FF">آره</font>
 
 174
 00:11:17,240 --> 00:11:21,360
-<font color="#00FFFF">Aber manchmal muss man nachhelfen.</font>
-<font color="#00FFFF">Der Mann steht nicht so auf POCs.</font>
+<font color="#00FFFF">ولی گاهی باید یه کم کمک کرد</font>
+<font color="#00FFFF">این یارو زیاد با آدم‌های رنگین‌پوست حال نمی‌کنه</font>
 
 175
 00:11:21,520 --> 00:11:23,440
-<font color="#FF00FF">PO was?</font>
-<font color="#FFFFFF">* Theo lacht. *</font>
+<font color="#FF00FF">آدم‌های چی چی؟</font>
+<font color="#FFFFFF">* تئو می‌خندد *</font>
 
 176
 00:11:24,960 --> 00:11:28,280
-<font color="#00FFFF">Ähm, People of Color.</font>
-<font color="#FF00FF">Sagt man das jetzt so?</font>
+<font color="#00FFFF">خب، رنگین‌پوست‌ها</font>
+<font color="#FF00FF">الان دیگه این‌طوری می‌گن؟</font>
 
 177
 00:11:29,040 --> 00:11:30,520
-<font color="#00FFFF">Also na ja...</font>
+<font color="#00FFFF">خب، یعنی...</font>
 
 178
 00:11:30,560 --> 00:11:34,160
-<font color="#00FFFF">Also man kann das so sagen,</font>
-<font color="#00FFFF">wenn man so aussieht wie ... wir.</font>
+<font color="#00FFFF">یعنی می‌شه این‌طوری گفت</font>
+<font color="#00FFFF">وقتی قیافه‌ت مثل... ما باشه</font>
 
 179
 00:11:35,200 --> 00:11:37,520
-<font color="#00FFFF">Also Sie und ich.</font>
-<font color="#FF00FF">Wie sehe ich denn aus?</font>
+<font color="#00FFFF">یعنی شما و من</font>
+<font color="#FF00FF">مگه قیافه من چطوریه؟</font>
 
 180
 00:11:39,880 --> 00:11:42,320
-<font color="#00FFFF">Na ja, Sie wissen schon.</font>
-<font color="#FF00FF">Nee, weiß ich nicht.</font>
+<font color="#00FFFF">خب، خودتون می‌دونید دیگه</font>
+<font color="#FF00FF">نه، نمی‌دونم</font>
 
 181
 00:11:43,080 --> 00:11:46,200
-<font color="#00FFFF">Okay, also ich bin schwarz.</font>
-<font color="#00FFFF">Und Sie...</font>
+<font color="#00FFFF">اوکی، خب من سیاه‌پوستم</font>
+<font color="#00FFFF">و شما...</font>
 
 182
 00:11:47,440 --> 00:11:50,000
-<font color="#00FFFF">Damit nicht</font>
-<font color="#00FFFF">die Farbpalette herhalten muss,</font>
+<font color="#00FFFF">برای اینکه مجبور نباشیم</font>
+<font color="#00FFFF">از پالت رنگ استفاده کنیم</font>
 
 183
 00:11:50,040 --> 00:11:51,520
-<font color="#00FFFF">sagt man People of Color.</font>
+<font color="#00FFFF">بهشون می‌گیم رنگین‌پوست</font>
 
 184
 00:11:51,680 --> 00:11:54,000
-<font color="#FF00FF">Die ohne Farbe heißen nur People</font>
-<font color="#FF00FF">oder was?</font>
+<font color="#FF00FF">پس اونایی که رنگ ندارن فقط آدم‌ان</font>
+<font color="#FF00FF">یا چی؟</font>
 
 185
 00:11:55,080 --> 00:11:57,560
-<font color="#00FFFF">Äh...</font>
-<font color="#00FFFF">Ich glaube, ich sollte mal wieder.</font>
+<font color="#00FFFF">اوه...</font>
+<font color="#00FFFF">فکر کنم دیگه باید برم</font>
 
 186
 00:11:58,120 --> 00:11:59,600
-<font color="#FF00FF">Kollege.</font>
+<font color="#FF00FF">رفیق</font>
 
 187
 00:12:02,440 --> 00:12:05,160
-<font color="#00FFFF">Klar, sorry. Ich habe es ganz...</font>
-<font color="#00FFFF">Ich bin so...</font>
+<font color="#00FFFF">آره، ببخشید، اصلاً حواسم...</font>
+<font color="#00FFFF">خیلی گیج شدم</font>
 
 188
 00:12:06,800 --> 00:12:10,320
-<font color="#00FFFF">Was hatten wir noch mal gesagt? 20?</font>
-<font color="#FF00FF">30.</font>
+<font color="#00FFFF">چی گفتیم؟ بیست تا؟</font>
+<font color="#FF00FF">سی تا</font>
 
 189
 00:12:12,360 --> 00:12:13,960
-<font color="#00FFFF">Ach ja, 30.</font>
+<font color="#00FFFF">آهان، آره، سی تا</font>
 
 190
 00:12:15,880 --> 00:12:17,480
-<font color="#00FFFF">Für einen Sixer Bier.</font>
+<font color="#00FFFF">برای یه شش‌تایی آبجو</font>
 
 191
 00:12:18,800 --> 00:12:22,080
-<font color="#FFFF00">Wie goldig.</font>
-<font color="#FFFF00">Wie 'ne Margarine-Werbung.</font>
+<font color="#FFFF00">چه بامزه</font>
+<font color="#FFFF00">انگار تبلیغ مارگارینه</font>
 
 192
 00:12:22,120 --> 00:12:23,920
-<font color="#FFFF00">Wissen Sie, was ich meine?</font>
+<font color="#FFFF00">می‌فهمید چی می‌گم؟</font>
 
 193
 00:12:23,960 --> 00:12:26,720
-<font color="#FFFF00">Mit dem Licht und so?</font>
-<font color="#FFFF00">Die blonden Haare.</font>
+<font color="#FFFF00">با اون نور و این حرفا؟</font>
+<font color="#FFFF00">اون موهای بلوند</font>
 
 194
 00:12:27,600 --> 00:12:30,120
-<font color="#FFFF00">Herrlich.</font>
-<font color="#FFFF00">Der Garten zeigt nicht nach Süden.</font>
+<font color="#FFFF00">عالیه</font>
+<font color="#FFFF00">باغش رو به جنوب نیست</font>
 
 195
 00:12:30,160 --> 00:12:32,600
-<font color="#FFFF00">Aber gefühlt haben Sie</font>
-<font color="#FFFF00">den ganzen Tag Sonne,</font>
+<font color="#FFFF00">ولی انگار</font>
+<font color="#FFFF00">کل روز آفتاب داره</font>
 
 196
 00:12:32,760 --> 00:12:34,320
-<font color="#FFFF00">hat mit der Bauweise zu tun.</font>
+<font color="#FFFF00">به خاطر نوع ساختشه</font>
 
 197
 00:12:34,920 --> 00:12:37,320
-<font color="#FFFF00">Der Eigentümer, Patzke.</font>
-<font color="#FFFF00">Ganz feiner Kerl.</font>
+<font color="#FFFF00">صاحب‌خونه، پاتسکه</font>
+<font color="#FFFF00">آدم خیلی باکلاسیه</font>
 
 198
 00:12:37,480 --> 00:12:39,880
-<font color="#FFFF00">Der hatte hier</font>
-<font color="#FFFF00">immer seine Couch stehen,</font>
+<font color="#FFFF00">اون همیشه مبلش رو</font>
+<font color="#FFFF00">اینجا می‌ذاشت</font>
 
 199
 00:12:39,920 --> 00:12:42,240
-<font color="#FFFF00">damit er beim Fernsehgucken</font>
-<font color="#FFFF00">UV abkriegt.</font>
+<font color="#FFFF00">تا موقع تلویزیون دیدن</font>
+<font color="#FFFF00">اشعه فرابنفش بگیره</font>
 
 200
 00:12:42,280 --> 00:12:45,000
-<font color="#FFFF00">Soll gut sein</font>
-<font color="#FFFF00">für den Kreislauf und so weiter.</font>
+<font color="#FFFF00">می‌گن برای گردش خون</font>
+<font color="#FFFF00">و این چیزا خوبه</font>
 
 201
 00:12:45,040 --> 00:12:48,280
-<font color="#FFFFFF">Und wo ist der Herr Patzke jetzt?</font>
-<font color="#FFFF00">Tot, Schlaganfall.</font>
+<font color="#FFFFFF">خب آقای پاتسکه الان کجاست؟</font>
+<font color="#FFFF00">مرد، سکته کرد</font>
 
 202
 00:12:49,080 --> 00:12:50,560
-<font color="#FFFFFF">Oh, das tut mir leid.</font>
+<font color="#FFFFFF">اوه، واقعاً متاسفم</font>
 
 203
 00:12:53,400 --> 00:12:55,680
-<font color="#FFFF00">Jetzt habe ich Sie aber gefoppt,</font>
-<font color="#FFFF00">Jochen?</font>
+<font color="#FFFF00">شوخی کردم، سرکارت گذاشتم</font>
+<font color="#FFFF00">یوخن؟</font>
 
 204
 00:12:55,720 --> 00:12:58,640
-<font color="#FFFF00">Dem geht's prächtig auf Malle,</font>
-<font color="#FFFF00">genießt seine Rente.</font>
+<font color="#FFFF00">توی مایورکا داره حال می‌کنه،</font>
+<font color="#FFFF00">داره از بازنشستگیش لذت می‌بره</font>
 
 205
 00:12:58,680 --> 00:13:00,840
-<font color="#FFFFFF">Ella,</font>
-<font color="#FFFFFF">du musst nicht alles nachmachen.</font>
+<font color="#FFFFFF">الا،</font>
+<font color="#FFFFFF">لازم نیست هر کاری اون می‌کنه رو تکرار کنی</font>
 
 206
 00:13:01,000 --> 00:13:02,800
-<font color="#FFFFFF">Komm, wir gehen raus zu Mama.</font>
+<font color="#FFFFFF">بیا، بریم پیش مامان بیرون</font>
 
 207
 00:13:02,840 --> 00:13:06,120
-<font color="#FFFF00">Alles klar, Jochen.</font>
-<font color="#FFFF00">Bin gleich bei Ihnen. Worum geht's?</font>
+<font color="#FFFF00">باشه یوخن،</font>
+<font color="#FFFF00">الان میام پیشت. قضیه چیه؟</font>
 
 208
 00:13:06,160 --> 00:13:09,080
-<font color="#00FF00">Können Sie mir sagen,</font>
-<font color="#00FF00">ob das eine tragende Wand ist?</font>
+<font color="#00FF00">می‌تونید بهم بگید</font>
+<font color="#00FF00">که این دیوار باربره یا نه؟</font>
 
 209
 00:13:10,040 --> 00:13:11,520
-<font color="#FFFF00">Wieso? Was haben Sie vor?</font>
+<font color="#FFFF00">چطور؟ مگه چه نقشه‌ای داری؟</font>
 
 210
 00:13:11,680 --> 00:13:14,600
-<font color="#00FF00">Hier würde sich</font>
-<font color="#00FF00">ja eine offene Küche gut anbieten.</font>
+<font color="#00FF00">اینجا خیلی جای خوبیه</font>
+<font color="#00FF00">برای یه آشپزخونه اوپن</font>
 
 211
 00:13:14,640 --> 00:13:17,080
-<font color="#FFFF00">Meiner Meinung nach</font>
-<font color="#FFFF00">stehen die Wände gut da.</font>
+<font color="#FFFF00">به نظر من که</font>
+<font color="#FFFF00">دیوارها وضعیتشون خوبه</font>
 
 212
 00:13:17,120 --> 00:13:21,200
-<font color="#FFFF00">Bleibt den Eigentümern überlassen,</font>
-<font color="#FFFF00">ob das eine Lagerhalle werden soll.</font>
+<font color="#FFFF00">دیگه به صاحبخونه مربوطه که</font>
+<font color="#FFFF00">می‌خواد اینجا رو تبدیل به انبار کنه یا نه</font>
 
 213
 00:13:21,360 --> 00:13:24,000
-<font color="#FFFF00">Die Wand, die nicht</font>
-<font color="#FFFF00">angefasst wird, ist die da.</font>
+<font color="#FFFF00">اون دیواری که نباید</font>
+<font color="#FFFF00">بهش دست زد، همونه</font>
 
 214
 00:13:24,040 --> 00:13:26,160
-<font color="#00FF00">Die geht zu den Nachbarn?</font>
-<font color="#FFFF00">Richtig.</font>
+<font color="#00FF00">اون سمت همسایه‌هاست؟</font>
+<font color="#FFFF00">درسته</font>
 
 215
 00:13:26,200 --> 00:13:28,320
-<font color="#00FF00">Wie ist das</font>
-<font color="#00FF00">mit der Schallisolierung?</font>
+<font color="#00FF00">عایق صوتیش</font>
+<font color="#00FF00">چطوره؟</font>
 
 216
 00:13:28,480 --> 00:13:31,520
-<font color="#00FF00">Ist das sehr laut oder...</font>
-<font color="#FFFF00">Hören Sie denn jetzt was?</font>
+<font color="#00FF00">خیلی صدا میاد یا...</font>
+<font color="#FFFF00">الان چیزی می‌شنوی؟</font>
 
 217
 00:13:32,680 --> 00:13:34,160
-<font color="#00FF00">Nein.</font>
+<font color="#00FF00">نه</font>
 
 218
 00:13:34,200 --> 00:13:36,920
-<font color="#FFFF00">Wenn sich niemand</font>
-<font color="#FFFF00">wie die Hottentotten verhält,</font>
+<font color="#FFFF00">اگه کسی مثل</font>
+<font color="#FFFF00">آدم‌های وحشی رفتار نکنه،</font>
 
 219
 00:13:36,960 --> 00:13:38,520
-<font color="#FFFF00">sollte das kein Thema sein.</font>
+<font color="#FFFF00">نباید مشکلی باشه</font>
 
 220
 00:13:39,040 --> 00:13:42,560
-<font color="#00FF00">Äh, wie wer?</font>
-<font color="#FFFF00">Wie die Hottentotten.</font>
+<font color="#00FF00">اِ، مثل کی؟</font>
+<font color="#FFFF00">مثل آدم‌های وحشی</font>
 
 221
 00:13:43,160 --> 00:13:46,560
-<font color="#00FF00">Ist Ihnen bewusst, das ist</font>
-<font color="#00FF00">ein Begriff aus der Kolonialzeit,</font>
+<font color="#00FF00">می‌دونید که این</font>
+<font color="#00FF00">یه اصطلاح مربوط به دوران استعمارگریه</font>
 
 222
 00:13:46,600 --> 00:13:48,560
-<font color="#00FF00">der für viele verletzend sein kann?</font>
+<font color="#00FF00">که می‌تونه برای خیلی‌ها توهین‌آمیز باشه؟</font>
 
 223
 00:13:48,720 --> 00:13:51,600
-<font color="#FFFF00">Hallo? Äh, da bitte nicht rein.</font>
+<font color="#FFFF00">الو؟ اِ، اونجا نرو لطفا</font>
 
 224
 00:13:52,200 --> 00:13:54,840
-<font color="#FFFF00">Fräulein, was möchten Sie denn?</font>
-<font color="#FFFFFF">Zum Klo?</font>
+<font color="#FFFF00">خانم کوچولو، چی می‌خوای؟</font>
+<font color="#FFFFFF">دستشویی؟</font>
 
 225
 00:13:56,320 --> 00:13:59,240
-<font color="#FFFF00">Hinten raus, durch den Garten</font>
-<font color="#FFFF00">und dann in die Büsche.</font>
+<font color="#FFFF00">از پشت برو بیرون، از توی باغ</font>
+<font color="#FFFF00">بعد برو لای بوته‌ها</font>
 
 226
 00:13:59,400 --> 00:14:02,080
-<font color="#FFFF00">Sanitär ist</font>
-<font color="#FFFF00">im ganzen Haus außer Betrieb.</font>
+<font color="#FFFF00">سیستم بهداشتی</font>
+<font color="#FFFF00">کل خونه خرابه</font>
 
 227
 00:14:02,240 --> 00:14:06,400
-<font color="#00FF00">In Büsche pinkeln ist zivilisiert?</font>
-<font color="#FFFF00">Wie haben die Ägypter das gemacht?</font>
+<font color="#00FF00">یعنی جیش کردن لای بوته‌ها متمدنانه‌ست؟</font>
+<font color="#FFFF00">مصری‌ها چطوری این کار رو می‌کردن؟</font>
 
 228
 00:14:06,560 --> 00:14:09,720
-<font color="#00FF00">Die hatten Töpfe mit Sand.</font>
-<font color="#FFFF00">Ja, gibt's da hinten auch.</font>
+<font color="#00FF00">اونا ظرف‌های شن داشتن</font>
+<font color="#FFFF00">آره، اون پشت هم هست</font>
 
 229
 00:14:11,880 --> 00:14:15,800
-<font color="#00FF00">Verkneif's dir einfach. Wir möchten</font>
-<font color="#00FF00">uns den Raum trotzdem anschauen.</font>
+<font color="#00FF00">بی‌خیال شو. ما در هر صورت</font>
+<font color="#00FF00">می‌خوایم اون اتاق رو ببینیم</font>
 
 230
 00:14:15,960 --> 00:14:18,400
-<font color="#FFFF00">Das ist</font>
-<font color="#FFFF00">aktuell leider nicht möglich.</font>
+<font color="#FFFF00">متاسفانه الان</font>
+<font color="#FFFF00">امکانش نیست</font>
 
 231
 00:14:18,440 --> 00:14:22,000
-<font color="#FFFF00">Der Raum wird gerade renoviert.</font>
-<font color="#00FF00">Wir möchten nichts anfassen.</font>
+<font color="#FFFF00">اتاق داره بازسازی می‌شه</font>
+<font color="#00FF00">ما به چیزی دست نمی‌زنیم</font>
 
 232
 00:14:22,040 --> 00:14:24,160
-<font color="#FFFF00">Was ist das Problem</font>
-<font color="#FFFF00">mit Leuten wie Sie?</font>
+<font color="#FFFF00">مشکل شماها</font>
+<font color="#FFFF00">چیه؟</font>
 
 233
 00:14:24,320 --> 00:14:26,560
-<font color="#FFFF00">Ich habe doch gesagt:</font>
-<font color="#FFFF00">Der Raum bleibt zu.</font>
+<font color="#FFFF00">مگه نگفتم:</font>
+<font color="#FFFF00">اتاق بسته می‌مونه</font>
 
 234
 00:14:26,600 --> 00:14:28,640
-<font color="#FFFF00">Da sind Sachen</font>
-<font color="#FFFF00">von Herrn Patzke drin.</font>
+<font color="#FFFF00">وسایل آقای پاتسکه</font>
+<font color="#FFFF00">اون توئه</font>
 
 235
 00:14:28,680 --> 00:14:30,520
-<font color="#FFFF00">Herr Patzke ist auf Malle.</font>
+<font color="#FFFF00">آقای پاتسکه مایورکاست</font>
 
 236
 00:14:30,680 --> 00:14:33,000
-<font color="#00FF00">Was genau meinen Sie</font>
-<font color="#00FF00">mit "Leuten wie Sie"?</font>
+<font color="#00FF00">دقیقاً منظورتون از</font>
+<font color="#00FF00">«شماها» چیه؟</font>
 
 237
 00:14:33,040 --> 00:14:34,880
-<font color="#FFFF00">Ah, so.</font>
+<font color="#FFFF00">آها، اینطوری</font>
 
 238
 00:14:37,520 --> 00:14:39,840
-<font color="#FFFF00">Darf ich Sie mal was fragen?</font>
-<font color="#00FF00">Bitte.</font>
+<font color="#FFFF00">می‌تونم یه سوال ازتون بپرسم؟</font>
+<font color="#00FF00">بفرمایید</font>
 
 239
 00:14:40,000 --> 00:14:41,600
-<font color="#FFFF00">Haben Sie einen Job?</font>
+<font color="#FFFF00">شما اصلاً شغل دارید؟</font>
 
 240
 00:14:41,760 --> 00:14:45,400
-<font color="#00FF00">Ja, im HR-Department bei einem</font>
-<font color="#00FF00">großen Elektromobilhersteller.</font>
+<font color="#00FF00">بله، در بخش منابع انسانی یه</font>
+<font color="#00FF00">شرکت بزرگ تولید خودروهای برقی کار می‌کنم</font>
 
 241
 00:14:45,440 --> 00:14:47,480
-<font color="#00FF00">Führungskraft.</font>
-<font color="#FFFF00">Das Ding um die Ecke?</font>
+<font color="#00FF00">مدیر اجرایی</font>
+<font color="#FFFF00">همون ساختمون سر نبش؟</font>
 
 242
 00:14:47,520 --> 00:14:51,400
-<font color="#FFFF00">Wo sie Wald für abgeholzt haben?</font>
-<font color="#00FF00">Und Arbeitsplätze geschaffen haben.</font>
+<font color="#FFFF00">همون‌جایی که واسش کلی درخت قطع کردن؟</font>
+<font color="#00FF00">و کلی شغل ایجاد کردن</font>
 
 243
 00:14:51,560 --> 00:14:55,040
-<font color="#FFFF00">Na schönen Dank auch. Ihr habt</font>
-<font color="#FFFF00">da ein Vorstellungsgespräch?</font>
+<font color="#FFFF00">دمشون گرم واقعاً. اونجا</font>
+<font color="#FFFF00">قرار مصاحبه دارید؟</font>
 
 244
 00:14:55,200 --> 00:14:56,720
-<font color="#00FF00">Mhm, mehrere.</font>
+<font color="#00FF00">آره، چند تا</font>
 
 245
 00:14:56,880 --> 00:14:59,920
-<font color="#FFFF00">Und haben Sie da auch</font>
-<font color="#FFFF00">so rumgenölt wie jetzt? Nee, wa?</font>
+<font color="#FFFF00">اونجا هم همین‌طوری غر زدید؟</font>
+<font color="#FFFF00">نه، مگه نه؟</font>
 
 246
 00:15:00,080 --> 00:15:01,560
-<font color="#FFFF00">Wenn man was haben will,</font>
+<font color="#FFFF00">آدم وقتی چیزی رو بخواد</font>
 
 247
 00:15:01,600 --> 00:15:05,280
-<font color="#FFFF00">muss man klein beigeben können,</font>
-<font color="#FFFF00">ansonsten wird's nämlich nichts.</font>
+<font color="#FFFF00">باید بتونه کوتاه بیاد</font>
+<font color="#FFFF00">وگرنه هیچی به هیچی</font>
 
 248
 00:15:06,920 --> 00:15:08,880
-<font color="#FFFF00">So, Jochen, bin wieder bei Ihnen.</font>
+<font color="#FFFF00">خب یوخن، دوباره در خدمتتون هستم</font>
 
 249
 00:15:08,920 --> 00:15:10,920
-<font color="#FFFFFF">* Verspielte Musik *</font>
+<font color="#FFFFFF">* موسیقی شاد *</font>
 
 250
 00:15:21,240 --> 00:15:22,800
-<font color="#00FFFF">Habe ich was verpasst?</font>
+<font color="#00FFFF">چیزی رو از دست دادم؟</font>
 
 251
 00:15:25,440 --> 00:15:27,040
-<font color="#00FF00">Was ist das?</font>
+<font color="#00FF00">این چیه؟</font>
 
 252
 00:15:27,600 --> 00:15:30,120
-<font color="#00FFFF">Findet ihr nicht,</font>
-<font color="#00FFFF">dass er nach Bier aussieht?</font>
+<font color="#00FFFF">فکر نمی‌کنید</font>
+<font color="#00FFFF">که این بیشتر شبیه آبجوئه؟</font>
 
 253
 00:15:30,280 --> 00:15:33,920
-<font color="#00FFFF">Wein ist ein Risiko, am Ende</font>
-<font color="#00FFFF">schmeckt einer von beiden scheiße.</font>
+<font color="#00FFFF">شراب ریسکه، آخرش</font>
+<font color="#00FFFF">ممکنه یکیشون مزه گند بده</font>
 
 254
 00:15:34,080 --> 00:15:37,080
-<font color="#00FF00">Theo, vergiss es einfach, okay?</font>
-<font color="#00FF00">Zoe, komm.</font>
+<font color="#00FF00">تئو، بی‌خیال شو، باشه؟</font>
+<font color="#00FF00">زوئی، بیا بریم</font>
 
 255
 00:15:40,040 --> 00:15:41,520
-<font color="#FFFFFF">Good job.</font>
+<font color="#FFFFFF">کارت عالی بود</font>
 
 256
 00:15:50,200 --> 00:15:51,960
-<font color="#FFFF00">Was soll denn das jetzt werden?</font>
+<font color="#FFFF00">این دیگه چه صیغه‌ایه؟</font>
 
 257
 00:15:53,160 --> 00:15:54,800
-<font color="#FFFF00">Wollen Sie mich bestechen?</font>
+<font color="#FFFF00">می‌خوای رشوه بدی؟</font>
 
 258
 00:15:54,960 --> 00:15:56,440
-<font color="#00FFFF">Was?</font>
+<font color="#00FFFF">چی؟</font>
 
 259
 00:15:57,800 --> 00:16:00,360
-<font color="#00FFFF">Nee, das Bier</font>
-<font color="#00FFFF">sollte nicht warm werden im Auto,</font>
+<font color="#00FFFF">نه، آبجوها</font>
+<font color="#00FFFF">نباید تو ماشین گرم می‌شدن</font>
 
 260
 00:16:00,400 --> 00:16:02,000
-<font color="#00FFFF">sonst schmeckt es nach Urin.</font>
+<font color="#00FFFF">وگرنه مزه ادرار می‌گرفتن</font>
 
 261
 00:16:10,400 --> 00:16:11,880
-<font color="#FFFF00">Spaß muss sein, wa?</font>
+<font color="#FFFF00">شوخی لازمه، نه؟</font>
 
 262
 00:16:11,920 --> 00:16:14,960
-<font color="#FFFF00">Gut gekontert. Sonst</font>
-<font color="#FFFF00">schmeckt es nach Urin, herrlich.</font>
+<font color="#FFFF00">جواب خوبی بود. وگرنه</font>
+<font color="#FFFF00">مزه ادرار می‌گرفت، عالیه</font>
 
 263
 00:16:15,120 --> 00:16:16,760
-<font color="#FFFF00">Zum Piepen, du.</font>
+<font color="#FFFF00">خیلی خنده‌دار بود</font>
 
 264
 00:16:17,760 --> 00:16:19,320
-<font color="#00FFFF">Also, noch ist es kühl.</font>
+<font color="#00FFFF">خلاصه که هنوز خنکه</font>
 
 265
 00:16:21,040 --> 00:16:22,520
-<font color="#FFFF00">Ist wie Weihachten heute.</font>
+<font color="#FFFF00">انگار امروز کریسمسه</font>
 
 266
 00:16:22,560 --> 00:16:25,080
-<font color="#FFFF00">Dann noch mein Lieblingsbier.</font>
-<font color="#FFFF00">Perlewalder.</font>
+<font color="#FFFF00">اونم آبجوی مورد علاقه‌م</font>
+<font color="#FFFF00">پرله‌والدر</font>
 
 267
 00:16:25,720 --> 00:16:27,720
-<font color="#FFFF00">Hauptsache Helles, sage ich immer.</font>
+<font color="#FFFF00">من همیشه میگم فقط آبجوی روشن</font>
 
 268
 00:16:27,880 --> 00:16:30,240
-<font color="#FFFF00">Ich kriege</font>
-<font color="#FFFF00">mein Helles vom Schwarzen.</font>
+<font color="#FFFF00">من آبجوی روشنم رو</font>
+<font color="#FFFF00">از آدم سیاه‌پوست می‌گیرم</font>
 
 269
 00:16:30,920 --> 00:16:33,440
-<font color="#FFFF00">Weißt, wie es gemeint ist?</font>
-<font color="#00FFFF">War ein Wortspiel.</font>
+<font color="#FFFF00">می‌دونی چی میگم؟</font>
+<font color="#00FFFF">یه بازی با کلمات بود</font>
 
 270
 00:16:33,480 --> 00:16:35,080
-<font color="#00FFFF">Sollte ein Witz sein.</font>
-<font color="#FFFF00">Genau.</font>
+<font color="#00FFFF">می‌خواستم شوخی کنم</font>
+<font color="#FFFF00">دقیقاً</font>
 
 271
 00:16:35,240 --> 00:16:38,120
-<font color="#FFFF00">Wenn wir schon mal beim Du sind.</font>
-<font color="#FFFF00">Ich bin Andi.</font>
+<font color="#FFFF00">حالا که با هم راحت شدیم</font>
+<font color="#FFFF00">من اندی هستم</font>
 
 272
 00:16:38,720 --> 00:16:40,600
-<font color="#00FFFF">Theo.</font>
-<font color="#FFFF00">Ach echt, Theo, ja?</font>
+<font color="#00FFFF">تئو</font>
+<font color="#FFFF00">جدی؟ تئو؟</font>
 
 273
 00:16:40,640 --> 00:16:42,880
-<font color="#FFFF00">Ich hatte einen Kollegen,</font>
-<font color="#FFFF00">der hieß Theo.</font>
+<font color="#FFFF00">یه همکار داشتم</font>
+<font color="#FFFF00">اسمش تئو بود</font>
 
 274
 00:16:42,920 --> 00:16:45,400
-<font color="#FFFF00">Der war auch schwarz.</font>
-<font color="#FFFF00">So klein ist die Welt.</font>
+<font color="#FFFF00">اونم سیاه‌پوست بود</font>
+<font color="#FFFF00">دنیا چقدر کوچیکه</font>
 
 275
 00:16:54,520 --> 00:16:56,560
-<font color="#FFFF00">Und was machst du vom Beruf, Theo?</font>
+<font color="#FFFF00">خب تئو، شغلت چیه؟</font>
 
 276
 00:16:56,600 --> 00:16:59,680
-<font color="#00FFFF">Ähm, ich bin Lehrer.</font>
-<font color="#FFFF00">Intellektueller, ja. Mhm.</font>
+<font color="#00FFFF">امم، معلمم</font>
+<font color="#FFFF00">یه روشنفکر، آره. اوهوم</font>
 
 277
 00:16:59,720 --> 00:17:01,360
-<font color="#FFFF00">Einwandfrei, welche Fächer?</font>
+<font color="#FFFF00">خیلی هم عالی، چه درسی؟</font>
 
 278
 00:17:01,400 --> 00:17:02,880
-<font color="#00FFFF">Musik.</font>
-<font color="#FFFF00">Mhm.</font>
+<font color="#00FFFF">موسیقی</font>
+<font color="#FFFF00">اوهوم</font>
 
 279
 00:17:06,520 --> 00:17:08,040
-<font color="#FFFF00">Was noch?</font>
+<font color="#FFFF00">دیگه چی؟</font>
 
 280
 00:17:08,080 --> 00:17:10,240
-<font color="#00FFFF">Nur Musik.</font>
-<font color="#FFFF00">Und das reicht zum Leben?</font>
+<font color="#00FFFF">فقط موسیقی</font>
+<font color="#FFFF00">همین واسه زندگی کافیه؟</font>
 
 281
 00:17:10,960 --> 00:17:12,880
-<font color="#00FFFF">Na ja, also meine Partnerin...</font>
+<font color="#00FFFF">خب، راستش شریک زندگی من...</font>
 
 282
 00:17:13,800 --> 00:17:16,440
-<font color="#FFFF00">Ja, ja, ich weiß.</font>
-<font color="#FFFF00">Die hat die Hosen an, wa?</font>
+<font color="#FFFF00">آره، آره، می‌دونم</font>
+<font color="#FFFF00">حرف حرف اونه، نه؟</font>
 
 283
 00:17:17,040 --> 00:17:19,320
-<font color="#00FFFF">Normalerweise</font>
-<font color="#00FFFF">besprechen wir alles...</font>
+<font color="#00FFFF">معمولاً ما همه چیز رو</font>
+<font color="#00FFFF">با هم هماهنگ می‌کنیم...</font>
 
 284
 00:17:19,480 --> 00:17:22,480
-<font color="#FFFF00">Hey, ist doch klar.</font>
-<font color="#FFFF00">Ich weiß doch Bescheid.</font>
+<font color="#FFFF00">هی، معلومه دیگه</font>
+<font color="#FFFF00">من که در جریانم</font>
 
 285
 00:17:22,520 --> 00:17:25,680
-<font color="#FFFF00">Hast es auch nicht leicht.</font>
-<font color="#FFFF00">Ich bin ja nicht blöde.</font>
+<font color="#FFFF00">تو هم کارت سخت شده</font>
+<font color="#FFFF00">من که خنگ نیستم</font>
 
 286
 00:17:27,320 --> 00:17:29,760
-<font color="#FFFF00">Und? Wo kommt ihr her?</font>
+<font color="#FFFF00">خب؟ اهل کجایید؟</font>
 
 287
 00:17:31,000 --> 00:17:34,720
-<font color="#00FFFF">Äh, also Mari ist im Iran geboren</font>
-<font color="#00FFFF">und mein Vater kommt aus Ruanda.</font>
+<font color="#00FFFF">ام، ماری متولد ایرانه</font>
+<font color="#00FFFF">و پدرم هم اهل روانداست</font>
 
 288
 00:17:34,760 --> 00:17:36,760
-<font color="#FFFF00">Nee, ich meine, wo ihr wohnt.</font>
+<font color="#FFFF00">نه، منظورم اینه که کجا زندگی می‌کنید</font>
 
 289
 00:17:38,440 --> 00:17:39,920
-<font color="#00FFFF">Ach so.</font>
+<font color="#00FFFF">آهان، متوجه شدم</font>
 
 290
 00:17:41,240 --> 00:17:42,760
-<font color="#FFFF00">Das ist...</font>
-<font color="#00FFFF">Boing.</font>
+<font color="#FFFF00">اینم از این...</font>
+<font color="#00FFFF">بوم</font>
 
 291
 00:17:43,200 --> 00:17:45,080
-<font color="#00FFFF">Berlin, Neukölln.</font>
+<font color="#00FFFF">برلین، نویکلن</font>
 
 292
 00:17:46,280 --> 00:17:48,400
-<font color="#FFFF00">Mhm, echt, ja?</font>
+<font color="#FFFF00">مهم، جدی؟</font>
 
 293
 00:17:49,080 --> 00:17:51,520
-<font color="#FFFF00">Ich könnte da nicht wohnen.</font>
-<font color="#FFFF00">Zu viel Gesocks.</font>
+<font color="#FFFF00">من که نمی‌تونستم اونجا زندگی کنم</font>
+<font color="#FFFF00">پر از آدمای ناجوره</font>
 
 294
 00:17:54,200 --> 00:17:56,840
-<font color="#FFFF00">Sicher, dass das hier</font>
-<font color="#FFFF00">das Richtige für euch ist?</font>
+<font color="#FFFF00">مطمئنید که اینجا</font>
+<font color="#FFFF00">جای مناسبی برای شماست؟</font>
 
 295
 00:17:57,400 --> 00:17:59,800
-<font color="#00FFFF">Das haben wir uns auch gefragt.</font>
-<font color="#00FFFF">Aber...</font>
+<font color="#00FFFF">ما هم همین سوال رو از خودمون پرسیدیم</font>
+<font color="#00FFFF">اما...</font>
 
 296
 00:17:59,960 --> 00:18:03,080
-<font color="#00FFFF">Ich meine so ein Häuschen</font>
-<font color="#00FFFF">im Grünen, ganz für uns allein.</font>
+<font color="#00FFFF">منظورم اینه که یه خونه کوچیک</font>
+<font color="#00FFFF">توی فضای سبز، کاملاً برای خودمون</font>
 
 297
 00:18:03,640 --> 00:18:05,240
-<font color="#00FFFF">Das wäre schon toll.</font>
+<font color="#00FFFF">خیلی عالی می‌شد</font>
 
 298
 00:18:05,280 --> 00:18:08,400
-<font color="#FFFF00">Na ja, ganz für euch allein</font>
-<font color="#FFFF00">ist Interpretationssache.</font>
+<font color="#FFFF00">خب، اینکه کاملاً برای خودتون باشه</font>
+<font color="#FFFF00">جای بحث داره</font>
 
 299
 00:18:08,440 --> 00:18:12,040
-<font color="#FFFF00">Heißt schließlich Doppelhaushälfte.</font>
-<font color="#FFFF00">Nicht Doppelhausganze.</font>
+<font color="#FFFF00">بالاخره اسمش خونه دو واحده‌ست</font>
+<font color="#FFFF00">نه خونه دربست</font>
 
 300
 00:18:14,480 --> 00:18:18,800
-<font color="#FFFF00">So, Familie Reimers.</font>
-<font color="#FFFF00">Führung geht jetzt drinnen weiter.</font>
+<font color="#FFFF00">خب، خانواده رایمرز</font>
+<font color="#FFFF00">بقیه بازدید رو داخل انجام می‌دیم</font>
 
 301
 00:18:18,840 --> 00:18:22,920
-<font color="#FFFF00">Wenn Sie sich beeilen, kriegen Sie</font>
-<font color="#FFFF00">noch ein schönes, kühles Helles.</font>
+<font color="#FFFF00">اگه عجله کنید، می‌تونید</font>
+<font color="#FFFF00">یه آبجوی خنک و مشتی هم بگیرید</font>
 
 302
 00:18:23,440 --> 00:18:24,920
-<font color="#FFFF00">Vom Theo.</font>
+<font color="#FFFF00">از طرف تئو</font>
 
 303
 00:18:34,080 --> 00:18:36,480
-<font color="#FFFF00">So. Gehen wir mal hoch, wa?</font>
+<font color="#FFFF00">خب، بریم بالا، چطوره؟</font>
 
 304
 00:18:43,240 --> 00:18:45,240
-<font color="#FFFFFF">* Junge summt.*</font>
+<font color="#FFFFFF">*پسرک زمزمه می‌کند*</font>
 
 305
 00:18:47,920 --> 00:18:49,680
-<font color="#00FF00">Zoe, komm mal.</font>
+<font color="#00FF00">زوئی، بیا اینجا</font>
 
 306
 00:18:50,240 --> 00:18:52,000
-<font color="#00FF00">Guck mal, der Nachbarsjunge.</font>
+<font color="#00FF00">اون پسر همسایه رو ببین</font>
 
 307
 00:18:52,560 --> 00:18:54,560
-<font color="#00FF00">Der sieht doch ganz nett aus, oder?</font>
+<font color="#00FF00">به نظر پسر خوبی میاد، نه؟</font>
 
 308
 00:19:00,000 --> 00:19:01,480
-<font color="#FFFFFF">Mhm.</font>
+<font color="#FFFFFF">آره</font>
 
 309
 00:19:02,360 --> 00:19:04,440
-<font color="#FFFF00">Wer sind die größten Verbrecher?</font>
+<font color="#FFFF00">بزرگترین خلافکارا کین؟</font>
 
 310
 00:19:04,600 --> 00:19:07,200
-<font color="#FFFFFF">(Judith) Die Türkenclans?</font>
-<font color="#FFFF00">Energiekonzerne.</font>
+<font color="#FFFFFF">(جودیت) باندهای تبهکار؟</font>
+<font color="#FFFF00">شرکت‌های انرژی</font>
 
 311
 00:19:07,800 --> 00:19:11,920
-<font color="#FFFF00">Ja, ja, die führen die Regierung</font>
-<font color="#FFFF00">am Nasenring durch die Manege</font>
+<font color="#FFFF00">آره، آره، اونا دولت رو</font>
+<font color="#FFFF00">مثل عروسک خیمه‌شب‌بازی می‌چرخونن</font>
 
 312
 00:19:11,960 --> 00:19:15,080
-<font color="#FFFF00">und der kleine Mann</font>
-<font color="#FFFF00">darf Beifall klatschen und blechen.</font>
+<font color="#FFFF00">و آدمای معمولی</font>
+<font color="#FFFF00">فقط باید دست بزنن و پول بدن</font>
 
 313
 00:19:15,240 --> 00:19:17,680
-<font color="#FFFF00">Da gibt es jetzt 'ne Lösung.</font>
-<font color="#FFFF00">Photovoltaik.</font>
+<font color="#FFFF00">الان یه راه حل براش هست</font>
+<font color="#FFFF00">پنل‌های خورشیدی</font>
 
 314
 00:19:17,720 --> 00:19:20,000
-<font color="#FFFF00">Sind Sie unabhängig,</font>
-<font color="#FFFF00">Geld gibt's on top.</font>
+<font color="#FFFF00">مستقل می‌شید</font>
+<font color="#FFFF00">تازه پول هم بهتون می‌دن</font>
 
 315
 00:19:20,040 --> 00:19:23,160
-<font color="#FFFF00">Sie müssen aufpassen.</font>
-<font color="#FFFF00">Ist für Liliputaner konzipiert.</font>
+<font color="#FFFF00">باید حواستون باشه</font>
+<font color="#FFFF00">برای آدم‌کوچولوها طراحی شده</font>
 
 316
 00:19:23,200 --> 00:19:25,120
-<font color="#00FFFF">Machen wir uns mal alle ganz klein.</font>
+<font color="#00FFFF">بیاید همگی خودمون رو جمع‌وجور کنیم</font>
 
 317
 00:19:25,280 --> 00:19:27,280
-<font color="#FFFFFF">* Alle lachen. *</font>
-<font color="#FFFF00">Ja.</font>
+<font color="#FFFFFF">*همه می‌خندند*</font>
+<font color="#FFFF00">آره</font>
 
 318
 00:19:31,160 --> 00:19:33,600
-<font color="#FFFF00">Hier rechts kommen</font>
-<font color="#FFFF00">dann die Panels hin, wa?</font>
+<font color="#FFFF00">اینجا سمت راست</font>
+<font color="#FFFF00">پنل‌ها نصب می‌شن، فهمیدی؟</font>
 
 319
 00:19:37,040 --> 00:19:41,000
-<font color="#FFFF00">Das ist der Wechselrichter.</font>
-<font color="#FFFF00">Das ist ruckzuck installiert.</font>
+<font color="#FFFF00">اینم مبدل برقه</font>
+<font color="#FFFF00">خیلی سریع نصب می‌شه</font>
 
 320
 00:19:41,040 --> 00:19:45,320
-<font color="#FFFFFF">Sind die Anlagen wartungsanfällig?</font>
-<font color="#FFFFFF">- Nicht, dass wir im Dunkeln stehen.</font>
+<font color="#FFFFFF">این سیستم‌ها نیاز به تعمیر زیاد دارن؟</font>
+<font color="#FFFFFF">- نمی‌خوایم یهو برق قطع بشه</font>
 
 321
 00:19:45,360 --> 00:19:47,640
-<font color="#FFFF00">Da müssen Sie sich</font>
-<font color="#FFFF00">geschickt anstellen.</font>
+<font color="#FFFF00">باید خیلی زرنگ باشی</font>
+<font color="#FFFF00">و کار رو بلد باشی</font>
 
 322
 00:19:47,680 --> 00:19:50,960
-<font color="#FFFF00">Das Haus ist noch am Stromnetz,</font>
-<font color="#FFFF00">wir sind ja nicht in Uganda.</font>
+<font color="#FFFF00">خونه هنوز به برق وصله،</font>
+<font color="#FFFF00">اینجا که اوگاندا نیست</font>
 
 323
 00:19:51,120 --> 00:19:52,960
-<font color="#FFFF00">Ich habe was, da steht alles drin,</font>
+<font color="#FFFF00">یه چیزی دارم که توش همه چی هست،</font>
 
 324
 00:19:53,120 --> 00:19:55,480
-<font color="#FFFF00">was Sie über Photovoltaik</font>
-<font color="#FFFF00">wissen müssen.</font>
+<font color="#FFFF00">هر چی که باید درباره</font>
+<font color="#FFFF00">فتوولتائیک بدونی</font>
 
 325
 00:19:55,640 --> 00:19:57,760
-<font color="#FFFF00">Die Firma kann ich ans Herz legen.</font>
+<font color="#FFFF00">این شرکت رو شدیداً توصیه می‌کنم</font>
 
 326
 00:19:57,920 --> 00:20:01,520
-<font color="#FFFF00">Anständige Leute, die wissen,</font>
-<font color="#FFFF00">wie man Qualität buchstabiert.</font>
+<font color="#FFFF00">آدم‌های حسابی‌ان، قشنگ می‌دونن</font>
+<font color="#FFFF00">کیفیت یعنی چی</font>
 
 327
 00:20:02,080 --> 00:20:03,840
-<font color="#00FFFF">Hast du noch so ein Prospekt?</font>
+<font color="#00FFFF">بازم از اون بروشورها داری؟</font>
 
 328
 00:20:04,440 --> 00:20:07,600
-<font color="#FFFF00">Ja, aber das ist ein bisschen...</font>
-<font color="#FFFF00">Bisschen ramponiert.</font>
+<font color="#FFFF00">آره، ولی یکم...</font>
+<font color="#FFFF00">یکم داغونه</font>
 
 329
 00:20:08,240 --> 00:20:10,400
-<font color="#00FF00">Warum kriegen wir das zerknitterte?</font>
+<font color="#00FF00">چرا باید این مچاله رو به ما بدی؟</font>
 
 330
 00:20:10,560 --> 00:20:13,000
-<font color="#00FFFF">Ist doch egal.</font>
-<font color="#00FFFF">Das kann man noch super lesen.</font>
+<font color="#00FFFF">مهم نیست که</font>
+<font color="#00FFFF">هنوزم کاملاً خواناست</font>
 
 331
 00:20:13,640 --> 00:20:16,920
-<font color="#FFFFFF">Nehmt das, wir brauchen das nicht.</font>
-<font color="#FFFF00">Behalten Sie das lieber.</font>
+<font color="#FFFFFF">شما بردارید، ما لازمش نداریم</font>
+<font color="#FFFF00">همون بهتر که پیش خودتون بمونه</font>
 
 332
 00:20:17,080 --> 00:20:19,720
-<font color="#FFFF00">Ich kann noch ein paar holen,</font>
-<font color="#FFFF00">wenn es nötig ist?</font>
+<font color="#FFFF00">اگه لازمه می‌تونم</font>
+<font color="#FFFF00">چند تا دیگه هم بیارم؟</font>
 
 333
 00:20:19,760 --> 00:20:21,400
-<font color="#00FFFF">Nee, Quatsch.</font>
-<font color="#00FF00">Ja, gerne.</font>
+<font color="#00FFFF">نه، بی‌خیال</font>
+<font color="#00FF00">آره، حتماً</font>
 
 334
 00:20:22,440 --> 00:20:26,040
-<font color="#FFFFFF">Nehmt doch einfach unseres.</font>
-<font color="#FFFFFF">- Lass doch. Wenn sie nicht wollen.</font>
+<font color="#FFFFFF">خب مال ما رو بردارید</font>
+<font color="#FFFFFF">- ولش کن، اگه نمی‌خوان که نمی‌خوان</font>
 
 335
 00:20:26,200 --> 00:20:27,880
-<font color="#FFFFFF">Manche Leute suchen Ärger.</font>
+<font color="#FFFFFF">بعضی‌ها دنبال دردسر می‌گردن</font>
 
 336
 00:20:28,040 --> 00:20:31,320
-<font color="#00FF00">Manche wollen anständig</font>
-<font color="#00FF00">behandelt werden, du dumme Nuss.</font>
+<font color="#00FF00">بعضی‌ها هم می‌خوان باهاشون</font>
+<font color="#00FF00">درست رفتار بشه، احمق‌خانم</font>
 
 337
 00:20:31,360 --> 00:20:32,840
-<font color="#FFFFFF">Wie bitte?</font>
-<font color="#FFFFFF">- Nee.</font>
+<font color="#FFFFFF">ببخشید؟</font>
+<font color="#FFFFFF">- هیچی</font>
 
 338
 00:20:33,000 --> 00:20:36,080
-<font color="#FFFFFF">Darauf lassen wir uns nicht herab.</font>
-<font color="#FFFF00">Ich weiß, ich weiß.</font>
+<font color="#FFFFFF">ما خودمون رو تا این حد پایین نمیاریم</font>
+<font color="#FFFF00">می‌دونم، می‌دونم</font>
 
 339
 00:20:36,240 --> 00:20:38,560
-<font color="#FFFF00">Photovoltaik</font>
-<font color="#FFFF00">ist ein emotionales Thema.</font>
+<font color="#FFFF00">فتوولتائیک</font>
+<font color="#FFFF00">موضوع حساسیه</font>
 
 340
 00:20:38,600 --> 00:20:42,120
-<font color="#FFFF00">Ich würde sagen, wir atmen jetzt</font>
-<font color="#FFFF00">alle mal ganz tief durch, ja?</font>
+<font color="#FFFF00">پیشنهاد می‌کنم الان همگی</font>
+<font color="#FFFF00">یه نفس عمیق بکشیم، باشه؟</font>
 
 341
 00:20:42,160 --> 00:20:44,920
-<font color="#FFFF00">Dann können Sie sich</font>
-<font color="#FFFF00">noch ein bisschen umgucken.</font>
+<font color="#FFFF00">بعدش می‌تونید</font>
+<font color="#FFFF00">یه دوری هم بزنید</font>
 
 342
 00:20:45,080 --> 00:20:47,680
-<font color="#FFFF00">Ich bin gleich wieder da</font>
-<font color="#FFFF00">mit neuen Prospekten</font>
+<font color="#FFFF00">من الان برمی‌گردم</font>
+<font color="#FFFF00">با بروشورهای جدید</font>
 
 343
 00:20:47,720 --> 00:20:50,200
-<font color="#FFFF00">und ein paar Keksen</font>
-<font color="#FFFF00">für die Kleinen.</font>
+<font color="#FFFF00">و چند تا بیسکویت</font>
+<font color="#FFFF00">برای بچه‌ها</font>
 
 344
 00:20:50,240 --> 00:20:51,840
-<font color="#FFFFFF">Impertinenz.</font>
+<font color="#FFFFFF">چه پررو</font>
 
 345
 00:21:02,480 --> 00:21:03,960
-<font color="#FFFFFF">(Ella) Was machst du da?</font>
+<font color="#FFFFFF">(الا) داری چیکار می‌کنی؟</font>
 
 346
 00:21:07,560 --> 00:21:09,960
-<font color="#FFFFFF">Nichts.</font>
-<font color="#FFFFFF">- Was ist das?</font>
+<font color="#FFFFFF">هیچی</font>
+<font color="#FFFFFF">- این چیه؟</font>
 
 347
 00:21:19,760 --> 00:21:21,240
-<font color="#FFFFFF">Kannst austrinken.</font>
+<font color="#FFFFFF">بده بخور بره</font>
 
 348
 00:21:32,000 --> 00:21:35,960
-<font color="#FFFF00">Oh, Mann. Wo sind denn jetzt wieder</font>
-<font color="#FFFF00">die Prospekte für die Solaranlagen?</font>
+<font color="#FFFF00">ای بابا، باز این بروشورهای</font>
+<font color="#FFFF00">پنل‌های خورشیدی کجا رفتن؟</font>
 
 349
 00:21:36,120 --> 00:21:38,920
-<font color="#FF00FF">Wo du sie hin geräumt hast,</font>
-<font color="#FF00FF">denke ich mal.</font>
+<font color="#FF00FF">فکر کنم همون‌جایی که</font>
+<font color="#FF00FF">خودت قایمشون کردی</font>
 
 350
 00:21:39,080 --> 00:21:41,760
-<font color="#FFFF00">Mausi, wie soll ich</font>
-<font color="#FFFF00">denn hier irgendwas finden,</font>
+<font color="#FFFF00">موشی، من چطوری باید</font>
+<font color="#FFFF00">اینجا چیزی پیدا کنم</font>
 
 351
 00:21:41,800 --> 00:21:44,040
-<font color="#FFFF00">wenn alles</font>
-<font color="#FFFF00">mit deinen Sachen vollsteht?</font>
+<font color="#FFFF00">وقتی همه جا رو</font>
+<font color="#FFFF00">با خرت و پرت‌های تو پر کردن؟</font>
 
 352
 00:21:44,080 --> 00:21:45,640
-<font color="#FF00FF">Wie läuft's denn so?</font>
+<font color="#FF00FF">اوضاع چطوره؟</font>
 
 353
 00:21:45,680 --> 00:21:47,560
-<font color="#FFFF00">Ganz gut. Reimers sind 'ne Wucht.</font>
+<font color="#FFFF00">خوبه، خانواده رایمرز عالی‌ان</font>
 
 354
 00:21:47,600 --> 00:21:49,960
-<font color="#FFFF00">Ich hoffe,</font>
-<font color="#FFFF00">die gehen bei Patzkes Preis mit.</font>
+<font color="#FFFF00">امیدوارم</font>
+<font color="#FFFF00">با قیمت پاتسکه کنار بیان</font>
 
 355
 00:21:50,000 --> 00:21:52,280
-<font color="#FFFF00">Der Jochen</font>
-<font color="#FFFF00">ist ein richtiger Machertyp.</font>
+<font color="#FFFF00">یوخن</font>
+<font color="#FFFF00">یه آدمِ اهلِ عمله</font>
 
 356
 00:21:52,320 --> 00:21:55,280
-<font color="#FF00FF">Ist das der Farbige?</font>
-<font color="#FFFF00">Nee. Das ist Theo, der ist nett.</font>
+<font color="#FF00FF">همون رنگین‌پوسته؟</font>
+<font color="#FFFF00">نه، اون تئوئه، آدم خوبیه</font>
 
 357
 00:21:55,440 --> 00:21:58,520
-<font color="#FFFF00">Aber seine Alte ist anstrengend.</font>
-<font color="#FFFF00">'ne richtige Emanze.</font>
+<font color="#FFFF00">ولی زنش خیلی رو مخه</font>
+<font color="#FFFF00">یه فمینیستِ تمام‌عیاره</font>
 
 358
 00:21:59,160 --> 00:22:01,160
-<font color="#FFFF00">Woher weißt du,</font>
-<font color="#FFFF00">dass er schwarz ist?</font>
+<font color="#FFFF00">از کجا می‌دونی</font>
+<font color="#FFFF00">که سیاه‌پوسته؟</font>
 
 359
 00:22:01,320 --> 00:22:03,000
-<font color="#FF00FF">Wieso ist denn der nett?</font>
+<font color="#FF00FF">چرا میگی آدم خوبیه؟</font>
 
 360
 00:22:04,200 --> 00:22:06,880
-<font color="#FFFF00">Hat mir einen Sixer mitgebracht.</font>
-<font color="#FFFF00">Perlewalder.</font>
+<font color="#FFFF00">برام یه شیش‌تایی آبجو آورد</font>
+<font color="#FFFF00">پرله‌والدر</font>
 
 361
 00:22:08,200 --> 00:22:11,200
-<font color="#FFFF00">Ach, hier sind sie ja.</font>
-<font color="#FFFF00">Die Scheißdinger.</font>
+<font color="#FFFF00">آها، ایناهاش</font>
+<font color="#FFFF00">این گندکاری‌ها</font>
 
 362
 00:22:13,160 --> 00:22:14,640
-<font color="#00FF00">Arrogante Ziege.</font>
+<font color="#00FF00">عجب دماغ‌بالایِ پُرادعایی</font>
 
 363
 00:22:14,680 --> 00:22:16,520
-<font color="#00FFFF">Schlimm.</font>
-<font color="#00FF00">Was bildet die sich ein?</font>
+<font color="#00FFFF">افتضاحه</font>
+<font color="#00FF00">خودشو چی فرض کرده؟</font>
 
 364
 00:22:16,560 --> 00:22:19,920
-<font color="#00FFFF">Dass der Typ das mitmacht.</font>
-<font color="#00FF00">Diese Fakegeste mit dem Prospekt.</font>
+<font color="#00FFFF">اینکه مرده چطور تحملش می‌کنه</font>
+<font color="#00FF00">اون ادا اطوارِ مسخره با کاتالوگ</font>
 
 365
 00:22:19,960 --> 00:22:21,640
-<font color="#00FF00">Ich könnte kotzen.</font>
+<font color="#00FF00">حالم ازش بهم می‌خوره</font>
 
 366
 00:22:26,200 --> 00:22:28,360
-<font color="#00FF00">Wir haben es verkackt, oder?</font>
-<font color="#00FFFF">Wir?</font>
+<font color="#00FF00">گند زدیم، نه؟</font>
+<font color="#00FFFF">ما؟</font>
 
 367
 00:22:30,200 --> 00:22:33,360
-<font color="#00FF00">Habe ich Bier geholt und</font>
-<font color="#00FF00">mich volllaufen lassen? Oder du?</font>
+<font color="#00FF00">من رفتم آبجو گرفتم و</font>
+<font color="#00FF00">خودمو خفه کردم؟ یا تو؟</font>
 
 368
 00:22:33,520 --> 00:22:35,040
-<font color="#00FFFF">Entschuldigung.</font>
-<font color="#00FF00">Du Arsch.</font>
+<font color="#00FFFF">ببخشید</font>
+<font color="#00FF00">خاک بر سرت</font>
 
 369
 00:22:35,080 --> 00:22:37,920
-<font color="#00FFFF">Ein Grund zum Saufen</font>
-<font color="#00FFFF">ist unsere einzige Hoffnung.</font>
+<font color="#00FFFF">یه بهونه واسه مست کردن</font>
+<font color="#00FFFF">تنها امیدمونه</font>
 
 370
 00:22:38,640 --> 00:22:40,120
-<font color="#00FF00">Vielleicht.</font>
+<font color="#00FF00">شاید</font>
 
 371
 00:22:41,440 --> 00:22:43,120
-<font color="#00FFFF">Gefällt's dir denn?</font>
+<font color="#00FFFF">اصلاً ازش خوشت میاد؟</font>
 
 372
 00:22:43,160 --> 00:22:45,160
-<font color="#00FF00">Besser als ich dachte. Dir?</font>
+<font color="#00FF00">از اون چیزی که فکر می‌کردم بهتره. تو چی؟</font>
 
 373
 00:22:45,320 --> 00:22:48,320
-<font color="#00FFFF">Bisschen könnte man dran machen.</font>
-<font color="#00FF00">Ein bisschen?</font>
+<font color="#00FFFF">یه خورده باید روش کار بشه</font>
+<font color="#00FF00">یه خورده؟</font>
 
 374
 00:22:50,240 --> 00:22:52,880
-<font color="#00FFFF">Das könnte man</font>
-<font color="#00FFFF">vorsichtshalber stehen lassen.</font>
+<font color="#00FFFF">بهتره اینو فعلاً</font>
+<font color="#00FFFF">دست‌نخورده بذاریم</font>
 
 375
 00:22:56,040 --> 00:22:57,560
-<font color="#00FFFF">Oh.</font>
-<font color="#00FF00">Was denn?</font>
+<font color="#00FFFF">اوه</font>
+<font color="#00FF00">چی شده؟</font>
 
 376
 00:22:57,600 --> 00:22:59,080
-<font color="#00FFFF">Ich muss krass aufs Klo.</font>
+<font color="#00FFFF">باید برم دستشویی، خیلی فوری</font>
 
 377
 00:22:59,240 --> 00:23:01,320
-<font color="#00FF00">Number two?</font>
-<font color="#00FFFF">Nee, nur pinkeln.</font>
+<font color="#00FF00">شماره دو؟</font>
+<font color="#00FFFF">نه، فقط جیش</font>
 
 378
 00:23:01,360 --> 00:23:05,120
-<font color="#00FF00">Dann geh doch hier in die Büsche.</font>
-<font color="#00FFFF">Ich strullere nicht in den Garten.</font>
+<font color="#00FF00">خب برو پشت بوته‌ها</font>
+<font color="#00FFFF">من تو باغچه شاش ندارم</font>
 
 379
 00:23:06,560 --> 00:23:08,040
-<font color="#00FF00">Theo.</font>
+<font color="#00FF00">تئو</font>
 
 380
 00:23:08,200 --> 00:23:10,200
-<font color="#00FF00">Die Toilette ist doch kaputt.</font>
+<font color="#00FF00">دستشویی که خرابه</font>
 
 381
 00:23:10,360 --> 00:23:12,080
-<font color="#FFFFFF">Gibt's nicht.</font>
-<font color="#FFFFFF">- Was machen wir?</font>
+<font color="#FFFFFF">امکان نداره</font>
+<font color="#FFFFFF">- حالا چیکار کنیم؟</font>
 
 382
 00:23:12,120 --> 00:23:14,480
-<font color="#FFFFFF">Ich weiß es nicht. Mäuschen?</font>
-<font color="#FFFFFF">- Komm mal her.</font>
+<font color="#FFFFFF">نمی‌دونم. عزیزم؟</font>
+<font color="#FFFFFF">- بیا اینجا</font>
 
 383
 00:23:15,520 --> 00:23:17,000
-<font color="#FFFFFF">So schlimm?</font>
+<font color="#FFFFFF">این‌قدر بده؟</font>
 
 384
 00:23:33,960 --> 00:23:35,680
-<font color="#FFFFFF">Oh, Entschuldigung.</font>
-<font color="#FFFFFF">- Judith?</font>
+<font color="#FFFFFF">اوه، ببخشید</font>
+<font color="#FFFFFF">- جودیت؟</font>
 
 385
 00:23:36,800 --> 00:23:40,160
-<font color="#00FFFF">Das... Das war schon.</font>
-<font color="#FFFFFF">Oh Gott, ist das ekelhaft.</font>
+<font color="#00FFFF">این... این از قبل بود</font>
+<font color="#FFFFFF">خدای من، چقدر چندش‌آوره</font>
 
 386
 00:23:40,320 --> 00:23:42,440
-<font color="#FFFFFF">Was ist denn hier los?</font>
-<font color="#00FFFF">Nein, nein...</font>
+<font color="#FFFFFF">اینجا چه خبره؟</font>
+<font color="#00FFFF">نه، نه...</font>
 
 387
 00:23:42,600 --> 00:23:44,800
-<font color="#FFFFFF">Ist das widerlich.</font>
-<font color="#00FFFF">Nein, nein.</font>
+<font color="#FFFFFF">چقدر حال‌به‌هم‌زنه</font>
+<font color="#00FFFF">نه، نه</font>
 
 388
 00:23:47,800 --> 00:23:49,480
-<font color="#FFFFFF">Sie Schwein!</font>
+<font color="#FFFFFF">کثافت!</font>
 
 389
 00:23:49,640 --> 00:23:51,560
-<font color="#FFFFFF">Scheiße.</font>
-<font color="#00FFFF">Es ist nicht meine Kacke.</font>
+<font color="#FFFFFF">لعنتی</font>
+<font color="#00FFFF">این مال من نیست</font>
 
 390
 00:23:51,720 --> 00:23:53,400
-<font color="#FFFFFF">Oh mein Gott, Worldstar.</font>
+<font color="#FFFFFF">یا خدا، چه افتضاحی</font>
 
 391
 00:23:53,560 --> 00:23:55,160
-<font color="#FFFFFF">Schämen Sie sich.</font>
-<font color="#00FFFF">War schon.</font>
+<font color="#FFFFFF">خجالت بکشید</font>
+<font color="#00FFFF">از قبل بود</font>
 
 392
 00:23:55,320 --> 00:23:56,920
-<font color="#00FF00">Theo.</font>
-<font color="#00FFFF">Ich war das nicht.</font>
+<font color="#00FF00">تئو</font>
+<font color="#00FFFF">من نبودم</font>
 
 393
 00:23:56,960 --> 00:24:00,000
-<font color="#FFFF00">Was für ein Saustall?</font>
-<font color="#FFFFFF">Fragen Sie Ihren Saufkumpanen.</font>
+<font color="#FFFF00">چه طویله‌ای</font>
+<font color="#FFFFFF">از رفیقِ میگسارت بپرس</font>
 
 394
 00:24:00,160 --> 00:24:01,640
-<font color="#FFFFFF">Er fühlt sich wie zu Hause.</font>
+<font color="#FFFFFF">انگار خونه خودشه</font>
 
 395
 00:24:01,680 --> 00:24:04,000
-<font color="#00FFFF">Ist nicht meins.</font>
-<font color="#00FFFF">Ich musste nur pissen.</font>
+<font color="#00FFFF">مال من نیست</font>
+<font color="#00FFFF">فقط می‌خواستم جیش کنم</font>
 
 396
 00:24:04,160 --> 00:24:06,920
-<font color="#FFFF00">Genau, was soll man machen,</font>
-<font color="#FFFF00">wenn die Natur ruft?</font>
+<font color="#FFFF00">دقیقاً، وقتی طبیعت صدا می‌زنه</font>
+<font color="#FFFF00">آدم چیکار می‌تونه بکنه؟</font>
 
 397
 00:24:07,080 --> 00:24:09,440
-<font color="#FFFFFF">In die Büsche gehen natürlich.</font>
+<font color="#FFFFFF">خب معلومه، می‌ره پشت بوته‌ها</font>
 
 398
 00:24:09,600 --> 00:24:13,440
-<font color="#00FFFF">Entschuldigung, darf ich mal kurz?</font>
-<font color="#FFFFFF">(Ella) Ich will nach Hause.</font>
+<font color="#00FFFF">ببخشید، می‌شه یه لحظه؟</font>
+<font color="#FFFFFF">(الا) می‌خوام برم خونه</font>
 
 399
 00:24:14,800 --> 00:24:18,360
-<font color="#FFFFFF">Sie sagten, der Raum wäre</font>
-<font color="#FFFFFF">vollgestellt, er ist vollgeschissen.</font>
+<font color="#FFFFFF">گفتید اتاق پر از وسایله،</font>
+<font color="#FFFFFF">ولی اینجا پر از گُهه</font>
 
 400
 00:24:18,400 --> 00:24:22,120
-<font color="#FFFFFF">Können wir jetzt bitte gehen?</font>
-<font color="#FFFFFF">- Wenn er's nicht war, wer war's?</font>
+<font color="#FFFFFF">می‌شه لطفاً الان بریم؟</font>
+<font color="#FFFFFF">- اگه اون نبوده، پس کی بوده؟</font>
 
 401
 00:24:22,280 --> 00:24:24,160
-<font color="#FFFFFF">Das ist Körperverletzung.</font>
+<font color="#FFFFFF">این دیگه ضرب و جرحه</font>
 
 402
 00:24:24,200 --> 00:24:26,440
-<font color="#FFFFFF">Das wird Konsequenzen haben.</font>
-<font color="#00FF00">Ich war's.</font>
+<font color="#FFFFFF">این کار عواقب داره</font>
+<font color="#00FF00">کار من بود</font>
 
 403
 00:24:26,600 --> 00:24:30,960
-<font color="#00FF00">Ich musste vorhin ganz,</font>
-<font color="#00FF00">ganz dringend auf Klo,</font>
+<font color="#00FF00">یهو خیلی خیلی</font>
+<font color="#00FF00">لازم شد برم دستشویی</font>
 
 404
 00:24:31,120 --> 00:24:33,320
-<font color="#00FF00">habe das mit dem Wasser</font>
-<font color="#00FF00">zu spät gemerkt.</font>
+<font color="#00FF00">شیر آب رو</font>
+<font color="#00FF00">دیر دیدم</font>
 
 405
 00:24:33,480 --> 00:24:37,520
-<font color="#00FF00">Dann war's zu spät, es kam und kam.</font>
-<font color="#00FF00">Ich konnte nicht mehr aufhören.</font>
+<font color="#00FF00">بعد دیگه کار از کار گذشته بود، همین‌طور می‌اومد</font>
+<font color="#00FF00">نتونستم جلوش رو بگیرم</font>
 
 406
 00:24:37,680 --> 00:24:39,440
-<font color="#00FF00">Es tut mir leid.</font>
-<font color="#FFFFFF">Mir reicht's.</font>
+<font color="#00FF00">واقعاً شرمنده‌ام</font>
+<font color="#FFFFFF">دیگه بسه</font>
 
 407
 00:24:39,480 --> 00:24:41,440
-<font color="#00FF00">Ist mir peinlich.</font>
-<font color="#FFFFFF">Können wir gehen?</font>
+<font color="#00FF00">خیلی خجالت‌آوره</font>
+<font color="#FFFFFF">می‌تونیم بریم؟</font>
 
 408
 00:24:41,480 --> 00:24:43,160
-<font color="#FFFFFF">Widerlich! Bah!</font>
-<font color="#00FF00">Ich hoffe...</font>
+<font color="#FFFFFF">چقدر چندش! اه</font>
+<font color="#00FF00">امیدوارم...</font>
 
 409
 00:24:43,200 --> 00:24:45,360
-<font color="#FFFFFF">Ekelhaft.</font>
-<font color="#FFFFFF">- Die Leute sind so ekelig.</font>
+<font color="#FFFFFF">حال‌به‌هم‌زنه</font>
+<font color="#FFFFFF">- این آدما چقدر چندشن</font>
 
 410
 00:24:45,400 --> 00:24:49,080
-<font color="#00FF00">Ich hoffe, dass Sie Verständnis</font>
-<font color="#00FF00">haben für meine ... Situation.</font>
+<font color="#00FF00">امیدوارم شرایط من رو</font>
+<font color="#00FF00">درک کرده باشید</font>
 
 411
 00:24:49,240 --> 00:24:51,080
-<font color="#FFFF00">Mhm.</font>
+<font color="#FFFF00">اوهوم</font>
 
 412
 00:24:51,120 --> 00:24:54,840
-<font color="#FFFF00">Ja, gut. Dann gehe ich mal das</font>
-<font color="#FFFF00">Wasser wieder anmachen im Keller.</font>
+<font color="#FFFF00">خب، باشه. پس من برم</font>
+<font color="#FFFF00">آب رو دوباره تو زیرزمین وصل کنم</font>
 
 413
 00:24:59,280 --> 00:25:01,280
-<font color="#FFFFFF">* Sie lachen. *</font>
+<font color="#FFFFFF">* صدای خنده *</font>
 
 414
 00:25:03,120 --> 00:25:05,600
-<font color="#00FFFF">Was meinst du?</font>
-<font color="#00FF00">Ich habe ein gutes Gefühl.</font>
+<font color="#00FFFF">نظرت چیه؟</font>
+<font color="#00FF00">حس خوبی دارم</font>
 
 415
 00:25:05,640 --> 00:25:08,760
-<font color="#00FFFF">Der war am Ende ja fast freundlich.</font>
-<font color="#00FF00">Der Typ, ey.</font>
+<font color="#00FFFF">آخرش که دیگه تقریباً مهربون شده بود</font>
+<font color="#00FF00">عجب آدمیه</font>
 
 416
 00:25:08,800 --> 00:25:10,280
-<font color="#00FFFF">Der Makler?</font>
-<font color="#00FF00">Ja.</font>
+<font color="#00FFFF">دلاله رو میگی؟</font>
+<font color="#00FF00">آره</font>
 
 417
 00:25:10,320 --> 00:25:12,320
-<font color="#00FFFF">Proll, wie er im Buche steht.</font>
+<font color="#00FFFF">یه لاتِ تمام‌عیار</font>
 
 418
 00:25:13,280 --> 00:25:16,680
-<font color="#00FF00">Wie waren die Nachbarn?</font>
-<font color="#00FFFF">Musste ich auch gerade dran denken.</font>
+<font color="#00FF00">همسایه‌ها چطور بودن؟</font>
+<font color="#00FFFF">داشتم دقیقاً به همین فکر می‌کردم</font>
 
 419
 00:25:16,720 --> 00:25:18,240
-<font color="#00FFFF">Also schon speziell.</font>
+<font color="#00FFFF">خب، یه جورایی خاص بودن</font>
 
 420
 00:25:18,280 --> 00:25:20,960
-<font color="#00FFFF">Aber eigentlich ganz nett.</font>
-<font color="#00FFFF">Eine Chinesin.</font>
+<font color="#00FFFF">ولی در کل خیلی خوب بودن</font>
+<font color="#00FFFF">یه خانم چینی</font>
 
 421
 00:25:21,000 --> 00:25:24,240
-<font color="#00FF00">Da soll mal einer sagen,</font>
-<font color="#00FF00">dass das Umland nicht divers ist.</font>
+<font color="#00FF00">دیگه کسی نمی‌تونه بگه</font>
+<font color="#00FF00">که حومه شهر تنوع نداره</font>
 
 422
 00:25:24,280 --> 00:25:26,320
-<font color="#FFFFFF">Äh, Mama, Theo?</font>
-<font color="#FFFFFF">- (beide) Hm?</font>
+<font color="#FFFFFF">اِ، مامان، تئو؟</font>
+<font color="#FFFFFF">- (هر دو) هوم؟</font>
 
 423
 00:25:27,320 --> 00:25:30,640
-<font color="#FFFFFF">Was würdet ihr machen,</font>
-<font color="#FFFFFF">wenn der Makler unser Nachbar wäre?</font>
+<font color="#FFFFFF">اگه اون دلاله همسایه‌مون بود</font>
+<font color="#FFFFFF">چیکار می‌کردید؟</font>
 
 424
 00:25:31,280 --> 00:25:33,120
-<font color="#FFFFFF">* Reifenquietschen *</font>
+<font color="#FFFFFF">* صدای ترمز ماشین *</font>
 
 425
 00:25:34,600 --> 00:25:40,080
-<font color="#FFFFFF">♪ Schatzi, Hasi,</font>
-<font color="#FFFFFF">Mausi, Baby.</font>
+<font color="#FFFFFF">♪ عزیزم، عسلم</font>
+<font color="#FFFFFF">موش‌موشی، بیبی</font>
 
 426
 00:25:40,960 --> 00:25:45,680
-<font color="#FFFFFF">Falls du</font>
-<font color="#FFFFFF">mich suchst,</font>
+<font color="#FFFFFF">اگه دنبال</font>
+<font color="#FFFFFF">من می‌گردی</font>
 
 427
 00:25:46,960 --> 00:25:52,960
-<font color="#FFFFFF">ich lieg'</font>
-<font color="#FFFFFF">unten auf der Couch im Keller. ♪</font>
+<font color="#FFFFFF">من پایین</font>
+<font color="#FFFFFF">رو کاناپه تو زیرزمینم ♪</font>
 
 428
 00:25:53,000 --> 00:25:54,960
-<font color="#FFFFFF">Untertitel im Auftrag des ZDF,</font>
-<font color="#FFFFFF">2022</font>
+<font color="#FFFFFF">زیرنویس به سفارش زد‌دی‌اف،</font>
+<font color="#FFFFFF">۲۰۲۲</font>
 

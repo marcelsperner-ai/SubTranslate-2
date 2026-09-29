@@ -602,6 +602,24 @@
         </div>
     </div>
 
+    <div class="modal fade" id="syncOffsetWarningModal" tabindex="-1" aria-labelledby="syncOffsetWarningTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="syncOffsetWarningTitle">ASS-Synchronisierung beachten</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Wenn Sie den Übersetzungs-Sync-Offset anwenden und die SRT neu generieren, passt die bestehende ASS-Datei anschließend nicht mehr dazu. Bei reinen Timing-Anpassungen ändern Sie den ASS-Sync-Offset im EdTech-Modul; dadurch bleibt die SRT unverändert.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" id="btnUseEdtechSyncOffset">Zum EdTech-Offset</button>
+                    <button type="button" class="btn btn-primary" id="btnKeepTranslationSyncOffset">SRT-Offset beibehalten</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <!-- Flask url_for zum Laden der statischen JS-Datei -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

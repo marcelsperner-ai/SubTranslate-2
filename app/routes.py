@@ -148,8 +148,13 @@ def regenerate_translation(t_id):
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         return jsonify({"error": "GEMINI_API_KEY fehlt in .env"}), 500
+    try:
+        sync_offset = int(data.get('sync_offset', t.get('sync_offset', 0)))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Ungültiger Übersetzungs-Sync-Offset."}), 400
     if not reset_translation_for_regeneration(t_id):
         return jsonify({"error": "Projekt kann derzeit nicht neu generiert werden."}), 409
+    save_project_settings(t_id, {**t, 'sync_offset': sync_offset})
 
     base_name = t['original_filename'].replace('.srt', '')
     for suffix in ('_FA.srt', '_Vokabeln.csv', '_Interaktiv.ass'):
@@ -183,7 +188,7 @@ from app.db import (
     create_translation, get_translation_by_id, update_translation, 
     get_db_logs, get_all_translations, save_project_settings, update_edtech_status
 )
-from app.services.edtech_service import validate_csv_timestamps, fix_csv_timestamps, gemini_followup_fix_mismatches, generate_learning_subtitles
+from app.services.edtech_service import validate_csv_timestamps, validate_edtech_csv, fix_csv_timestamps, gemini_followup_fix_mismatches, generate_learning_subtitles
 from app.prompt_manager import load_prompts, get_edtech_instruction
 
 @main_bp.route('/api/edtech/validate/<int:t_id>', methods=['GET'])
@@ -193,6 +198,7 @@ def validate_edtech(t_id):
         return jsonify({"error": "Projekt nicht gefunden"}), 404
     
     farsi_srt = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_FA.srt'))
+    german_srt = os.path.join(current_app.config['UPLOADS_DIR'], t['original_filename'])
     csv_file = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_Vokabeln.csv'))
     
     if not os.path.exists(farsi_srt):
@@ -201,12 +207,13 @@ def validate_edtech(t_id):
     if not os.path.exists(csv_file):
         return jsonify({"status": "no_csv_yet"})
         
-    rows, ts_mismatches, kw_mismatches, fieldnames = validate_csv_timestamps(farsi_srt, csv_file)
+    report = validate_edtech_csv(german_srt, farsi_srt, csv_file)
     
     return jsonify({
         "status": "validated",
-        "ts_mismatches": ts_mismatches,
-        "kw_mismatches": kw_mismatches
+        "ts_mismatches": report['ts_mismatches'],
+        "kw_mismatches": report['kw_mismatches'],
+        "data_issues": report['data_issues']
     })
 
 @main_bp.route('/api/edtech/fix/<int:t_id>', methods=['POST'])
@@ -217,6 +224,7 @@ def fix_edtech(t_id):
             return jsonify({"error": "Projekt nicht gefunden"}), 404
             
         farsi_srt = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_FA.srt'))
+        german_srt = os.path.join(current_app.config['UPLOADS_DIR'], t['original_filename'])
         csv_file = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_Vokabeln.csv'))
         
         if not os.path.exists(farsi_srt) or not os.path.exists(csv_file):
@@ -225,14 +233,21 @@ def fix_edtech(t_id):
         data = request.json or {}
         method = data.get('method')
         
-        rows, ts_mismatches, kw_mismatches, fieldnames = validate_csv_timestamps(farsi_srt, csv_file)
+        report = validate_edtech_csv(german_srt, farsi_srt, csv_file)
+        rows = report['rows']
+        fieldnames = report['fieldnames']
+        ts_mismatches = report['ts_mismatches']
+        kw_mismatches = report['kw_mismatches']
+        data_issues = report['data_issues']
         
         if method == 'python' and ts_mismatches:
             fix_csv_timestamps(csv_file, rows, fieldnames, ts_mismatches)
-        elif method == 'gemini' and kw_mismatches:
+        elif method == 'gemini' and (kw_mismatches or data_issues):
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key: return jsonify({"error": "API Key fehlt"}), 500
-            gemini_followup_fix_mismatches(api_key, farsi_srt, csv_file, kw_mismatches)
+            gemini_followup_fix_mismatches(
+                api_key, farsi_srt, csv_file, kw_mismatches + data_issues, german_srt_path=german_srt
+            )
         elif method == 'ignore':
             pass
         else:
@@ -296,13 +311,17 @@ def generate_edtech(t_id):
         if not generate_csv_only:
             if not os.path.exists(csv_file):
                 return jsonify({"error": "CSV muss vor der ASS-Erstellung generiert werden."}), 409
-            _, ts_mismatches, kw_mismatches, _ = validate_csv_timestamps(farsi_srt, csv_file)
-            if (ts_mismatches or kw_mismatches) and not ignore_validation_errors:
+            validation_report = validate_edtech_csv(german_srt, farsi_srt, csv_file)
+            ts_mismatches = validation_report['ts_mismatches']
+            kw_mismatches = validation_report['kw_mismatches']
+            data_issues = validation_report['data_issues']
+            if (ts_mismatches or kw_mismatches or data_issues) and not ignore_validation_errors:
                 return jsonify({
                     "error": "CSV-Prüfung muss bestanden oder explizit ignoriert werden.",
                     "status": "validation_required",
                     "ts_mismatches": ts_mismatches,
-                    "kw_mismatches": kw_mismatches
+                    "kw_mismatches": kw_mismatches,
+                    "data_issues": data_issues
                 }), 409
         
         prompts_data = load_prompts()

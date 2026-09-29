@@ -55,6 +55,10 @@ const btnFixKeywordsGemini = document.getElementById('btnFixKeywordsGemini');
 const btnFixTimestampsPython = document.getElementById('btnFixTimestampsPython');
 const btnIgnoreMismatches = document.getElementById('btnIgnoreMismatches');
 const archiveTableBody = document.querySelector('#archiveModal tbody');
+const translationSyncOffsetInput = transSettingsForm.elements['sync_offset'];
+const syncOffsetWarningModal = new bootstrap.Modal(document.getElementById('syncOffsetWarningModal'));
+const btnUseEdtechSyncOffset = document.getElementById('btnUseEdtechSyncOffset');
+const btnKeepTranslationSyncOffset = document.getElementById('btnKeepTranslationSyncOffset');
 let yamlMetadata = {};
 let promptPreviewRequest = 0;
 let promptPreviewLoaded = false;
@@ -63,6 +67,8 @@ let translationPromptConfirmed = false;
 let episodeSummarySaved = true;
 let hasGeneratedAss = false;
 let savedEdtechSettings = null;
+let loadedTranslationSyncOffset = translationSyncOffsetInput.value;
+let pendingTranslationSyncOffset = null;
 let edtechPromptLoaded = false;
 let edtechPromptChanged = false;
 let edtechPromptConfirmed = false;
@@ -84,6 +90,33 @@ function updateEdtechPromptActions() {
     edtechPromptSaveButton.disabled = !hasPromptChange || edtechPromptConfirmed;
     regenerateEdtechPromptButton.disabled = !hasPromptChange || !edtechPromptConfirmed || !currentProjectId || !currentAvailableDownloads.srt;
 }
+
+translationSyncOffsetInput.addEventListener('change', () => {
+    const changedOffset = translationSyncOffsetInput.value;
+    if (!currentProjectId || !currentAvailableDownloads.ass || changedOffset === loadedTranslationSyncOffset) return;
+    pendingTranslationSyncOffset = changedOffset;
+    syncOffsetWarningModal.show();
+});
+
+btnUseEdtechSyncOffset.addEventListener('click', () => {
+    translationSyncOffsetInput.value = loadedTranslationSyncOffset;
+    pendingTranslationSyncOffset = null;
+    syncOffsetWarningModal.hide();
+    document.querySelector('#edtechZone .nav-link[href="#ed-settings"]').click();
+});
+
+btnKeepTranslationSyncOffset.addEventListener('click', () => {
+    loadedTranslationSyncOffset = pendingTranslationSyncOffset;
+    pendingTranslationSyncOffset = null;
+    syncOffsetWarningModal.hide();
+});
+
+document.getElementById('syncOffsetWarningModal').addEventListener('hidden.bs.modal', () => {
+    if (pendingTranslationSyncOffset !== null) {
+        translationSyncOffsetInput.value = loadedTranslationSyncOffset;
+        pendingTranslationSyncOffset = null;
+    }
+});
 
 function setLogbookExpanded(expanded) {
     if (!logbookCollapse) return;
@@ -271,7 +304,10 @@ regenerateTranslationButton.addEventListener('click', async () => {
         const response = await fetch(`/api/regenerate/${currentProjectId}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ translation_prompt: translationPromptInput.value })
+            body: JSON.stringify({
+                translation_prompt: translationPromptInput.value,
+                sync_offset: translationSyncOffsetInput.value
+            })
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'SRT-Neugenerierung fehlgeschlagen.');
@@ -509,6 +545,8 @@ async function loadProjectToMain(id, title, status) {
         if (loadSequence !== projectLoadSequence) return;
         if(pRes.ok) {
             let pData = await pRes.json();
+            translationSyncOffsetInput.value = pData.sync_offset ?? 0;
+            loadedTranslationSyncOffset = translationSyncOffsetInput.value;
             availableDownloads = pData.available_downloads || availableDownloads;
             currentAvailableDownloads = availableDownloads;
             hasGeneratedAss = Boolean(availableDownloads.ass);
@@ -770,22 +808,31 @@ function unlockEdtech(availableDownloads = currentAvailableDownloads) {
 }
 
 function showValidationMismatches(data) {
-    const msg = `Gefunden: ${data.ts_mismatches.length} Zeitstempel-Fehler und ${data.kw_mismatches.length} Keyword-Fehler.`;
+    const dataIssues = data.data_issues || [];
+    const msg = `Gefunden: ${data.ts_mismatches.length} Zeitstempel-Fehler, ${data.kw_mismatches.length} Keyword-Fehler und ${dataIssues.length} Datenhinweise.`;
     document.getElementById('fixMessage').textContent = msg;
     renderMismatchList(timestampMismatchList, data.ts_mismatches, 'Zeitstempel');
-    renderMismatchList(keywordMismatchList, data.kw_mismatches, 'Keyword');
-    btnFixKeywordsGemini.disabled = data.kw_mismatches.length === 0;
+    renderMismatchList(keywordMismatchList, data.kw_mismatches, 'Keyword', dataIssues);
+    btnFixKeywordsGemini.disabled = data.kw_mismatches.length === 0 && dataIssues.length === 0;
     btnFixTimestampsPython.disabled = data.ts_mismatches.length === 0;
-    btnIgnoreMismatches.disabled = false;
+    btnIgnoreMismatches.disabled = data.ts_mismatches.length === 0 && data.kw_mismatches.length === 0 && dataIssues.length === 0;
     fixModal.show();
 }
 
-function renderMismatchList(container, mismatches, label) {
+function renderMismatchList(container, mismatches, label, dataIssues = []) {
     container.replaceChildren();
     mismatches.forEach((mismatch) => {
         const item = document.createElement('div');
         item.className = 'border-bottom pb-2 mb-2';
-        item.textContent = `${label} #${Number(mismatch.index) + 1}: ${mismatch.keyword || 'Unbekannt'} | CSV: ${mismatch.csv_time || '-'} | SRT: ${mismatch.srt_time || '-'}`;
+        const cueLabel = mismatch.cue_id ? `Cue ${mismatch.cue_id}` : `CSV-Zeile ${Number(mismatch.index) + 1}`;
+        const neighborLabel = mismatch.other_cue_ids?.length ? ` | Treffer in Nachbar-Cue(s): ${mismatch.other_cue_ids.join(', ')}` : '';
+        item.textContent = `${label} | ${cueLabel}: ${mismatch.keyword || 'Unbekannt'} | CSV: ${mismatch.csv_time || '-'} | SRT: ${mismatch.srt_time || '-'}${neighborLabel}`;
+        container.appendChild(item);
+    });
+    dataIssues.forEach((issue) => {
+        const item = document.createElement('div');
+        item.className = 'border-bottom pb-2 mb-2 text-warning-emphasis';
+        item.textContent = `Datenhinweis${issue.cue_id ? ` | Cue ${issue.cue_id}` : ''}: ${issue.message}`;
         container.appendChild(item);
     });
 }
@@ -856,7 +903,7 @@ async function validateEdtech() {
             validationResult.className = 'alert alert-info';
             validationResult.textContent = 'Keine CSV vorhanden. Bitte zuerst generieren.';
             generateAssAfterValidation = false;
-        } else if (data.ts_mismatches.length === 0 && data.kw_mismatches.length === 0) {
+        } else if (data.ts_mismatches.length === 0 && data.kw_mismatches.length === 0 && (data.data_issues || []).length === 0) {
             validationResult.className = 'alert alert-success';
             validationResult.textContent = 'CSV geprüft: keine Abweichungen gefunden.';
             if (generateAssAfterValidation) {
@@ -865,7 +912,7 @@ async function validateEdtech() {
             }
         } else {
             validationResult.className = 'alert alert-warning';
-            validationResult.textContent = 'CSV enthält Abweichungen. Bitte korrigieren oder ausdrücklich ignorieren.';
+            validationResult.textContent = 'CSV enthält Abweichungen oder unsichere Cue-Zuordnungen. Bitte korrigieren oder ausdrücklich ignorieren.';
             showValidationMismatches(data);
         }
     } catch (error) {

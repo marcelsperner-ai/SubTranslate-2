@@ -11,11 +11,17 @@ from pydantic import BaseModel
 from app.prompt_manager import append_episode_summary
 
 class Vokabel(BaseModel):
-    zeit: str
+    cue_id: int
+    german_quote: str
     wort_deutsch: str
     keyword_farsi: str
     erklaerung_farsi: str
     erklaerung_kontext: str
+
+class SemanticAlignment(BaseModel):
+    item_id: int
+    aligned: bool
+    reason: str
 
 def normalize_persian(text):
     if not text:
@@ -34,56 +40,161 @@ def contains_persian_keyword(text, keyword):
     pattern = rf"(?<![\w\u200c]){re.escape(normalized_keyword)}(?![\w\u200c])"
     return re.search(pattern, normalized_text) is not None
 
-def validate_csv_timestamps(farsi_srt_path, csv_filepath):
-    """Gibt Mismatches zurück, falls die CSV nicht 100% synchron zur SRT ist."""
-    if not os.path.exists(csv_filepath) or not os.path.exists(farsi_srt_path):
-        return [], [], [], []
+def _read_srt(path):
+    try:
+        return pysrt.open(path, encoding='utf-8')
+    except UnicodeDecodeError:
+        return pysrt.open(path, encoding='iso-8859-1')
 
-    subs = pysrt.open(farsi_srt_path, encoding='utf-8')
+def _srt_start_time(subtitle):
+    return f"{subtitle.start.hours:02d}:{subtitle.start.minutes:02d}:{subtitle.start.seconds:02d},{subtitle.start.milliseconds:03d}"
+
+def paired_subtitle_cues(german_srt_path, farsi_srt_path):
+    """Paart deutsche und persische Untertitel anhand ihrer SRT-Nummer."""
+    german_subtitles = {sub.index: sub for sub in _read_srt(german_srt_path)}
+    farsi_subtitles = {sub.index: sub for sub in _read_srt(farsi_srt_path)}
+    return [
+        {
+            'cue_id': cue_id,
+            'german_text': german_subtitles[cue_id].text,
+            'farsi_text': farsi_subtitles[cue_id].text,
+            'zeit': _srt_start_time(farsi_subtitles[cue_id]),
+        }
+        for cue_id in sorted(german_subtitles.keys() & farsi_subtitles.keys())
+    ]
+
+def _normalized_quote(text):
+    return re.sub(r'[^\w\s]', '', (text or '').casefold()).strip()
+
+def vocabulary_cue_candidates(row, cues):
+    german_quote = _normalized_quote(row.get('German_Quote', row.get('german_quote', '')))
+    farsi_keyword = row.get('Farsi_Keyword', row.get('keyword_farsi', '')).strip()
+    if not german_quote or not farsi_keyword:
+        return []
+    return [
+        cue['cue_id'] for cue in cues
+        if german_quote in _normalized_quote(cue['german_text'])
+        and contains_persian_keyword(cue['farsi_text'], farsi_keyword)
+    ]
+
+def canonicalize_vocabulary_cues(rows, cues):
+    """Korrigiert eine Gemini-Cue-Zuordnung nur bei genau einem eindeutigen Paar."""
+    cue_by_id = {cue['cue_id']: cue for cue in cues}
+    for row in rows:
+        candidates = vocabulary_cue_candidates(row, cues)
+        if len(candidates) == 1:
+            cue_id = candidates[0]
+            row['cue_id'] = cue_id
+            row['zeit'] = cue_by_id[cue_id]['zeit']
+            if 'Cue_ID' in row:
+                row['Cue_ID'] = cue_id
+            if 'Zeitstempel' in row:
+                row['Zeitstempel'] = cue_by_id[cue_id]['zeit']
+    return rows
+
+def validate_edtech_csv(german_srt_path, farsi_srt_path, csv_filepath):
+    if not os.path.exists(csv_filepath) or not os.path.exists(farsi_srt_path):
+        return {'rows': [], 'fieldnames': [], 'ts_mismatches': [], 'kw_mismatches': [], 'data_issues': []}
+
+    farsi_subtitles = _read_srt(farsi_srt_path)
+    farsi_by_id = {sub.index: sub for sub in farsi_subtitles}
+    if german_srt_path and os.path.exists(german_srt_path):
+        cues = paired_subtitle_cues(german_srt_path, farsi_srt_path)
+    else:
+        cues = [
+            {'cue_id': sub.index, 'german_text': '', 'farsi_text': sub.text, 'zeit': _srt_start_time(sub)}
+            for sub in farsi_subtitles
+        ]
+
     rows = []
-    with open(csv_filepath, 'r', encoding='utf-8-sig') as f:
-        reader = csv.DictReader(f)
-        fieldnames = reader.fieldnames
-        for row in reader:
-            rows.append(row)
-            
+    with open(csv_filepath, 'r', encoding='utf-8-sig', newline='') as csv_file:
+        reader = csv.DictReader(csv_file)
+        fieldnames = reader.fieldnames or []
+        rows.extend(reader)
+
+    cue_by_id = {cue['cue_id']: cue for cue in cues}
     timestamp_mismatches = []
     keyword_mismatches = []
-    
-    for idx, row in enumerate(rows):
-        keyword = row['Farsi_Keyword'].strip()
-        csv_time = row['Zeitstempel'].strip()
-        
-        exact_match_found = False
-        fuzzy_match_time = None
-        
-        for sub in subs:
-            s_time = f"{sub.start.hours:02d}:{sub.start.minutes:02d}:{sub.start.seconds:02d},{sub.start.milliseconds:03d}"
-            
-            if contains_persian_keyword(sub.text, keyword):
-                if s_time == csv_time:
-                    exact_match_found = True
-                    break
-                elif not fuzzy_match_time:
-                    fuzzy_match_time = s_time
-                    
-        if exact_match_found:
-            continue
-            
-        if fuzzy_match_time:
-            timestamp_mismatches.append({
-                'index': idx, 'keyword': keyword, 'csv_time': csv_time, 'srt_time': fuzzy_match_time
+    data_issues = []
+    seen_keywords = {}
+
+    for row_index, row in enumerate(rows):
+        keyword = (row.get('Farsi_Keyword') or '').strip()
+        csv_time = (row.get('Zeitstempel') or '').strip()
+        try:
+            cue_id = int(row.get('Cue_ID', ''))
+        except (TypeError, ValueError):
+            cue_id = next((sub.index for sub in farsi_subtitles if _srt_start_time(sub) == csv_time), None)
+            if cue_id is None:
+                data_issues.append({'index': row_index, 'message': 'Cue_ID fehlt oder Zeitstempel kann keiner Untertitelnummer zugeordnet werden.'})
+                keyword_mismatches.append({
+                    'index': row_index, 'cue_id': None, 'keyword': keyword,
+                    'csv_time': csv_time, 'srt_time': 'Cue_ID fehlt', 'other_cue_ids': []
+                })
+                continue
+
+        normalized_keyword = normalize_persian(keyword)
+        if normalized_keyword in seen_keywords:
+            data_issues.append({
+                'index': row_index,
+                'message': f'Doppeltes Keyword wie CSV-Zeile {seen_keywords[normalized_keyword] + 1}: {keyword}'
             })
         else:
+            seen_keywords[normalized_keyword] = row_index
+
+        assigned_subtitle = farsi_by_id.get(cue_id)
+        if assigned_subtitle is None:
+            data_issues.append({'index': row_index, 'cue_id': cue_id, 'message': 'Cue_ID existiert nicht in der Farsi-SRT.'})
             keyword_mismatches.append({
-                'index': idx, 'keyword': keyword, 'csv_time': csv_time, 'srt_time': "Nicht gefunden in SRT"
+                'index': row_index, 'cue_id': cue_id, 'keyword': keyword,
+                'csv_time': csv_time, 'srt_time': 'Cue_ID nicht gefunden', 'other_cue_ids': []
             })
-            
-    return rows, timestamp_mismatches, keyword_mismatches, fieldnames
+            continue
+
+        if row.get('Semantik_Status') == 'PRÜFEN':
+            data_issues.append({
+                'index': row_index, 'cue_id': cue_id,
+                'message': row.get('Semantik_Hinweis') or 'Semantische Zuordnung prüfen.'
+            })
+
+        if contains_persian_keyword(assigned_subtitle.text, keyword):
+            actual_time = _srt_start_time(assigned_subtitle)
+            if csv_time != actual_time:
+                timestamp_mismatches.append({
+                    'index': row_index, 'cue_id': cue_id, 'keyword': keyword,
+                    'csv_time': csv_time, 'srt_time': actual_time, 'other_cue_ids': []
+                })
+            continue
+
+        neighboring_ids = [cue_id - 1, cue_id + 1]
+        other_cue_ids = [
+            neighbor_id for neighbor_id in neighboring_ids
+            if neighbor_id in farsi_by_id and contains_persian_keyword(farsi_by_id[neighbor_id].text, keyword)
+        ]
+        keyword_mismatches.append({
+            'index': row_index, 'cue_id': cue_id, 'keyword': keyword,
+            'csv_time': csv_time,
+            'srt_time': _srt_start_time(farsi_by_id[other_cue_ids[0]]) if other_cue_ids else 'Nicht im Cue oder direkten Nachbar-Cues gefunden',
+            'other_cue_ids': other_cue_ids,
+        })
+
+    return {
+        'rows': rows,
+        'fieldnames': fieldnames,
+        'ts_mismatches': timestamp_mismatches,
+        'kw_mismatches': keyword_mismatches,
+        'data_issues': data_issues,
+    }
+
+def validate_csv_timestamps(farsi_srt_path, csv_filepath):
+    report = validate_edtech_csv(None, farsi_srt_path, csv_filepath)
+    return report['rows'], report['ts_mismatches'], report['kw_mismatches'], report['fieldnames']
 
 def fix_csv_timestamps(csv_filepath, rows, fieldnames, timestamp_mismatches):
     for match in timestamp_mismatches:
         rows[match['index']]['Zeitstempel'] = match['srt_time']
+        if 'Cue_ID' in rows[match['index']] and match.get('cue_id') is not None:
+            rows[match['index']]['Cue_ID'] = match['cue_id']
         
     with open(csv_filepath, 'w', encoding='utf-8-sig', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
@@ -91,28 +202,59 @@ def fix_csv_timestamps(csv_filepath, rows, fieldnames, timestamp_mismatches):
         writer.writerows(rows)
     return True
 
-def gemini_followup_fix_mismatches(api_key, farsi_srt_path, csv_filepath, mismatches):
+def validate_ass_content(ass_filepath):
+    if not os.path.exists(ass_filepath):
+        return ['ASS-Datei wurde nicht erstellt.']
+    with open(ass_filepath, 'r', encoding='utf-8') as ass_file:
+        content = ass_file.read()
+    issues = []
+    if '[Events]' not in content or 'Dialogue:' not in content:
+        issues.append('ASS-Datei enthält keine Untertitelereignisse.')
+    return issues
+
+def gemini_followup_fix_mismatches(api_key, farsi_srt_path, csv_filepath, mismatches, german_srt_path=None):
     if not mismatches:
         return True
         
     client = genai.Client(api_key=api_key)
-    with open(farsi_srt_path, 'r', encoding='utf-8') as f:
-        fa_srt = f.read()
     with open(csv_filepath, 'r', encoding='utf-8-sig') as f:
         current_csv = f.read()
 
-    mismatch_keywords = [m['keyword'] for m in mismatches]
+    farsi_subtitles = _read_srt(farsi_srt_path)
+    if german_srt_path and os.path.exists(german_srt_path):
+        paired_cues = paired_subtitle_cues(german_srt_path, farsi_srt_path)
+        cue_lookup = {cue['cue_id']: cue for cue in paired_cues}
+    else:
+        cue_lookup = {
+            subtitle.index: {
+                'cue_id': subtitle.index,
+                'german_text': '',
+                'farsi_text': subtitle.text,
+                'zeit': _srt_start_time(subtitle),
+            }
+            for subtitle in farsi_subtitles
+        }
+    local_cues = {}
+    for mismatch in mismatches:
+        cue_id = mismatch.get('cue_id')
+        if cue_id is None:
+            continue
+        for local_id in (cue_id - 1, cue_id, cue_id + 1):
+            if local_id in cue_lookup:
+                local_cues[local_id] = cue_lookup[local_id]
     prompt = f"""Du bist ein präziser Daten-Analyst für Untertitel.
-Ich habe eine Vokabel-CSV, bei der einige "Farsi_Keyword"-Einträge in der persischen SRT-Datei so nicht exakt gefunden wurden.
-DEINE AUFGABE: Korrigiere NUR die fehlerhaften Keywords oder passe deren Zeitstempel so an, dass das "Farsi_Keyword" zu 100% zeichengenau aus der unten stehenden persischen SRT kopiert wird. Gib die vollständige korrigierte CSV aus.
+Korrigiere ausschließlich markierte CSV-Zeilen. Ein Farsi_Keyword darf nur im zugewiesenen Cue_ID oder seinen direkten Nachbar-Cues vorkommen.
+Ändere Cue_ID nur dann, wenn eine eindeutige lokale Zuordnung nachweisbar ist. Erfinde oder verschiebe keine Untertitelnummern.
+Zeitstempel müssen exakt zum Start des tatsächlich zugewiesenen Cue passen. Gib die vollständige CSV mit allen Originalspalten aus.
 
-FEHLERHAFTE KEYWORDS: {mismatch_keywords}
-PERSISCHE SRT: {fa_srt}
+ABWEICHUNGEN: {json.dumps(mismatches, ensure_ascii=False)}
+LOKALE CUE-KONTEXTE (nur n-1, n, n+1): {json.dumps(local_cues, ensure_ascii=False)}
 AKTUELLE CSV: {current_csv}
 
 REGELN:
 - Gib AUSSCHLIESSLICH die rohen CSV-Daten aus. Kein Markdown, kein Begrüßungstext.
 - Umschließe JEDES Feld zwingend mit doppelten Anführungszeichen ("...").
+- Bewahre unveränderte Zeilen, Spalten und Werte exakt.
 """
     response = client.models.generate_content(
         model="gemini-3.1-pro-preview", 
@@ -121,8 +263,14 @@ REGELN:
     )
     
     fixed_csv_data = response.text.replace('```csv', '').replace('```', '').strip()
-    with open(csv_filepath, 'w', encoding='utf-8-sig') as f:
-        f.write(fixed_csv_data)
+    temporary_csv = f'{csv_filepath}.tmp'
+    try:
+        with open(temporary_csv, 'w', encoding='utf-8-sig', newline='') as csv_file:
+            csv_file.write(fixed_csv_data)
+        os.replace(temporary_csv, csv_filepath)
+    finally:
+        if os.path.exists(temporary_csv):
+            os.remove(temporary_csv)
     return True
 
 def generate_learning_subtitles(
@@ -156,22 +304,30 @@ def generate_learning_subtitles(
             custom_system_instruction or "Du bist ein erfahrener Sprachdozent für Deutsch als Fremdsprache (B2/C1)...",
             summary
         )
+        cues = paired_subtitle_cues(german_srt_path, farsi_srt_path)
+        if not cues:
+            raise ValueError('Deutsche und persische SRT enthalten keine gemeinsam nummerierten Untertitel.')
+
+        cue_reference = '\n'.join(
+            f"Cue_ID: {cue['cue_id']} | Zeitstempel: {cue['zeit']} | Deutsch: {cue['german_text']} | Farsi: {cue['farsi_text']}"
+            for cue in cues
+        )
         prompt = f"""{base_instruction}
-SPALTEN DER CSV-DATEI UND REGELN:
-1. "Zeitstempel": Nimm EXAKT den Start-Zeitstempel.
-2. "Farsi_Keyword": MUSS zu 100 % zeichengenau kopiert werden.
-3. "Deutsches_Wort": Das deutsche Wort.
-4. "Erklärung auf Farsi": Bedeutung auf Farsi.
-5. "Erklärung im Kontext der Geschichte": Ein kurzer deutscher Satz zur Handlung.
+Erstelle 25 bis 35 Vokabeleinträge aus den exakt gepaarten Untertiteln.
+Für jeden Eintrag gib folgende Felder zurück:
+1. "cue_id": die Nummer des Untertitels, aus dem das deutsche Wort und Farsi-Keyword stammen.
+2. "german_quote": ein eindeutiges, wortgetreues deutsches Zitat aus genau diesem Untertitel.
+3. "wort_deutsch": das deutsche Wort.
+4. "keyword_farsi": MUSS zu 100 % zeichengenau aus dem Farsi-Text desselben Cue kopiert werden.
+5. "erklaerung_farsi": Bedeutung auf Farsi.
+6. "erklaerung_kontext": kurzer deutscher Satz zur Handlung.
+Wähle keine Wörter, deren deutsche und persische Stelle nicht eindeutig demselben Cue zugeordnet werden können.
 
 ZUSAMMENFASSUNG:
 {summary or 'Keine Episodenzusammenfassung angegeben.'}
 
-DEUTSCHE SRT:
-{de_srt}
-
-PERSISCHE SRT:
-{fa_srt}"""
+GEPaarte UNTERTITEL-CUES:
+{cue_reference}"""
         
         config = types.GenerateContentConfig(
             system_instruction=base_instruction,
@@ -189,16 +345,76 @@ PERSISCHE SRT:
         else:
             vokabeln_raw = json.loads(response.text)
             
-        if vokabeln_raw and csv_filepath:
-            with open(csv_filepath, 'w', encoding='utf-8-sig', newline='') as f:
-                writer = csv.DictWriter(f, fieldnames=["Zeitstempel", "Farsi_Keyword", "Deutsches_Wort", "Erklärung auf Farsi", "Erklärung im Kontext der Geschichte"], quoting=csv.QUOTE_ALL)
+        if not 25 <= len(vokabeln_raw) <= 35:
+            raise ValueError(f'{len(vokabeln_raw)} Vokabeln erhalten; erwartet werden 25 bis 35.')
+
+        canonicalize_vocabulary_cues(vokabeln_raw, cues)
+        semantic_entries = [
+            {'item_id': item_id, **vocabulary}
+            for item_id, vocabulary in enumerate(vokabeln_raw, start=1)
+        ]
+        semantic_prompt = f"""Prüfe für jeden Vokabeleintrag, ob deutsches Zitat und Farsi-Keyword semantisch zusammenpassen.
+Beurteile die Zuordnung zur angegebenen Cue_ID anhand des folgenden Deutschen und Persischen.
+Gib für jede übergebene item_id genau ein Ergebnis mit derselben item_id, aligned (true/false) und bei false einem kurzen Grund aus.
+
+EINTRÄGE:
+{json.dumps(semantic_entries, ensure_ascii=False)}
+
+GEPaarte CUES:
+{cue_reference}"""
+        semantic_response = client.models.generate_content(
+            model=model,
+            contents=semantic_prompt,
+            config=types.GenerateContentConfig(
+                temperature=0,
+                response_schema=list[SemanticAlignment],
+                thinking_config=types.ThinkingConfig(thinking_budget=0)
+            )
+        )
+        if semantic_response.parsed:
+            semantic_results = [item.model_dump() for item in semantic_response.parsed]
+        else:
+            semantic_results = json.loads(semantic_response.text)
+        semantic_by_id = {int(item['item_id']): item for item in semantic_results}
+        cue_by_id = {cue['cue_id']: cue for cue in cues}
+        csv_rows = []
+        for item_id, vocabulary in enumerate(vokabeln_raw, start=1):
+            semantic = semantic_by_id.get(item_id, {'aligned': False, 'reason': 'Keine semantische Prüfung erhalten.'})
+            cue = cue_by_id.get(int(vocabulary['cue_id']))
+            if not cue:
+                semantic = {'aligned': False, 'reason': 'Cue_ID ist in den gepaarten SRTs nicht vorhanden.'}
+                cue_id = int(vocabulary['cue_id'])
+                cue_time = ''
+            else:
+                cue_id = cue['cue_id']
+                cue_time = cue['zeit']
+            csv_rows.append({
+                'Cue_ID': cue_id,
+                'Zeitstempel': cue_time,
+                'Farsi_Keyword': vocabulary['keyword_farsi'],
+                'German_Quote': vocabulary['german_quote'],
+                'Deutsches_Wort': vocabulary['wort_deutsch'],
+                'Erklärung auf Farsi': vocabulary['erklaerung_farsi'],
+                'Erklärung im Kontext der Geschichte': vocabulary.get('erklaerung_kontext', ''),
+                'Semantik_Status': 'OK' if semantic.get('aligned') else 'PRÜFEN',
+                'Semantik_Hinweis': semantic.get('reason', '') if not semantic.get('aligned') else '',
+            })
+
+        csv_fields = [
+            'Cue_ID', 'Zeitstempel', 'Farsi_Keyword', 'German_Quote', 'Deutsches_Wort',
+            'Erklärung auf Farsi', 'Erklärung im Kontext der Geschichte',
+            'Semantik_Status', 'Semantik_Hinweis',
+        ]
+        temporary_csv = f'{csv_filepath}.tmp'
+        try:
+            with open(temporary_csv, 'w', encoding='utf-8-sig', newline='') as csv_file:
+                writer = csv.DictWriter(csv_file, fieldnames=csv_fields, quoting=csv.QUOTE_ALL)
                 writer.writeheader()
-                for v in vokabeln_raw:
-                    writer.writerow({
-                        "Zeitstempel": v["zeit"], "Farsi_Keyword": v["keyword_farsi"],
-                        "Deutsches_Wort": v["wort_deutsch"], "Erklärung auf Farsi": v["erklaerung_farsi"],
-                        "Erklärung im Kontext der Geschichte": v.get("erklaerung_kontext", "")
-                    })
+                writer.writerows(csv_rows)
+            os.replace(temporary_csv, csv_filepath)
+        finally:
+            if os.path.exists(temporary_csv):
+                os.remove(temporary_csv)
     else:
         raise ValueError("Weder eine gültige CSV-Datei noch API-Zugangsdaten für die Neuerstellung gefunden.")
 
@@ -232,6 +448,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         reader = csv.DictReader(f)
         for row in reader:
             vokabel = {
+                'cue_id': int(row['Cue_ID']) if row.get('Cue_ID', '').strip().isdigit() else None,
                 'zeit': row['Zeitstempel'].strip(), 
                 'keyword_farsi': row['Farsi_Keyword'].strip(),
                 'wort_deutsch': row['Deutsches_Wort'].strip(),
@@ -275,6 +492,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     for block in blocks:
         lines = block.split('\n')
         if len(lines) < 3 or '-->' not in lines[1]: continue
+        try:
+            subtitle_cue_id = int(lines[0].strip())
+        except ValueError:
+            subtitle_cue_id = None
             
         start_srt, end_srt = lines[1].split(' --> ')
         start_ass = srt_time_to_ass(start_srt.strip())
@@ -284,7 +505,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         text_farsi = convert_html_to_ass(text_farsi)
         
         for vokabel in vokabeln:
-            if vokabel['zeit'] in start_srt:
+            cue_matches = vokabel['cue_id'] is not None and vokabel['cue_id'] == subtitle_cue_id
+            legacy_time_matches = vokabel['cue_id'] is None and vokabel['zeit'] in start_srt
+            if cue_matches or legacy_time_matches:
                 open_tags, close_tags = [], []
                 
                 if highlight_bold:
@@ -337,7 +560,16 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         
         ass_events.append(f"Dialogue: 0,{start_ass},{end_ass},Standard,,0,0,0,,{text_farsi}")
         
-    with open(ass_filepath, 'w', encoding='utf-8') as f:
-        f.write(ass_header + '\n'.join(ass_events))
+    temporary_ass = f'{ass_filepath}.tmp'
+    try:
+        with open(temporary_ass, 'w', encoding='utf-8') as ass_file:
+            ass_file.write(ass_header + '\n'.join(ass_events))
+        validation_issues = validate_ass_content(temporary_ass)
+        if validation_issues:
+            raise ValueError(f"ASS-Prüfung fehlgeschlagen: {'; '.join(validation_issues)}")
+        os.replace(temporary_ass, ass_filepath)
+    finally:
+        if os.path.exists(temporary_ass):
+            os.remove(temporary_ass)
         
     return ass_filepath, csv_filepath
