@@ -9,7 +9,7 @@ from app.prompt_manager import load_prompts, get_edtech_instruction, get_system_
 import yaml
 from app.db import (
     create_translation, get_translation_by_id, update_translation, 
-    get_db_logs, get_all_translations, archive_translation,
+    get_db_logs, get_all_translations, archive_translation, unarchive_translation,
     reset_translation_for_regeneration
 )
 from app.services.translation_service import start_translation_job
@@ -19,14 +19,43 @@ load_dotenv()
 
 @main_bp.route('/api/projects', methods=['GET'])
 def list_projects():
-    """Gibt alle Projekte für die Archiv-Ansicht zurück."""
-    return jsonify([p for p in get_all_translations() if not p.get('archived')])
+    """Liefert aktive und archivierte Projekte samt Dateistatus für die UI."""
+    outputs_dir = current_app.config['OUTPUTS_DIR']
+    projects = get_all_translations()
+    for project in projects:
+        base_name = project['original_filename'].replace('.srt', '')
+        project['available_downloads'] = {
+            'srt': os.path.exists(os.path.join(outputs_dir, f'{base_name}_FA.srt')),
+            'ass': bool(project.get('edtech_done')) and os.path.exists(os.path.join(outputs_dir, f'{base_name}_Interaktiv.ass')),
+            'csv': os.path.exists(os.path.join(outputs_dir, f'{base_name}_Vokabeln.csv')),
+        }
+    return jsonify(projects)
 
 @main_bp.route('/api/archive/<int:t_id>', methods=['POST'])
 def archive_project(t_id):
+    project = get_translation_by_id(t_id)
+    if not project:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    base_name = project['original_filename'].replace('.srt', '')
+    outputs_dir = current_app.config['OUTPUTS_DIR']
+    has_srt = os.path.exists(os.path.join(outputs_dir, f'{base_name}_FA.srt'))
+    has_ass = bool(project.get('edtech_done')) and os.path.exists(os.path.join(outputs_dir, f'{base_name}_Interaktiv.ass'))
+    if project.get('status') != 'abgeschlossen' or not has_srt or not has_ass:
+        return jsonify({"error": "Archivieren ist erst möglich, wenn SRT und ASS vollständig erstellt wurden."}), 409
     if archive_translation(t_id):
         return jsonify({"message": "Projekt archiviert"})
     return jsonify({"error": "Projekt nicht gefunden"}), 404
+
+@main_bp.route('/api/unarchive/<int:t_id>', methods=['POST'])
+def unarchive_project(t_id):
+    project = get_translation_by_id(t_id)
+    if not project:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    if not project.get('archived'):
+        return jsonify({"message": "Projekt ist bereits aktiv"})
+    if unarchive_translation(t_id):
+        return jsonify({"message": "Projekt wiederhergestellt"})
+    return jsonify({"error": "Projekt konnte nicht wiederhergestellt werden"}), 409
 
 @main_bp.route('/', methods=['GET'])
 def index():
@@ -100,7 +129,9 @@ def upload_file():
         'episode_summary': real_summary,
         'profile_key': profile_key,
         'sync_offset': sync_offset,
-        'gemini_model': request.form.get('gemini_model', 'gemini-3-flash-preview'),
+        'gemini_model': request.form.get('translation_model', request.form.get('gemini_model', 'gemini-3.1-flash-lite')),
+        'translation_model': request.form.get('translation_model', request.form.get('gemini_model', 'gemini-3.1-flash-lite')),
+        'edtech_model': request.form.get('edtech_model', 'gemini-3.1-flash-lite'),
         'export_path': request.form.get('export_path', '')
     })
     
@@ -154,7 +185,13 @@ def regenerate_translation(t_id):
         return jsonify({"error": "Ungültiger Übersetzungs-Sync-Offset."}), 400
     if not reset_translation_for_regeneration(t_id):
         return jsonify({"error": "Projekt kann derzeit nicht neu generiert werden."}), 409
-    save_project_settings(t_id, {**t, 'sync_offset': sync_offset})
+    translation_model = data.get('translation_model', t.get('translation_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite')
+    save_project_settings(t_id, {
+        **t,
+        'sync_offset': sync_offset,
+        'gemini_model': translation_model,
+        'translation_model': translation_model,
+    })
 
     base_name = t['original_filename'].replace('.srt', '')
     for suffix in ('_FA.srt', '_Vokabeln.csv', '_Interaktiv.ass'):
@@ -246,7 +283,12 @@ def fix_edtech(t_id):
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key: return jsonify({"error": "API Key fehlt"}), 500
             gemini_followup_fix_mismatches(
-                api_key, farsi_srt, csv_file, kw_mismatches + data_issues, german_srt_path=german_srt
+                api_key,
+                farsi_srt,
+                csv_file,
+                kw_mismatches + data_issues,
+                german_srt_path=german_srt,
+                model=t.get('edtech_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite'
             )
         elif method == 'ignore':
             pass
@@ -285,7 +327,7 @@ def generate_edtech(t_id):
         infobox_content = data.get('infobox_content', t.get('infobox_content', 'german_only'))
         episode_summary = data.get('episode_summary', t.get('episode_summary', ''))
         profile_key = data.get('profile_key', t.get('profile_key', 'default'))
-        gemini_model = data.get('gemini_model', t.get('gemini_model', 'gemini-3.1-flash-lite'))
+        gemini_model = data.get('edtech_model', data.get('gemini_model', t.get('edtech_model') or t.get('gemini_model', 'gemini-3.1-flash-lite')))
         custom_edtech_prompt = data.get('custom_edtech_prompt', '').strip()
 
         # 2. Sauberes Dictionary für die DB bauen und speichern
@@ -299,7 +341,9 @@ def generate_edtech(t_id):
             'infobox_content': infobox_content,
             'episode_summary': episode_summary,
             'profile_key': profile_key
-            , 'gemini_model': gemini_model
+            , 'gemini_model': t.get('gemini_model') or t.get('translation_model', 'gemini-3.1-flash-lite')
+            , 'translation_model': t.get('translation_model') or t.get('gemini_model', 'gemini-3.1-flash-lite')
+            , 'edtech_model': gemini_model
         }
         save_project_settings(t_id, merged_settings)
         

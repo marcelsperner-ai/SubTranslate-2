@@ -13,6 +13,7 @@ const startBtn = document.getElementById('startBtn');
 const seriesSelect = document.getElementById('seriesSelect');
 const episodeSelect = document.getElementById('episodeSelect');
 const transSettingsForm = document.getElementById('transSettingsForm');
+const translationModelSelect = document.getElementById('translationModelSelect');
 const transPromptsTab = document.getElementById('transPromptsTab');
 const translationPromptInput = document.getElementById('translationPromptInput');
 const translationPromptSaveButton = document.getElementById('btnSaveTranslationPrompt');
@@ -44,6 +45,7 @@ const btnGenerateEdtech = document.getElementById('btnGenerateEdtech');
 const btnRebuildAss = document.getElementById('btnRebuildAss');
 const generateEdtechForm = document.getElementById('generateEdtechForm');
 const edtechSettingsForm = document.getElementById('edtechSettingsForm');
+const edtechModelSelect = document.getElementById('edtechModelSelect');
 const edtechPromptInput = document.getElementById('edtechPromptInput');
 const edtechPromptSaveButton = document.getElementById('btnSaveEdtechPrompt');
 const regenerateEdtechPromptButton = document.getElementById('btnRegenerateEdtechPrompt');
@@ -55,6 +57,10 @@ const btnFixKeywordsGemini = document.getElementById('btnFixKeywordsGemini');
 const btnFixTimestampsPython = document.getElementById('btnFixTimestampsPython');
 const btnIgnoreMismatches = document.getElementById('btnIgnoreMismatches');
 const archiveTableBody = document.querySelector('#archiveModal tbody');
+const archiveConfirmModalElement = document.getElementById('archiveConfirmModal');
+const archiveConfirmModal = new bootstrap.Modal(archiveConfirmModalElement);
+const archiveConfirmProjectName = document.getElementById('archiveConfirmProjectName');
+const btnConfirmArchiveProject = document.getElementById('btnConfirmArchiveProject');
 const translationSyncOffsetInput = transSettingsForm.elements['sync_offset'];
 const syncOffsetWarningModal = new bootstrap.Modal(document.getElementById('syncOffsetWarningModal'));
 const btnUseEdtechSyncOffset = document.getElementById('btnUseEdtechSyncOffset');
@@ -67,6 +73,7 @@ let translationPromptConfirmed = false;
 let episodeSummarySaved = true;
 let hasGeneratedAss = false;
 let savedEdtechSettings = null;
+let pendingArchiveProjectId = null;
 let loadedTranslationSyncOffset = translationSyncOffsetInput.value;
 let pendingTranslationSyncOffset = null;
 let edtechPromptLoaded = false;
@@ -83,6 +90,11 @@ function updateTranslationPromptActions() {
     const hasPromptChange = promptPreviewLoaded && translationPromptChanged && translationPromptInput.value.trim();
     translationPromptSaveButton.disabled = !hasPromptChange || translationPromptConfirmed;
     regenerateTranslationButton.disabled = !hasPromptChange || !translationPromptConfirmed || !currentProjectId || !currentAvailableDownloads.srt;
+}
+
+function setModelSelectValue(select, model) {
+    const hasOption = Array.from(select.options).some(option => option.value === model);
+    select.value = hasOption ? model : 'gemini-3.1-flash-lite';
 }
 
 function updateEdtechPromptActions() {
@@ -352,6 +364,7 @@ function getEdtechSettingsSnapshot() {
     const settings = {};
     for (const field of edtechSettingsForm.elements) {
         if (!field.name) continue;
+        if (field.name === 'edtech_model') continue;
         settings[field.name] = field.type === 'checkbox' ? field.checked : field.value;
     }
     return JSON.stringify(settings);
@@ -424,9 +437,24 @@ episodeSelect.addEventListener('change', () => {
     loadPromptPreview();
 });
 
-function openProjectFromElement(projectElement) {
+async function openProjectFromElement(projectElement) {
     const projectId = Number(projectElement.dataset.projectId);
     if (!Number.isInteger(projectId)) return;
+
+    if (projectElement.dataset.projectArchived === 'true') {
+        projectElement.disabled = true;
+        try {
+            const response = await fetch(`/api/unarchive/${projectId}`, { method: 'POST' });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'Projekt konnte nicht wiederhergestellt werden.');
+            await loadProjects();
+            bootstrap.Modal.getInstance(document.getElementById('archiveModal'))?.hide();
+        } catch (error) {
+            projectElement.disabled = false;
+            alert(error.message);
+            return;
+        }
+    }
 
     loadProjectToMain(
         projectId,
@@ -436,7 +464,16 @@ function openProjectFromElement(projectElement) {
 }
 
 sidebarList.addEventListener('click', (event) => {
-    const projectElement = event.target.closest('.mini-project[data-project-id]');
+    const archiveButton = event.target.closest('.archive-project-button[data-project-id]');
+    if (archiveButton && sidebarList.contains(archiveButton)) {
+        event.stopPropagation();
+        pendingArchiveProjectId = Number(archiveButton.dataset.projectId);
+        archiveConfirmProjectName.textContent = archiveButton.dataset.projectTitle;
+        archiveConfirmModal.show();
+        return;
+    }
+
+    const projectElement = event.target.closest('.mini-project-open[data-project-id]');
     if (projectElement && sidebarList.contains(projectElement)) {
         openProjectFromElement(projectElement);
     }
@@ -445,7 +482,7 @@ sidebarList.addEventListener('click', (event) => {
 sidebarList.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
 
-    const projectElement = event.target.closest('.mini-project[data-project-id]');
+    const projectElement = event.target.closest('.mini-project-open[data-project-id]');
     if (projectElement && sidebarList.contains(projectElement)) {
         event.preventDefault();
         openProjectFromElement(projectElement);
@@ -457,6 +494,29 @@ archiveTableBody.addEventListener('click', (event) => {
     if (projectElement && archiveTableBody.contains(projectElement)) {
         openProjectFromElement(projectElement);
     }
+});
+
+btnConfirmArchiveProject.addEventListener('click', async () => {
+    if (!pendingArchiveProjectId) return;
+    btnConfirmArchiveProject.disabled = true;
+    btnConfirmArchiveProject.textContent = 'Wird archiviert ...';
+    try {
+        const response = await fetch(`/api/archive/${pendingArchiveProjectId}`, { method: 'POST' });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Projekt konnte nicht archiviert werden.');
+        archiveConfirmModal.hide();
+        pendingArchiveProjectId = null;
+        await loadProjects();
+    } catch (error) {
+        alert(error.message);
+    } finally {
+        btnConfirmArchiveProject.disabled = false;
+        btnConfirmArchiveProject.textContent = 'Archivieren';
+    }
+});
+
+archiveConfirmModalElement.addEventListener('hidden.bs.modal', () => {
+    pendingArchiveProjectId = null;
 });
 
 // 2. PROJEKTE & ARCHIV LADEN
@@ -471,46 +531,62 @@ async function loadProjects() {
         sidebarList.innerHTML = '';
         archiveTableBody.innerHTML = '';
         
-        projects.forEach(p => {
+        const activeProjects = projects.filter(project => !project.archived);
+        const archivedProjects = projects.filter(project => project.archived);
+
+        activeProjects.forEach(p => {
             let percent = p.total_lines > 0 ? Math.round((p.translated_lines / p.total_lines) * 100) : 0;
             let isActive = p.id === currentProjectId ? 'active' : '';
-            let edtechDone = p.edtech_done ? 'done' : '';
-            let transDone = p.status === 'abgeschlossen' ? 'done' : '';
+            let edtechDone = p.available_downloads?.ass ? 'done' : '';
+            let transDone = p.available_downloads?.srt ? 'done' : '';
             let progressColor = p.status === 'abgeschlossen' ? 'bg-success' : 'var(--purple-accent)';
             let name = p.original_filename.replace('.srt', '');
             let safeName = escapeHtml(name);
             let safeStatus = escapeHtml(p.status);
+            let canArchive = p.status === 'abgeschlossen'
+                && p.available_downloads?.srt && p.available_downloads?.ass;
 
-            // Sidebar Eintrag
+            let archiveButton = canArchive
+                ? `<button type="button" class="archive-project-button" data-project-id="${Number(p.id)}" data-project-title="${safeName}" aria-label="${safeName} archivieren" title="Projekt archivieren">×</button>`
+                : '';
             let sidebarHtml = `
-            <div class="mini-project ${isActive}" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}" role="button" tabindex="0">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="text-truncate" style="max-width: 70%;">
-                        <div class="fw-bold fs-6 text-truncate">${safeName}</div>
-                        <div class="text-muted" style="font-size: 0.8em;">Status: ${safeStatus}</div>
+            <div class="mini-project ${isActive}">
+                <button type="button" class="mini-project-open" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="text-truncate" style="max-width: 68%;">
+                            <div class="fw-bold fs-6 text-truncate">${safeName}</div>
+                            <div class="text-muted" style="font-size: 0.8em;">Status: ${safeStatus}</div>
+                        </div>
+                        <div class="d-flex gap-1 me-1">
+                            <span class="file-badge ${transDone}">SRT</span>
+                            <span class="file-badge ${edtechDone}">ASS</span>
+                        </div>
                     </div>
-                    <div class="d-flex gap-1">
-                        <span class="file-badge ${transDone}">SRT</span>
-                        <span class="file-badge ${edtechDone}">ASS</span>
+                    <div class="progress mt-2" style="height: 4px;">
+                        <div class="progress-bar" style="background-color: ${progressColor}; width: ${percent}%;"></div>
                     </div>
-                </div>
-                <div class="progress mt-2" style="height: 4px;">
-                    <div class="progress-bar" style="background-color: ${progressColor}; width: ${percent}%;"></div>
-                </div>
+                </button>
+                ${archiveButton}
             </div>`;
             sidebarList.insertAdjacentHTML('beforeend', sidebarHtml);
+        });
 
-            // Archiv Eintrag (nur Status-Farbe anpassen)
+        archivedProjects.forEach(p => {
+            const safeName = escapeHtml(p.original_filename.replace('.srt', ''));
+            const safeStatus = escapeHtml(p.status);
             let badgeClass = p.status === 'abgeschlossen' ? 'bg-success' : (p.status === 'laufend' ? 'bg-primary' : 'bg-secondary');
             let archiveHtml = `
             <tr>
                 <td>${safeName}</td>
                 <td><span class="badge ${badgeClass}">${safeStatus}</span></td>
                 <td class="text-muted small">${new Date(p.last_updated).toLocaleString()}</td>
-                <td><button class="btn btn-sm btn-outline-secondary" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}" data-bs-dismiss="modal">Öffnen</button></td>
+                <td><button class="btn btn-sm btn-outline-secondary" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}" data-project-archived="true">Öffnen</button></td>
             </tr>`;
             archiveTableBody.insertAdjacentHTML('beforeend', archiveHtml);
         });
+        if (archivedProjects.length === 0) {
+            archiveTableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Noch keine archivierten Projekte.</td></tr>';
+        }
     } catch (e) {
         console.error("Fehler beim Laden der Projekte", e);
     } finally {
@@ -547,6 +623,8 @@ async function loadProjectToMain(id, title, status) {
             let pData = await pRes.json();
             translationSyncOffsetInput.value = pData.sync_offset ?? 0;
             loadedTranslationSyncOffset = translationSyncOffsetInput.value;
+            setModelSelectValue(translationModelSelect, pData.translation_model || pData.gemini_model);
+            setModelSelectValue(edtechModelSelect, pData.edtech_model || pData.gemini_model);
             availableDownloads = pData.available_downloads || availableDownloads;
             currentAvailableDownloads = availableDownloads;
             hasGeneratedAss = Boolean(availableDownloads.ass);
@@ -619,6 +697,7 @@ form.addEventListener('submit', async (e) => {
     if (isCustomEpisodeSelected()) {
         formData.set('episode_summary_override', episodeSummaryInput.value);
     }
+    formData.set('edtech_model', edtechModelSelect.value);
     projectTitle.textContent = projectTitleText;
 
     try {

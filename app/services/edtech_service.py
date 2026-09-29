@@ -212,7 +212,10 @@ def validate_ass_content(ass_filepath):
         issues.append('ASS-Datei enthält keine Untertitelereignisse.')
     return issues
 
-def gemini_followup_fix_mismatches(api_key, farsi_srt_path, csv_filepath, mismatches, german_srt_path=None):
+def gemini_followup_fix_mismatches(
+    api_key, farsi_srt_path, csv_filepath, mismatches,
+    german_srt_path=None, model='gemini-3.1-flash-lite'
+):
     if not mismatches:
         return True
         
@@ -257,7 +260,7 @@ REGELN:
 - Bewahre unveränderte Zeilen, Spalten und Werte exakt.
 """
     response = client.models.generate_content(
-        model="gemini-3.1-pro-preview", 
+        model=model,
         contents=prompt,
         config=types.GenerateContentConfig(temperature=0.1)
     )

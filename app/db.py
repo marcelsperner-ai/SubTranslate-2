@@ -42,18 +42,29 @@ def init_db():
         "episode_summary": "TEXT DEFAULT ''",
         "custom_translation_prompt": "TEXT DEFAULT ''",
         "gemini_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
+        "translation_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
+        "edtech_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
         "export_path": "TEXT DEFAULT ''",
         "archived": "INTEGER DEFAULT 0",
         # --- NEU FÜR DEN HEARTBEAT & LEASE ---
         "heartbeat_at": "REAL DEFAULT 0",
         "worker_token": "TEXT DEFAULT NULL"
     }
+
+    c.execute("PRAGMA table_info(translations)")
+    existing_columns = {row[1] for row in c.fetchall()}
     
     for col_name, col_type in new_columns.items():
         try:
             c.execute(f"ALTER TABLE translations ADD COLUMN {col_name} {col_type}")
         except sqlite3.OperationalError:
             pass
+
+    if "gemini_model" in existing_columns:
+        if "translation_model" not in existing_columns:
+            c.execute("UPDATE translations SET translation_model = gemini_model")
+        if "edtech_model" not in existing_columns:
+            c.execute("UPDATE translations SET edtech_model = gemini_model")
             
     # NEU FÜR FLASK: Eine separate Tabelle für das Live-Logbuch
     c.execute('''
@@ -76,7 +87,8 @@ def save_project_settings(t_id, settings_dict):
             batch_size = ?, infobox_duration = ?, ass_sync_offset = ?, 
             hl_bold = ?, hl_underline = ?, hl_color = ?, 
             infobox_content = ?, episode_summary = ?, custom_translation_prompt = ?,
-            sync_offset = ?, profile_key = ?, gemini_model = ?, export_path = ?
+            sync_offset = ?, profile_key = ?, gemini_model = ?, translation_model = ?,
+            edtech_model = ?, export_path = ?
         WHERE id = ?
     '''
     c.execute(query, (
@@ -91,7 +103,9 @@ def save_project_settings(t_id, settings_dict):
         settings_dict.get('custom_translation_prompt', ''),
         settings_dict.get('sync_offset', 0),
         settings_dict.get('profile_key', 'default'),
-        settings_dict.get('gemini_model', 'gemini-3.1-flash-lite'),
+        settings_dict.get('gemini_model') or settings_dict.get('translation_model', 'gemini-3.1-flash-lite'),
+        settings_dict.get('translation_model') or settings_dict.get('gemini_model', 'gemini-3.1-flash-lite'),
+        settings_dict.get('edtech_model') or settings_dict.get('gemini_model', 'gemini-3.1-flash-lite'),
         settings_dict.get('export_path', ''),
         t_id
     ))
@@ -187,6 +201,18 @@ def archive_translation(t_id):
     conn = get_db_connection()
     c = conn.cursor()
     c.execute("UPDATE translations SET archived = 1, last_updated = ? WHERE id = ?", (datetime.now().isoformat(), t_id))
+    success = c.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
+
+def unarchive_translation(t_id):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute(
+        "UPDATE translations SET archived = 0, last_updated = ? WHERE id = ? AND archived = 1",
+        (datetime.now().isoformat(), t_id)
+    )
     success = c.rowcount > 0
     conn.commit()
     conn.close()

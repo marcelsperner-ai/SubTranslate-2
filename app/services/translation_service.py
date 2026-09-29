@@ -179,7 +179,7 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
         prompts_data = load_prompts()
         custom_prompt = prompt_override if prompt_override is not None else (t.get('custom_translation_prompt', '') or '')
         episode_summary = t.get('episode_summary', '').strip()
-        gemini_model = t.get('gemini_model') or 'gemini-3.1-flash-lite'
+        gemini_model = t.get('translation_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite'
         base_prompt = custom_prompt or get_system_instruction(prompts_data, t.get('profile_key', 'default'))
         final_system_prompt = append_episode_summary(base_prompt, episode_summary)
 
