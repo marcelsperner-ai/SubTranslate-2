@@ -104,6 +104,11 @@
             background-color: var(--purple-accent);
             color: white;
         }
+        #btnNewProject.active {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
 
         /* HAUPTBEREICH & FENSTER */
         .main-workspace {
@@ -135,6 +140,19 @@
             padding: 1rem 2rem;
             min-height: 0;
             overflow: hidden;
+            transition: flex-grow 0.3s ease, flex-basis 0.3s ease;
+        }
+        .split-pane.pane-maximized {
+            flex: 1 1 0;
+        }
+        .split-pane.pane-minimized {
+            flex: 0 0 15vh;
+        }
+        .split-pane.pane-minimized .pane-body {
+            display: none;
+        }
+        .edtech-pane-toggle {
+            line-height: 1;
         }
         .translation-tab-content,
         .main-tab-content,
@@ -312,7 +330,7 @@
             <h5 class="m-0">Projekte</h5>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="btnOpenSettings" title="Standard-Einstellungen" aria-label="Standard-Einstellungen" data-bs-toggle="modal" data-bs-target="#settingsModal">⚙️</button>
-                <button class="btn btn-sm btn-outline-secondary" id="btnNewProject">Neu ➕</button>
+                <button class="btn btn-sm btn-outline-secondary active" id="btnNewProject">Neu ➕</button>
             </div>
         </div>
         
@@ -367,7 +385,7 @@
         </div>
         
         <!-- OBERES FENSTER: Translation -->
-        <div class="split-pane pane-top">
+        <div class="split-pane pane-top pane-maximized" id="translationZone">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h3 id="currentProjectTitle" class="m-0">Neues Projekt</h3>
                 <ul class="nav nav-tabs border-0" id="transTabs" role="tablist">
@@ -377,7 +395,7 @@
                 </ul>
             </div>
 
-            <div class="tab-content translation-tab-content flex-grow-1 mt-2">
+            <div class="tab-content translation-tab-content pane-body flex-grow-1 mt-2">
                 <div class="tab-pane fade show active" id="trans-main">
                     <div class="main-tab-layout">
                         <div class="main-tab-header">
@@ -495,17 +513,20 @@
         </div>
 
         <!-- UNTERES FENSTER: EdTech -->
-        <div class="split-pane disabled-overlay" id="edtechZone">
+        <div class="split-pane disabled-overlay pane-minimized" id="edtechZone">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h3 class="m-0">🎓 EdTech</h3>
-                <ul class="nav nav-tabs border-0">
-                    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#ed-main">Main</a></li>
-                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ed-settings">Settings</a></li>
-                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ed-prompts">Prompts</a></li>
-                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    <ul class="nav nav-tabs border-0">
+                        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#ed-main">Main</a></li>
+                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ed-settings">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ed-prompts">Prompts</a></li>
+                    </ul>
+                    <button type="button" class="btn btn-sm btn-outline-secondary edtech-pane-toggle" id="btnToggleEdtechPane" title="Ansicht wechseln" aria-label="EdTech-Ansicht maximieren/minimieren">▲</button>
+                </div>
             </div>
             
-            <div class="tab-content flex-grow-1 mt-2">
+            <div class="tab-content pane-body flex-grow-1 mt-2">
                 <!-- EDTECH MAIN TAB (Validieren & Status) -->
                 <div class="tab-pane fade show active" id="ed-main">
                     <div id="edtechStatusBox" class="text-center pt-4">

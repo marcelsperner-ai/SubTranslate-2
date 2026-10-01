@@ -78,6 +78,51 @@ const exportDefaultSubtitlesPath = document.getElementById('exportDefaultSubtitl
 const exportDefaultVocabPath = document.getElementById('exportDefaultVocabPath');
 const exportSeasonRows = document.getElementById('exportSeasonRows');
 const translationSyncOffsetInput = transSettingsForm.elements['sync_offset'];
+const translationZone = document.getElementById('translationZone');
+const btnToggleEdtechPane = document.getElementById('btnToggleEdtechPane');
+
+// PANE-ZUSTAND: nur eines der beiden Module ist maximiert, solange EdTech gesperrt ist bleibt SRT maximiert
+let edtechPaneLocked = true;
+let activePane = 'srt';
+
+function applyPaneState() {
+    const edtechActive = activePane === 'edtech' && !edtechPaneLocked;
+    translationZone.classList.toggle('pane-maximized', !edtechActive);
+    translationZone.classList.toggle('pane-minimized', edtechActive);
+    edtechZone.classList.toggle('pane-maximized', edtechActive);
+    edtechZone.classList.toggle('pane-minimized', !edtechActive);
+    btnToggleEdtechPane.textContent = edtechActive ? '▼' : '▲';
+}
+
+function setActivePane(pane) {
+    if (pane === 'edtech' && edtechPaneLocked) return;
+    activePane = pane;
+    applyPaneState();
+}
+
+function lockEdtechPane() {
+    edtechPaneLocked = true;
+    setActivePane('srt');
+}
+
+btnToggleEdtechPane.addEventListener('click', () => {
+    setActivePane(activePane === 'edtech' ? 'srt' : 'edtech');
+});
+
+translationZone.addEventListener('click', (event) => {
+    if (event.target.closest('.nav-link') || event.target.closest('button')) {
+        setActivePane('srt');
+    }
+});
+
+edtechZone.addEventListener('click', (event) => {
+    if (event.target.closest('#btnToggleEdtechPane')) return;
+    if (event.target.closest('.nav-link') || event.target.closest('button')) {
+        setActivePane('edtech');
+    }
+});
+
+applyPaneState();
 const syncOffsetWarningModal = new bootstrap.Modal(document.getElementById('syncOffsetWarningModal'));
 const btnUseEdtechSyncOffset = document.getElementById('btnUseEdtechSyncOffset');
 const btnKeepTranslationSyncOffset = document.getElementById('btnKeepTranslationSyncOffset');
@@ -868,9 +913,11 @@ async function loadProjectToMain(id, title, status) {
     setProjectLoading(true);
     setTranslationStarted(false);
     currentProjectId = id;
+    btnNewProject.classList.remove('active');
     projectTitle.textContent = title; // XSS-Schutz
     progressSection.style.display = 'block';
     document.getElementById('previewLinks').classList.add('d-none');
+    lockEdtechPane();
     let availableDownloads = { srt: status === 'abgeschlossen', ass: false, csv: false };
     currentAvailableDownloads = availableDownloads;
     
@@ -938,6 +985,7 @@ async function loadProjectToMain(id, title, status) {
         edtechZone.classList.add('disabled-overlay');
         edtechStatusBox.style.display = 'block';
         edtechActiveBox.style.display = 'none';
+        lockEdtechPane();
     }
     
     startPolling();
@@ -1051,6 +1099,7 @@ function startPolling() {
                 edtechZone.classList.add('disabled-overlay');
                 edtechStatusBox.style.display = 'block';
                 edtechActiveBox.style.display = 'none';
+                lockEdtechPane();
             }
             
             if (data.status === 'Fehler' || data.status === 'pausiert') {
@@ -1075,6 +1124,7 @@ btnNewProject.addEventListener('click', () => {
     setProjectLoading(false);
     setTranslationStarted(false);
     currentProjectId = null;
+    btnNewProject.classList.add('active');
     if (pollInterval) clearInterval(pollInterval);
     
     projectTitle.textContent = "Neues Projekt";
@@ -1107,6 +1157,7 @@ btnNewProject.addEventListener('click', () => {
     edtechZone.classList.add('disabled-overlay');
     edtechStatusBox.style.display = 'block';
     edtechActiveBox.style.display = 'none';
+    lockEdtechPane();
     btnPauseResume.style.display = 'none';
     applyDefaultsToNewProjectForms();
 });
@@ -1785,6 +1836,7 @@ previewLinks.addEventListener('click', async (event) => {
 });
 
 function unlockEdtech(availableDownloads = currentAvailableDownloads) {
+    const wasLocked = edtechPaneLocked;
     currentAvailableDownloads = availableDownloads;
     edtechZone.classList.remove('disabled-overlay');
     edtechStatusBox.style.display = 'none';
@@ -1794,6 +1846,13 @@ function unlockEdtech(availableDownloads = currentAvailableDownloads) {
     
     setPreviewAvailability(availableDownloads);
     updateEdtechPromptActions();
+
+    edtechPaneLocked = false;
+    if (wasLocked) {
+        setActivePane('edtech');
+    } else {
+        applyPaneState();
+    }
 }
 
 function showValidationMismatches(data) {
