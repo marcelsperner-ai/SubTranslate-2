@@ -8,9 +8,11 @@ body { margin: 0; }
 .fc-header h1 { margin: 0; font-size: 1.4rem; font-weight: 650; }
 
 .fc-direction-toggle { display: inline-flex; border: 1px solid #84919a; border-radius: 6px; overflow: hidden; }
+.fc-mode-toggle { display: inline-flex; border: 1px solid #84919a; border-radius: 6px; overflow: hidden; }
 .fc-direction-btn { border: none; background: #fff; color: #20262b; padding: 7px 14px; font: inherit; font-size: .85rem; cursor: pointer; }
 .fc-direction-btn + .fc-direction-btn { border-left: 1px solid #84919a; }
 .fc-direction-btn.is-active { background: #176b58; color: #fff; }
+.fc-direction-btn:disabled { opacity: .5; cursor: not-allowed; }
 
 .fc-status { color: #59636c; padding: 20px 0; }
 .fc-status.is-error { color: #a4262c; }
@@ -38,6 +40,9 @@ body { margin: 0; }
 .fc-card-text { margin: 0; font-size: 1.5rem; font-weight: 600; unicode-bidi: plaintext; }
 .fc-card-text--quote { font-size: 1.15rem; font-weight: 500; line-height: 1.5; }
 .fc-card-text u { text-decoration-color: #176b58; text-decoration-thickness: 3px; text-underline-offset: 3px; font-weight: 700; }
+.fc-card-text .fc-blank { font-weight: 700; color: #176b58; letter-spacing: .1em; }
+.fc-card-hint { margin: 0; font-size: 1.1rem; color: #4d5962; unicode-bidi: plaintext; }
+.fc-card-hint.d-none { display: none; }
 .fc-card-context { margin: 0; font-size: .95rem; color: #4d5962; unicode-bidi: plaintext; white-space: pre-wrap; }
 .fc-card-context mark { background: #ffe9a8; padding: 0 2px; border-radius: 3px; }
 

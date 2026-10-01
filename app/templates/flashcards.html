@@ -10,7 +10,11 @@
     <main class="flashcards-page" data-t-id="{{ t_id }}" data-project-missing="{{ 'true' if project_missing else 'false' }}">
         <header class="fc-header">
             <h1>🎴 Lernkarten{{ ' – ' + project_name if project_name else '' }}</h1>
-            <div class="fc-direction-toggle" role="group" aria-label="Lernrichtung">
+            <div class="fc-mode-toggle" role="group" aria-label="Lernmodus">
+                <button type="button" class="fc-direction-btn is-active" id="btnModeFlip" data-mode="flip">🎴 Karteikarte</button>
+                <button type="button" class="fc-direction-btn" id="btnModeCloze" data-mode="cloze">📝 Lückentext</button>
+            </div>
+            <div class="fc-direction-toggle" id="fcDirectionGroup" role="group" aria-label="Lernrichtung">
                 <button type="button" class="fc-direction-btn is-active" id="btnDirDeFa" data-direction="de-fa">Deutsch → Farsi</button>
                 <button type="button" class="fc-direction-btn" id="btnDirFaDe" data-direction="fa-de">Farsi → Deutsch</button>
             </div>
@@ -26,6 +30,7 @@
                     <div class="fc-card-face fc-card-front">
                         <p class="fc-card-label" id="fcFrontLabel"></p>
                         <p class="fc-card-text" id="fcFrontText"></p>
+                        <p class="fc-card-hint d-none" id="fcFrontHint"></p>
                     </div>
                     <div class="fc-card-face fc-card-back">
                         <p class="fc-card-label" id="fcBackLabel"></p>
