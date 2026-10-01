@@ -5,6 +5,9 @@ let projectListRequestActive = false;
 let projectLoadSequence = 0;
 let generateAssAfterValidation = false;
 let currentAvailableDownloads = { srt: false, ass: false, csv: false };
+const openAssPreviewWindows = new Set();
+const csvPreviewControls = new Map();
+const previewRequestIds = new WeakMap();
 
 // DOM Elemente
 const form = document.getElementById('newProjectForm');
@@ -948,20 +951,29 @@ function createPreviewWindow(type) {
                 #preview-status { margin: 12px 0; color: #59636c; }
                 .table-wrap { overflow: auto; max-height: calc(100vh - 120px); background: white; border: 1px solid #d9dee2; }
                 table { width: 100%; border-collapse: collapse; }
+                table.ass-table { width: max-content; min-width: 0; }
                 th, td { padding: 10px 12px; border-bottom: 1px solid #e5e8ea; text-align: left; vertical-align: top; }
                 th { position: sticky; top: 0; z-index: 1; background: #edf0f2; font-size: .84rem; white-space: nowrap; }
                 td { white-space: pre-wrap; overflow-wrap: anywhere; }
                 .timestamp { min-width: 210px; color: #4d5962; font: 13px/1.5 ui-monospace, monospace; white-space: nowrap; }
                 .subtitle { min-width: 380px; }
-                .srt-text { white-space: pre-wrap; unicode-bidi: plaintext; }
-                .ass-stage { width: min(100%, 782px); aspect-ratio: 16 / 9; padding: 3%; display: flex; overflow: hidden; background: #161a1d; color: white; }
-                .ass-line { width: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; }
-                .ass-line.align-left { text-align: left; }
-                .ass-line.align-center { text-align: center; }
-                .ass-line.align-right { text-align: right; }
-                .ass-line.valign-top { justify-content: flex-start; }
-                .ass-line.valign-middle { justify-content: center; }
-                .ass-line.valign-bottom { justify-content: flex-end; }
+                .cue-number { min-width: 72px; text-align: right; color: #59636c; font: 13px/1.5 ui-monospace, monospace; }
+                .srt-text { min-width: 320px; padding: 12px; white-space: pre-wrap; unicode-bidi: plaintext; background: #000; color: #fff; }
+                .srt-original { min-width: 320px; }
+                .ass-timestamp { min-width: 0; white-space: nowrap; }
+                .ass-subtitle { width: max-content; min-width: 0; max-width: min(70vw, 900px); padding: 8px 12px; background: #000; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; }
+                .ass-original { background: #000; }
+                .ass-original.is-empty { background: transparent; }
+                .ass-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+                .ass-filter { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; cursor: pointer; }
+                .ass-filter input { margin: 0; }
+                .csv-preview-actions { display: flex; flex-wrap: wrap; gap: 6px; min-width: 150px; }
+                .csv-preview-actions button { border: 1px solid #84919a; border-radius: 4px; background: #fff; color: #20262b; padding: 4px 8px; font: inherit; font-size: .8rem; cursor: pointer; }
+                .csv-preview-actions button.primary { border-color: #176b58; background: #176b58; color: #fff; }
+                .csv-preview-actions button:disabled { opacity: .6; cursor: wait; }
+                .csv-cell-editor { display: block; width: 100%; min-width: 150px; min-height: 2rem; padding: 4px 6px; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; resize: vertical; }
+                .csv-cell-editor:focus { border-color: #6b9b8e; outline: 2px solid #d3e7e1; background: #fff; }
+                .csv-delete-row { width: 28px; height: 28px; padding: 0 !important; font-size: 1.2rem !important; line-height: 1; }
                 .empty { padding: 20px; color: #59636c; }
                 @media (max-width: 700px) { main { padding: 18px 12px 32px; } .timestamp { min-width: 170px; } .subtitle { min-width: 260px; } }
             </style>
@@ -974,17 +986,19 @@ function createPreviewWindow(type) {
     return popup;
 }
 
-function appendPreviewTable(popup, headings, rows) {
+function appendPreviewTable(popup, headings, rows, tableClass = '') {
     const document = popup.document;
     const wrap = document.createElement('div');
     wrap.className = 'table-wrap';
     const table = document.createElement('table');
+    if (tableClass) table.className = tableClass;
     const head = document.createElement('thead');
     const headRow = document.createElement('tr');
     headings.forEach((heading) => {
         const cell = document.createElement('th');
         cell.scope = 'col';
-        cell.textContent = heading;
+        if (heading instanceof document.defaultView.Node) cell.append(heading);
+        else cell.textContent = heading;
         headRow.append(cell);
     });
     head.append(headRow);
@@ -1002,22 +1016,121 @@ function showPreviewMessage(popup, message) {
     status.textContent = message;
 }
 
-function renderCsvPreview(popup, rows) {
-    if (!rows.length) {
+function renderCsvPreview(popup, rows, fieldnames, projectId) {
+    if (!fieldnames.length) {
         showPreviewMessage(popup, 'Keine CSV-Daten vorhanden.');
         return;
     }
-    const headings = Object.keys(rows[0]);
+    const actions = popup.document.createElement('div');
+    actions.className = 'csv-preview-actions';
+    const saveButton = popup.document.createElement('button');
+    saveButton.type = 'button';
+    saveButton.textContent = 'CSV speichern';
+    saveButton.hidden = true;
+    const rebuildButton = popup.document.createElement('button');
+    rebuildButton.type = 'button';
+    rebuildButton.className = 'primary';
+    rebuildButton.textContent = 'ASS neu generieren';
+    rebuildButton.hidden = true;
+    actions.append(saveButton, rebuildButton);
+    const headings = [actions, ...fieldnames];
     const tableRows = rows.map((record) => {
         const row = popup.document.createElement('tr');
-        headings.forEach((heading) => {
+        const controls = popup.document.createElement('td');
+        const deleteButton = popup.document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'csv-delete-row';
+        deleteButton.textContent = '×';
+        deleteButton.title = 'Zeile löschen';
+        deleteButton.setAttribute('aria-label', 'CSV-Zeile löschen');
+        controls.append(deleteButton);
+        row.append(controls);
+        fieldnames.forEach((fieldname) => {
             const cell = popup.document.createElement('td');
-            cell.textContent = record[heading] ?? '';
+            const editor = popup.document.createElement('textarea');
+            editor.className = 'csv-cell-editor';
+            editor.rows = Math.min(4, Math.max(1, String(record[fieldname] ?? '').split('\n').length));
+            editor.value = record[fieldname] ?? '';
+            editor.setAttribute('aria-label', fieldname);
+            cell.append(editor);
             row.append(cell);
         });
         return row;
     });
-    appendPreviewTable(popup, headings, tableRows);
+    appendPreviewTable(popup, headings, tableRows, 'csv-preview-table');
+    const table = popup.document.querySelector('.csv-preview-table');
+    const body = table.tBodies[0];
+    let dirty = false;
+    const markDirty = () => {
+        dirty = true;
+        saveButton.hidden = false;
+        rebuildButton.hidden = true;
+        popup.document.getElementById('preview-status').textContent = 'Änderungen noch nicht gespeichert.';
+    };
+    body.addEventListener('input', (event) => {
+        if (event.target.matches('.csv-cell-editor')) markDirty();
+    });
+    body.addEventListener('click', (event) => {
+        if (!event.target.closest('.csv-delete-row')) return;
+        event.target.closest('tr').remove();
+        markDirty();
+    });
+    saveButton.addEventListener('click', async () => {
+        if (!dirty) return;
+        const editors = Array.from(body.querySelectorAll('.csv-cell-editor, .csv-delete-row'));
+        editors.forEach((editor) => { editor.disabled = true; });
+        const editedRows = Array.from(body.rows, (row) => {
+            const editors = Array.from(row.querySelectorAll('.csv-cell-editor'));
+            return Object.fromEntries(fieldnames.map((fieldname, index) => [fieldname, editors[index].value]));
+        });
+        saveButton.disabled = true;
+        saveButton.textContent = 'Speichert...';
+        try {
+            const response = await fetch(`/api/edtech/csv/${projectId}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({rows: editedRows})
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'CSV konnte nicht gespeichert werden.');
+            dirty = false;
+            saveButton.hidden = true;
+            rebuildButton.hidden = false;
+            popup.document.getElementById('preview-status').textContent = `${result.row_count} CSV-Zeilen gespeichert.`;
+        } catch (error) {
+            showPreviewMessage(popup, error.message || 'CSV konnte nicht gespeichert werden.');
+        } finally {
+            editors.forEach((editor) => { editor.disabled = false; });
+            saveButton.disabled = false;
+            saveButton.textContent = 'CSV speichern';
+        }
+    });
+    rebuildButton.addEventListener('click', async () => {
+        if (projectId !== currentProjectId) {
+            showPreviewMessage(popup, 'Bitte zuerst dieses Projekt im Hauptfenster auswählen.');
+            return;
+        }
+        rebuildButton.disabled = true;
+        generateAssAfterValidation = true;
+        popup.document.getElementById('preview-status').textContent = 'CSV wird geprüft und die ASS neu generiert...';
+        const generated = await validateEdtech();
+        if (generated) {
+            showPreviewMessage(popup, 'ASS neu generiert.');
+        } else if (generateAssAfterValidation) {
+            showPreviewMessage(popup, 'CSV-Prüfung benötigt Aufmerksamkeit. Hinweise und Optionen sind im Hauptfenster geöffnet.');
+        } else {
+            showPreviewMessage(popup, 'ASS-Neugenerierung fehlgeschlagen. Details stehen im Hauptfenster.');
+        }
+        rebuildButton.disabled = false;
+    });
+    const projectControls = csvPreviewControls.get(projectId) || new Set();
+    projectControls.add({popup, saveButton, rebuildButton});
+    csvPreviewControls.set(projectId, projectControls);
+    popup.addEventListener('pagehide', () => {
+        projectControls.forEach((control) => {
+            if (control.popup === popup) projectControls.delete(control);
+        });
+    }, {once: true});
 }
 
 function parseSrtPreview(text) {
@@ -1026,29 +1139,70 @@ function parseSrtPreview(text) {
         const timeIndex = lines.findIndex((line) => line.includes('-->'));
         if (timeIndex < 0) return [];
         const [start, end] = lines[timeIndex].split('-->').map((stamp) => stamp.trim());
-        return [{start, end, text: lines.slice(timeIndex + 1).join('\n')}];
+        const cueId = [...lines.slice(0, timeIndex)].reverse().find((line) => /^\d+$/.test(line.trim()))?.trim() || '';
+        return [{cueId, start, end, text: lines.slice(timeIndex + 1).join('\n')}];
     });
 }
 
-function renderSrtPreview(popup, text) {
+function appendSrtMarkup(document, parent, text) {
+    const source = new document.defaultView.DOMParser().parseFromString(text, 'text/html');
+    const allowedTags = new Set(['b', 'strong', 'i', 'em', 'u', 's', 'strike', 'del', 'br', 'font', 'span']);
+    const copyNode = (sourceNode, target) => {
+        if (sourceNode.nodeType === document.defaultView.Node.TEXT_NODE) {
+            target.append(document.createTextNode(sourceNode.nodeValue));
+            return;
+        }
+        if (sourceNode.nodeType !== document.defaultView.Node.ELEMENT_NODE) return;
+        const tag = sourceNode.tagName.toLowerCase();
+        if (!allowedTags.has(tag)) {
+            sourceNode.childNodes.forEach((child) => copyNode(child, target));
+            return;
+        }
+        if (tag === 'br') {
+            target.append(document.createElement('br'));
+            return;
+        }
+        const renderedTag = tag === 'font' ? 'span' : tag;
+        const element = document.createElement(renderedTag);
+        const color = tag === 'font' ? sourceNode.getAttribute('color') : sourceNode.style.color;
+        if (color) {
+            element.style.color = color;
+        }
+        sourceNode.childNodes.forEach((child) => copyNode(child, element));
+        target.append(element);
+    };
+    source.body.childNodes.forEach((node) => copyNode(node, parent));
+}
+
+function renderSrtPreview(popup, text, originalText) {
     const cues = parseSrtPreview(text);
+    const originalCues = new Map(parseSrtPreview(originalText).map((cue) => [cue.cueId, cue]));
     const tableRows = cues.map((cue) => {
         const row = popup.document.createElement('tr');
+        const cueNumber = popup.document.createElement('td');
+        cueNumber.className = 'cue-number';
+        cueNumber.textContent = cue.cueId;
         const timestamp = popup.document.createElement('td');
         timestamp.className = 'timestamp';
         timestamp.textContent = `${cue.start} – ${cue.end}`;
         const subtitle = popup.document.createElement('td');
         subtitle.className = 'subtitle srt-text';
         subtitle.dir = 'auto';
-        subtitle.textContent = cue.text;
-        row.append(timestamp, subtitle);
+        appendSrtMarkup(popup.document, subtitle, cue.text);
+        const original = popup.document.createElement('td');
+        original.className = 'subtitle srt-text srt-original';
+        original.dir = 'auto';
+        const originalCue = originalCues.get(cue.cueId);
+        if (originalCue) appendSrtMarkup(popup.document, original, originalCue.text);
+        else original.textContent = '—';
+        row.append(cueNumber, timestamp, subtitle, original);
         return row;
     });
     if (!tableRows.length) {
         showPreviewMessage(popup, 'Keine SRT-Untertitel vorhanden.');
         return;
     }
-    appendPreviewTable(popup, ['Zeitstempel', 'Untertitel'], tableRows);
+    appendPreviewTable(popup, ['Cue-Nr.', 'Zeitstempel', 'Gerenderter Untertitel', 'Deutsches Original'], tableRows);
 }
 
 function assColorToCss(value, fallback) {
@@ -1060,6 +1214,23 @@ function assColorToCss(value, fallback) {
     const green = parseInt(hex.slice(-4, -2), 16);
     const red = parseInt(hex.slice(-2), 16);
     return `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
+}
+
+function srtStartTimeKey(timestamp, offsetMs = 0) {
+    const match = String(timestamp || '').match(/^(\d+):(\d{2}):(\d{2}),(\d{1,3})$/);
+    if (!match) return null;
+    const milliseconds = Number(match[4].padEnd(3, '0'));
+    const totalMilliseconds = ((Number(match[1]) * 60 + Number(match[2])) * 60 + Number(match[3])) * 1000
+        + milliseconds + Number(offsetMs || 0);
+    const dayCentiseconds = 24 * 60 * 60 * 100;
+    return ((Math.floor(totalMilliseconds / 10) % dayCentiseconds) + dayCentiseconds) % dayCentiseconds;
+}
+
+function assStartTimeKey(timestamp) {
+    const match = String(timestamp || '').match(/^(\d+):(\d{2}):(\d{2})\.(\d{1,2})$/);
+    if (!match) return null;
+    return ((Number(match[1]) * 60 + Number(match[2])) * 60 + Number(match[3])) * 100
+        + Number(match[4].padEnd(2, '0'));
 }
 
 function parseAssFile(text) {
@@ -1181,60 +1352,132 @@ function renderAssText(document, rawText, initialState, styles) {
     return content;
 }
 
-function renderAssPreview(popup, text) {
+function renderAssPreview(popup, text, originalText, assSyncOffsetMs = 0, translationSyncOffsetMs = 0) {
     const parsed = parseAssFile(text);
     if (!parsed.events.length) {
         showPreviewMessage(popup, 'Keine ASS-Events vorhanden.');
         return;
     }
+    const originalByStartTime = new Map();
+    parseSrtPreview(originalText).forEach((cue) => {
+        const totalOffsetMs = Number(assSyncOffsetMs || 0) + Number(translationSyncOffsetMs || 0);
+        const key = srtStartTimeKey(cue.start, totalOffsetMs);
+        if (key === null) return;
+        if (!originalByStartTime.has(key)) originalByStartTime.set(key, []);
+        originalByStartTime.get(key).push(cue);
+    });
     const tableRows = parsed.events.map((event) => {
         const row = popup.document.createElement('tr');
+        row.dataset.style = String(event.style || '').toLowerCase();
         const timestamp = popup.document.createElement('td');
-        timestamp.className = 'timestamp';
+        timestamp.className = 'timestamp ass-timestamp';
         timestamp.textContent = `${event.start} – ${event.end}`;
         const subtitle = popup.document.createElement('td');
-        subtitle.className = 'subtitle';
+        subtitle.className = 'ass-subtitle';
+        subtitle.dir = 'auto';
         const style = parsed.styles[event.style] || parsed.styles.Standard || {};
         const state = assStyleState(style, parsed.playResY);
         state.stylename = event.style;
         state.color = style.primarycolour || '&H00FFFFFF&';
-        const alignment = state.alignment;
-        const stage = popup.document.createElement('div');
-        stage.className = 'ass-stage';
-        const rendered = popup.document.createElement('div');
-        rendered.className = 'ass-line';
-        rendered.classList.add([1, 4, 7].includes(alignment) ? 'align-left' : [3, 6, 9].includes(alignment) ? 'align-right' : 'align-center');
-        rendered.classList.add(alignment >= 7 ? 'valign-top' : alignment >= 4 ? 'valign-middle' : 'valign-bottom');
-        rendered.style.paddingLeft = `${(state.marginl / parsed.playResX) * 100}%`;
-        rendered.style.paddingRight = `${(state.marginr / parsed.playResX) * 100}%`;
-        rendered.style.paddingTop = `${(state.marginv / parsed.playResY) * 100}%`;
-        rendered.style.paddingBottom = `${(state.marginv / parsed.playResY) * 100}%`;
-        rendered.append(renderAssText(popup.document, event.text, state, parsed.styles));
-        stage.append(rendered);
-        subtitle.append(stage);
-        row.append(timestamp, subtitle);
+        subtitle.append(renderAssText(popup.document, event.text, state, parsed.styles));
+        const original = popup.document.createElement('td');
+        original.className = 'ass-subtitle ass-original';
+        original.dir = 'auto';
+        if (row.dataset.style === 'infobox') {
+            original.classList.add('is-empty');
+        } else {
+            const matches = originalByStartTime.get(assStartTimeKey(event.start));
+            const originalCue = matches?.shift();
+            if (originalCue) appendSrtMarkup(popup.document, original, originalCue.text);
+            else original.classList.add('is-empty');
+        }
+        row.append(timestamp, subtitle, original);
         return row;
     });
-    appendPreviewTable(popup, ['Zeitstempel', 'Gerenderter Untertitel'], tableRows);
+    const header = popup.document.createElement('div');
+    header.className = 'ass-header';
+    const title = popup.document.createElement('span');
+    title.textContent = 'Gerenderter Untertitel';
+    const filterLabel = popup.document.createElement('label');
+    filterLabel.className = 'ass-filter';
+    const filter = popup.document.createElement('input');
+    filter.type = 'checkbox';
+    const filterText = popup.document.createElement('span');
+    filterText.textContent = 'Nur InfoBoxen';
+    filterLabel.append(filter, filterText);
+    header.append(title, filterLabel);
+    appendPreviewTable(popup, ['Zeitstempel', header, 'Deutsches Original'], tableRows, 'ass-table');
+    filter.addEventListener('change', () => {
+        let visibleRows = 0;
+        tableRows.forEach((row) => {
+            row.hidden = filter.checked && row.dataset.style !== 'infobox';
+            if (!row.hidden) visibleRows += 1;
+        });
+        popup.document.getElementById('preview-status').textContent = filter.checked
+            ? `${visibleRows} von ${tableRows.length} InfoBoxen`
+            : `${tableRows.length} Einträge`;
+    });
+}
+
+function updateCsvPreviewControls(projectId) {
+    const controls = csvPreviewControls.get(projectId);
+    if (!controls) return;
+    controls.forEach((control) => {
+        if (control.popup.closed) {
+            controls.delete(control);
+            return;
+        }
+        if (!control.saveButton.hidden) return;
+        control.rebuildButton.hidden = true;
+        control.popup.document.getElementById('preview-status').textContent = 'ASS neu generiert.';
+    });
+}
+
+async function loadPreviewIntoPopup(popup, type, projectId) {
+    const requestId = (previewRequestIds.get(popup) || 0) + 1;
+    previewRequestIds.set(popup, requestId);
+    try {
+        const response = await fetch(`/api/edtech/preview/${projectId}`);
+        const files = await response.json();
+        if (!response.ok) throw new Error(files.error || 'Vorschau konnte nicht geladen werden.');
+        if (popup.closed || previewRequestIds.get(popup) !== requestId) return;
+        if (type === 'csv') renderCsvPreview(popup, files.csv || [], files.csv_fieldnames || [], projectId);
+        else if (type === 'srt') renderSrtPreview(popup, files.srt || '', files.original_srt || '');
+        else renderAssPreview(
+            popup,
+            files.ass || '',
+            files.original_srt || '',
+            files.ass_sync_offset_ms || 0,
+            files.translation_sync_offset_ms || 0
+        );
+    } catch (error) {
+        if (!popup.closed && previewRequestIds.get(popup) === requestId) {
+            showPreviewMessage(popup, error.message || 'Vorschau konnte nicht geladen werden.');
+        }
+    }
+}
+
+async function refreshOpenAssPreviews(projectId) {
+    const refreshes = [];
+    openAssPreviewWindows.forEach((popup) => {
+        if (popup.closed) openAssPreviewWindows.delete(popup);
+        else refreshes.push(loadPreviewIntoPopup(popup, 'ass', projectId));
+    });
+    await Promise.all(refreshes);
 }
 
 previewLinks.addEventListener('click', async (event) => {
     const button = event.target.closest('[data-preview-type]');
     if (!button || !currentProjectId) return;
     const type = button.dataset.previewType;
+    const projectId = currentProjectId;
     const popup = createPreviewWindow(type);
     if (!popup) return;
-    try {
-        const response = await fetch(`/api/edtech/preview/${currentProjectId}`);
-        const files = await response.json();
-        if (!response.ok) throw new Error(files.error || 'Vorschau konnte nicht geladen werden.');
-        if (popup.closed) return;
-        if (type === 'csv') renderCsvPreview(popup, files.csv || []);
-        else if (type === 'srt') renderSrtPreview(popup, files.srt || '');
-        else renderAssPreview(popup, files.ass || '');
-    } catch (error) {
-        showPreviewMessage(popup, error.message || 'Vorschau konnte nicht geladen werden.');
+    if (type === 'ass') {
+        openAssPreviewWindows.add(popup);
+        popup.addEventListener('pagehide', () => openAssPreviewWindows.delete(popup), {once: true});
     }
+    await loadPreviewIntoPopup(popup, type, projectId);
 });
 
 function unlockEdtech(availableDownloads = currentAvailableDownloads) {
@@ -1309,7 +1552,7 @@ async function generateAss(ignoreValidationErrors = false) {
 
         if (response.status === 409 && result.status === 'validation_required') {
             showValidationMismatches(result);
-            return;
+            return false;
         }
         if (!response.ok) throw new Error(result.error || 'ASS-Generierung fehlgeschlagen.');
 
@@ -1322,10 +1565,14 @@ async function generateAss(ignoreValidationErrors = false) {
         savedEdtechSettings = getEdtechSettingsSnapshot();
         updateAssRebuildButton();
         loadProjects();
+        updateCsvPreviewControls(currentProjectId);
+        await refreshOpenAssPreviews(currentProjectId);
+        return true;
     } catch (error) {
         validationResult.className = 'alert alert-danger';
         validationResult.textContent = error.message || 'ASS-Generierung fehlgeschlagen.';
         validationResult.classList.remove('d-none');
+        return false;
     } finally {
         btnGenerateEdtech.disabled = false;
         btnGenerateEdtech.textContent = 'CSV generieren';
@@ -1344,22 +1591,26 @@ async function validateEdtech() {
             validationResult.className = 'alert alert-info';
             validationResult.textContent = 'Keine CSV vorhanden. Bitte zuerst generieren.';
             generateAssAfterValidation = false;
+            return false;
         } else if (data.ts_mismatches.length === 0 && data.kw_mismatches.length === 0 && (data.data_issues || []).length === 0) {
             validationResult.className = 'alert alert-success';
             validationResult.textContent = 'CSV geprüft: keine Abweichungen gefunden.';
             if (generateAssAfterValidation) {
                 generateAssAfterValidation = false;
-                await generateAss();
+                return await generateAss();
             }
+            return true;
         } else {
             validationResult.className = 'alert alert-warning';
             validationResult.textContent = 'CSV enthält Abweichungen oder unsichere Cue-Zuordnungen. Bitte korrigieren oder ausdrücklich ignorieren.';
             showValidationMismatches(data);
+            return false;
         }
     } catch (error) {
         generateAssAfterValidation = false;
         validationResult.className = 'alert alert-danger';
         validationResult.textContent = error.message || 'Fehler bei der Validierung.';
+        return false;
     } finally {
         validationResult.classList.remove('d-none');
     }

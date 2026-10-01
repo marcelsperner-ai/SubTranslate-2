@@ -1,3 +1,4 @@
+import csv
 import os
 from flask import Blueprint, request, jsonify, current_app
 from werkzeug.utils import secure_filename
@@ -488,20 +489,92 @@ def preview_edtech_files(t_id):
     if not t: return jsonify({"error": "Projekt nicht gefunden"}), 404
     base = t['original_filename'].replace('.srt', '')
     srt_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_FA.srt')
+    original_srt_path = os.path.join(current_app.config['UPLOADS_DIR'], t['original_filename'])
     csv_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_Vokabeln.csv')
     ass_path = os.path.join(current_app.config['OUTPUTS_DIR'], f'{base}_Interaktiv.ass')
     srt_text = ''
     if os.path.exists(srt_path):
         with open(srt_path, encoding='utf-8-sig', errors='replace') as f:
             srt_text = f.read()
+    original_srt_text = ''
+    if os.path.exists(original_srt_path):
+        try:
+            with open(original_srt_path, encoding='utf-8-sig') as f:
+                original_srt_text = f.read()
+        except UnicodeDecodeError:
+            with open(original_srt_path, encoding='iso-8859-1') as f:
+                original_srt_text = f.read()
     csv_rows = []
+    csv_fieldnames = []
     if os.path.exists(csv_path):
         with open(csv_path, encoding='utf-8-sig', newline='') as f:
-            csv_rows = list(__import__('csv').DictReader(f))
+            reader = csv.DictReader(f)
+            csv_fieldnames = reader.fieldnames or []
+            csv_rows = list(reader)
     ass_text = ''
     if os.path.exists(ass_path):
         with open(ass_path, encoding='utf-8') as f: ass_text = f.read()
-    return jsonify({'srt': srt_text, 'csv': csv_rows, 'ass': ass_text})
+    return jsonify({
+        'srt': srt_text,
+        'original_srt': original_srt_text,
+        'ass_sync_offset_ms': t.get('ass_sync_offset', 0),
+        'translation_sync_offset_ms': t.get('sync_offset', 0),
+        'csv': csv_rows,
+        'csv_fieldnames': csv_fieldnames,
+        'ass': ass_text,
+    })
+
+@main_bp.route('/api/edtech/csv/<int:t_id>', methods=['POST'])
+def save_edtech_csv(t_id):
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({'error': 'Projekt nicht gefunden'}), 404
+
+    csv_path = os.path.join(
+        current_app.config['OUTPUTS_DIR'],
+        t['original_filename'].replace('.srt', '_Vokabeln.csv')
+    )
+    if not os.path.exists(csv_path):
+        return jsonify({'error': 'CSV-Datei nicht gefunden'}), 404
+
+    data = request.get_json(silent=True) or {}
+    rows = data.get('rows')
+    if not isinstance(rows, list) or len(rows) > 10000:
+        return jsonify({'error': 'Ungültige CSV-Zeilendaten.'}), 400
+
+    with open(csv_path, encoding='utf-8-sig', newline='') as csv_file:
+        fieldnames = csv.DictReader(csv_file).fieldnames or []
+    if not fieldnames:
+        return jsonify({'error': 'CSV-Datei enthält keine Spaltenüberschriften.'}), 400
+
+    saved_rows = []
+    for row in rows:
+        if not isinstance(row, dict) or set(row) - set(fieldnames):
+            return jsonify({'error': 'CSV-Zeile hat ein ungültiges Format.'}), 400
+        saved_row = {}
+        for fieldname in fieldnames:
+            value = row.get(fieldname, '')
+            if value is None:
+                value = ''
+            if not isinstance(value, str):
+                return jsonify({'error': 'CSV-Zellen müssen Textwerte enthalten.'}), 400
+            saved_row[fieldname] = value
+        saved_rows.append(saved_row)
+
+    temporary_csv = f'{csv_path}.tmp'
+    try:
+        with open(temporary_csv, 'w', encoding='utf-8-sig', newline='') as csv_file:
+            writer = csv.DictWriter(
+                csv_file, fieldnames=fieldnames, quoting=csv.QUOTE_ALL
+            )
+            writer.writeheader()
+            writer.writerows(saved_rows)
+        os.replace(temporary_csv, csv_path)
+    finally:
+        if os.path.exists(temporary_csv):
+            os.remove(temporary_csv)
+
+    return jsonify({'message': 'CSV gespeichert.', 'row_count': len(saved_rows)})
 
 @main_bp.route('/api/prompts/preview', methods=['GET', 'POST'])
 def preview_prompts():
