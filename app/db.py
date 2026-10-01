@@ -1,10 +1,29 @@
 import sqlite3
 import os
+import json
 from datetime import datetime
 import time
 
 # Die Datenbank legen wir im Flask-typischen "instance"-Ordner ab
 DB_PATH = "instance/translations.db"
+
+# Globale Standardwerte für neue Projekte, überschreibbar über das Settings-Popup.
+DEFAULT_APP_SETTINGS = {
+    'srt': {
+        'batch_size': 40,
+        'translation_model': 'gemini-3.1-flash-lite',
+        'sync_offset': 0,
+    },
+    'edtech': {
+        'infobox_duration': 9,
+        'ass_sync_offset': 0,
+        'infobox_content': 'german_only',
+        'hl_bold': False,
+        'hl_underline': True,
+        'hl_color': False,
+        'edtech_model': 'gemini-3.1-flash-lite',
+    },
+}
 
 def get_db_connection():
     """Erstellt eine Verbindung zur Datenbank und stellt sicher, dass der Ordner existiert."""
@@ -81,7 +100,40 @@ def init_db():
             message TEXT
         )
     ''')
-            
+
+    # Globale Default-Einstellungen fürs Settings-Popup (gelten nur für neue Projekte).
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS app_settings (
+            scope TEXT PRIMARY KEY,
+            settings_json TEXT
+        )
+    ''')
+
+    conn.commit()
+    conn.close()
+
+def get_default_settings():
+    """Liefert die globalen Default-Einstellungen je Modul (srt/edtech), gemerged mit Fallbacks."""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT scope, settings_json FROM app_settings")
+    stored = {row['scope']: json.loads(row['settings_json']) for row in c.fetchall()}
+    conn.close()
+
+    result = {scope: dict(values) for scope, values in DEFAULT_APP_SETTINGS.items()}
+    for scope, values in stored.items():
+        if scope in result:
+            result[scope].update(values)
+    return result
+
+def save_default_settings(scope, settings_dict):
+    """Speichert die globalen Default-Einstellungen für ein Modul (srt/edtech)."""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('''
+        INSERT INTO app_settings (scope, settings_json) VALUES (?, ?)
+        ON CONFLICT(scope) DO UPDATE SET settings_json = excluded.settings_json
+    ''', (scope, json.dumps(settings_dict)))
     conn.commit()
     conn.close()
 

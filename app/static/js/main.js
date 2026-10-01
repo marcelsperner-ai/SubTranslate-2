@@ -66,11 +66,19 @@ const archiveConfirmModalElement = document.getElementById('archiveConfirmModal'
 const archiveConfirmModal = new bootstrap.Modal(archiveConfirmModalElement);
 const archiveConfirmProjectName = document.getElementById('archiveConfirmProjectName');
 const btnConfirmArchiveProject = document.getElementById('btnConfirmArchiveProject');
+const settingsModal = new bootstrap.Modal(document.getElementById('settingsModal'));
+const defaultSrtSettingsForm = document.getElementById('defaultSrtSettingsForm');
+const defaultEdtechSettingsForm = document.getElementById('defaultEdtechSettingsForm');
+const defaultTranslationModelSelect = document.getElementById('defaultTranslationModelSelect');
+const defaultEdtechModelSelect = document.getElementById('defaultEdtechModelSelect');
+const btnSaveDefaultSettings = document.getElementById('btnSaveDefaultSettings');
+const settingsSaveStatus = document.getElementById('settingsSaveStatus');
 const translationSyncOffsetInput = transSettingsForm.elements['sync_offset'];
 const syncOffsetWarningModal = new bootstrap.Modal(document.getElementById('syncOffsetWarningModal'));
 const btnUseEdtechSyncOffset = document.getElementById('btnUseEdtechSyncOffset');
 const btnKeepTranslationSyncOffset = document.getElementById('btnKeepTranslationSyncOffset');
 let yamlMetadata = {};
+let appDefaultSettings = null;
 let promptPreviewRequest = 0;
 let promptPreviewLoaded = false;
 let translationPromptChanged = false;
@@ -195,6 +203,87 @@ document.addEventListener("DOMContentLoaded", () => {
     loadProjects();
     startProjectListPolling();
     updateSelectionAvailability();
+    loadDefaultSettings();
+});
+
+function populateDefaultSettingsForm(settings) {
+    defaultSrtSettingsForm.elements['sync_offset'].value = settings.srt.sync_offset;
+    defaultSrtSettingsForm.elements['batch_size'].value = settings.srt.batch_size;
+    setModelSelectValue(defaultTranslationModelSelect, settings.srt.translation_model);
+    defaultEdtechSettingsForm.elements['infobox_duration'].value = settings.edtech.infobox_duration;
+    defaultEdtechSettingsForm.elements['ass_sync_offset'].value = settings.edtech.ass_sync_offset;
+    defaultEdtechSettingsForm.elements['infobox_content'].value = settings.edtech.infobox_content;
+    defaultEdtechSettingsForm.elements['hl_bold'].checked = Boolean(settings.edtech.hl_bold);
+    defaultEdtechSettingsForm.elements['hl_underline'].checked = Boolean(settings.edtech.hl_underline);
+    defaultEdtechSettingsForm.elements['hl_color'].checked = Boolean(settings.edtech.hl_color);
+    setModelSelectValue(defaultEdtechModelSelect, settings.edtech.edtech_model);
+}
+
+// Überträgt die globalen Defaults auf das Upload-Formular, aber nur solange kein Projekt geladen ist.
+function applyDefaultsToNewProjectForms() {
+    if (!appDefaultSettings || currentProjectId) return;
+    translationSyncOffsetInput.value = appDefaultSettings.srt.sync_offset;
+    loadedTranslationSyncOffset = translationSyncOffsetInput.value;
+    transSettingsForm.elements['batch_size'].value = appDefaultSettings.srt.batch_size;
+    setModelSelectValue(translationModelSelect, appDefaultSettings.srt.translation_model);
+    edtechSettingsForm.elements['infobox_duration'].value = appDefaultSettings.edtech.infobox_duration;
+    edtechSettingsForm.elements['ass_sync_offset'].value = appDefaultSettings.edtech.ass_sync_offset;
+    edtechSettingsForm.elements['infobox_content'].value = appDefaultSettings.edtech.infobox_content;
+    edtechSettingsForm.elements['hl_bold'].checked = Boolean(appDefaultSettings.edtech.hl_bold);
+    edtechSettingsForm.elements['hl_underline'].checked = Boolean(appDefaultSettings.edtech.hl_underline);
+    edtechSettingsForm.elements['hl_color'].checked = Boolean(appDefaultSettings.edtech.hl_color);
+    setModelSelectValue(edtechModelSelect, appDefaultSettings.edtech.edtech_model);
+}
+
+async function loadDefaultSettings() {
+    try {
+        const response = await fetch('/api/settings/defaults');
+        if (!response.ok) return;
+        appDefaultSettings = await response.json();
+        populateDefaultSettingsForm(appDefaultSettings);
+        applyDefaultsToNewProjectForms();
+    } catch (error) {
+        console.error('Standard-Einstellungen konnten nicht geladen werden.', error);
+    }
+}
+
+document.getElementById('settingsModal').addEventListener('show.bs.modal', () => {
+    if (appDefaultSettings) populateDefaultSettingsForm(appDefaultSettings);
+    settingsSaveStatus.textContent = '';
+});
+
+btnSaveDefaultSettings.addEventListener('click', async () => {
+    settingsSaveStatus.textContent = 'Wird gespeichert ...';
+    const payload = {
+        srt: {
+            sync_offset: defaultSrtSettingsForm.elements['sync_offset'].value,
+            batch_size: defaultSrtSettingsForm.elements['batch_size'].value,
+            translation_model: defaultTranslationModelSelect.value,
+        },
+        edtech: {
+            infobox_duration: defaultEdtechSettingsForm.elements['infobox_duration'].value,
+            ass_sync_offset: defaultEdtechSettingsForm.elements['ass_sync_offset'].value,
+            infobox_content: defaultEdtechSettingsForm.elements['infobox_content'].value,
+            hl_bold: defaultEdtechSettingsForm.elements['hl_bold'].checked,
+            hl_underline: defaultEdtechSettingsForm.elements['hl_underline'].checked,
+            hl_color: defaultEdtechSettingsForm.elements['hl_color'].checked,
+            edtech_model: defaultEdtechModelSelect.value,
+        },
+    };
+    try {
+        const response = await fetch('/api/settings/defaults', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Standard-Einstellungen konnten nicht gespeichert werden.');
+        appDefaultSettings = result;
+        applyDefaultsToNewProjectForms();
+        settingsModal.hide();
+    } catch (error) {
+        settingsSaveStatus.textContent = error.message;
+    }
 });
 
 function setPromptTabEnabled(enabled) {
@@ -894,6 +983,7 @@ btnNewProject.addEventListener('click', () => {
     edtechStatusBox.style.display = 'block';
     edtechActiveBox.style.display = 'none';
     btnPauseResume.style.display = 'none';
+    applyDefaultsToNewProjectForms();
 });
 
 btnPauseResume.addEventListener('click', async () => {

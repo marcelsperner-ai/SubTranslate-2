@@ -11,7 +11,8 @@ import yaml
 from app.db import (
     create_translation, get_translation_by_id, update_translation, 
     get_db_logs, get_all_translations, archive_translation, unarchive_translation,
-    reset_translation_for_regeneration, update_translation_runtime_settings
+    reset_translation_for_regeneration, update_translation_runtime_settings,
+    get_default_settings, save_default_settings
 )
 from app.services.translation_service import start_translation_job
 
@@ -73,6 +74,55 @@ def index():
     """Lädt das Haupt-Frontend."""
     return render_template('index.html')
 
+@main_bp.route('/api/settings/defaults', methods=['GET'])
+def get_app_default_settings():
+    """Liefert die globalen Default-Einstellungen für neue Projekte."""
+    return jsonify(get_default_settings())
+
+@main_bp.route('/api/settings/defaults', methods=['POST'])
+def update_app_default_settings():
+    """Speichert die globalen Default-Einstellungen; wirkt sich nur auf neue Projekte aus."""
+    data = request.get_json(silent=True) or {}
+    srt = data.get('srt', {})
+    edtech = data.get('edtech', {})
+
+    try:
+        batch_size = int(srt.get('batch_size', 40))
+        sync_offset = int(srt.get('sync_offset', 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Ungültige Batch-Größe oder ungültiger Sync-Offset."}), 400
+    if not 1 <= batch_size <= 500:
+        return jsonify({"error": "Die Batch-Größe muss zwischen 1 und 500 liegen."}), 400
+    translation_model = srt.get('translation_model', 'gemini-3.1-flash-lite')
+    if translation_model not in GEMINI_MODEL_IDS:
+        return jsonify({"error": "Ungültige Gemini-Modellauswahl für das SRT-Modul."}), 400
+
+    try:
+        infobox_duration = int(edtech.get('infobox_duration', 9))
+        ass_sync_offset = int(edtech.get('ass_sync_offset', 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Ungültige Infobox-Dauer oder ungültiger ASS-Sync-Offset."}), 400
+    edtech_model = edtech.get('edtech_model', 'gemini-3.1-flash-lite')
+    if edtech_model not in GEMINI_MODEL_IDS:
+        return jsonify({"error": "Ungültige Gemini-Modellauswahl für das EdTech-Modul."}), 400
+    infobox_content = edtech.get('infobox_content', 'german_only')
+
+    save_default_settings('srt', {
+        'batch_size': batch_size,
+        'translation_model': translation_model,
+        'sync_offset': sync_offset,
+    })
+    save_default_settings('edtech', {
+        'infobox_duration': infobox_duration,
+        'ass_sync_offset': ass_sync_offset,
+        'infobox_content': infobox_content,
+        'hl_bold': bool(edtech.get('hl_bold')),
+        'hl_underline': bool(edtech.get('hl_underline')),
+        'hl_color': bool(edtech.get('hl_color')),
+        'edtech_model': edtech_model,
+    })
+    return jsonify(get_default_settings())
+
 def get_episode_summary(profile_key, episode_key):
     base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     summaries_path = os.path.join(base_dir, 'summaries.yaml')
@@ -110,10 +160,13 @@ def upload_file():
     episode_key = request.form.get('episode', '')
     custom_translation_prompt = request.form.get('custom_translation_prompt', '')
     episode_summary_override = request.form.get('episode_summary_override', '')
-    sync_offset = int(request.form.get('sync_offset', 0))
-    batch_size = int(request.form.get('batch_size', 40))
-    translation_model = request.form.get('translation_model', request.form.get('gemini_model', 'gemini-3.1-flash-lite'))
-    edtech_model = request.form.get('edtech_model', 'gemini-3.1-flash-lite')
+    defaults = get_default_settings()
+    srt_defaults = defaults['srt']
+    edtech_defaults = defaults['edtech']
+    sync_offset = int(request.form.get('sync_offset', srt_defaults['sync_offset']))
+    batch_size = int(request.form.get('batch_size', srt_defaults['batch_size']))
+    translation_model = request.form.get('translation_model', request.form.get('gemini_model', srt_defaults['translation_model']))
+    edtech_model = request.form.get('edtech_model', edtech_defaults['edtech_model'])
     if translation_model not in GEMINI_MODEL_IDS or edtech_model not in GEMINI_MODEL_IDS:
         return jsonify({"error": "Ungültige Gemini-Modellauswahl."}), 400
     
@@ -147,7 +200,13 @@ def upload_file():
         'gemini_model': translation_model,
         'translation_model': translation_model,
         'edtech_model': edtech_model,
-        'export_path': request.form.get('export_path', '')
+        'export_path': request.form.get('export_path', ''),
+        'infobox_duration': edtech_defaults['infobox_duration'],
+        'ass_sync_offset': edtech_defaults['ass_sync_offset'],
+        'infobox_content': edtech_defaults['infobox_content'],
+        'hl_bold': edtech_defaults['hl_bold'],
+        'hl_underline': edtech_defaults['hl_underline'],
+        'hl_color': edtech_defaults['hl_color'],
     })
     
     return jsonify({"message": "Projekt angelegt", "id": t_id}), 201
