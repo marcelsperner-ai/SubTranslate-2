@@ -73,12 +73,17 @@ const defaultTranslationModelSelect = document.getElementById('defaultTranslatio
 const defaultEdtechModelSelect = document.getElementById('defaultEdtechModelSelect');
 const btnSaveDefaultSettings = document.getElementById('btnSaveDefaultSettings');
 const settingsSaveStatus = document.getElementById('settingsSaveStatus');
+const exportPathSeriesSelect = document.getElementById('exportPathSeriesSelect');
+const exportDefaultSubtitlesPath = document.getElementById('exportDefaultSubtitlesPath');
+const exportDefaultVocabPath = document.getElementById('exportDefaultVocabPath');
+const exportSeasonRows = document.getElementById('exportSeasonRows');
 const translationSyncOffsetInput = transSettingsForm.elements['sync_offset'];
 const syncOffsetWarningModal = new bootstrap.Modal(document.getElementById('syncOffsetWarningModal'));
 const btnUseEdtechSyncOffset = document.getElementById('btnUseEdtechSyncOffset');
 const btnKeepTranslationSyncOffset = document.getElementById('btnKeepTranslationSyncOffset');
 let yamlMetadata = {};
 let appDefaultSettings = null;
+let exportPathsData = {};
 let promptPreviewRequest = 0;
 let promptPreviewLoaded = false;
 let translationPromptChanged = false;
@@ -204,6 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
     startProjectListPolling();
     updateSelectionAvailability();
     loadDefaultSettings();
+    loadExportPathSettings();
 });
 
 function populateDefaultSettingsForm(settings) {
@@ -247,6 +253,123 @@ async function loadDefaultSettings() {
     }
 }
 
+function getSeasonsForProfile(profileKey) {
+    const episodes = yamlMetadata[profileKey]?.episodes || [];
+    const seasons = [...new Set(episodes.filter(e => e.includes('x')).map(e => e.split('x')[0]))];
+    seasons.sort((a, b) => Number(a) - Number(b));
+    return seasons;
+}
+
+function populateExportPathSeriesSelect() {
+    if (!exportPathSeriesSelect) return;
+    const previousValue = exportPathSeriesSelect.value;
+    exportPathSeriesSelect.replaceChildren();
+    Object.entries(yamlMetadata).forEach(([key, profile]) => {
+        // 'default' dient als Sammelbecken für Uploads ohne eigenes Serienprofil.
+        const label = key === 'default' ? 'Andere (kein dediziertes Serienprofil)' : (profile.name || key);
+        exportPathSeriesSelect.appendChild(new Option(label, key));
+    });
+    if (previousValue && yamlMetadata[previousValue]) exportPathSeriesSelect.value = previousValue;
+    renderExportPathsForProfile(exportPathSeriesSelect.value);
+}
+
+function renderExportPathsForProfile(profileKey) {
+    const profileData = exportPathsData[profileKey] || {};
+    const defaults = profileData.default || { subtitles_path: '', vocab_path: '' };
+    exportDefaultSubtitlesPath.value = defaults.subtitles_path || '';
+    exportDefaultVocabPath.value = defaults.vocab_path || '';
+
+    exportSeasonRows.replaceChildren();
+    const seasons = getSeasonsForProfile(profileKey);
+    if (!seasons.length) return;
+
+    const heading = document.createElement('p');
+    heading.className = 'form-label small mb-2 mt-3';
+    heading.textContent = 'Staffel-Überschreibungen (optional)';
+    exportSeasonRows.appendChild(heading);
+
+    seasons.forEach(season => {
+        const seasonData = profileData[season] || { subtitles_path: '', vocab_path: '' };
+        const row = document.createElement('div');
+        row.className = 'row g-3 mb-2 align-items-end';
+
+        const seasonLabelCol = document.createElement('div');
+        seasonLabelCol.className = 'col-md-2';
+        seasonLabelCol.innerHTML = `<label class="form-label small mb-0">Staffel ${escapeHtml(season)}</label>`;
+
+        const subtitlesCol = document.createElement('div');
+        subtitlesCol.className = 'col-md-5';
+        const subtitlesInput = document.createElement('input');
+        subtitlesInput.type = 'text';
+        subtitlesInput.className = 'form-control form-control-sm';
+        subtitlesInput.dataset.season = season;
+        subtitlesInput.dataset.field = 'subtitles_path';
+        subtitlesInput.placeholder = 'wie Serien-Standard';
+        subtitlesInput.value = seasonData.subtitles_path || '';
+        subtitlesCol.appendChild(subtitlesInput);
+
+        const vocabCol = document.createElement('div');
+        vocabCol.className = 'col-md-5';
+        const vocabInput = document.createElement('input');
+        vocabInput.type = 'text';
+        vocabInput.className = 'form-control form-control-sm';
+        vocabInput.dataset.season = season;
+        vocabInput.dataset.field = 'vocab_path';
+        vocabInput.placeholder = 'wie Serien-Standard';
+        vocabInput.value = seasonData.vocab_path || '';
+        vocabCol.appendChild(vocabInput);
+
+        row.appendChild(seasonLabelCol);
+        row.appendChild(subtitlesCol);
+        row.appendChild(vocabCol);
+        exportSeasonRows.appendChild(row);
+    });
+}
+
+if (exportPathSeriesSelect) {
+    exportPathSeriesSelect.addEventListener('change', () => {
+        renderExportPathsForProfile(exportPathSeriesSelect.value);
+    });
+}
+
+async function loadExportPathSettings() {
+    try {
+        const response = await fetch('/api/settings/export-paths');
+        if (!response.ok) return;
+        exportPathsData = await response.json();
+        if (Object.keys(yamlMetadata).length) populateExportPathSeriesSelect();
+    } catch (error) {
+        console.error('Export-Pfade konnten nicht geladen werden.', error);
+    }
+}
+
+async function saveExportPathSettings() {
+    const profileKey = exportPathSeriesSelect.value;
+    if (!profileKey) return;
+    const entries = [{
+        season: '',
+        subtitles_path: exportDefaultSubtitlesPath.value.trim(),
+        vocab_path: exportDefaultVocabPath.value.trim(),
+    }];
+    exportSeasonRows.querySelectorAll('[data-season]').forEach(input => {
+        const season = input.dataset.season;
+        let entry = entries.find(e => e.season === season);
+        if (!entry) {
+            entry = { season, subtitles_path: '', vocab_path: '' };
+            entries.push(entry);
+        }
+        entry[input.dataset.field] = input.value.trim();
+    });
+    const response = await fetch('/api/settings/export-paths', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile_key: profileKey, entries }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Export-Pfade konnten nicht gespeichert werden.');
+    exportPathsData[profileKey] = { default: entries[0], ...Object.fromEntries(entries.filter(e => e.season).map(e => [e.season, e])) };
+}
+
 document.getElementById('settingsModal').addEventListener('show.bs.modal', () => {
     if (appDefaultSettings) populateDefaultSettingsForm(appDefaultSettings);
     settingsSaveStatus.textContent = '';
@@ -280,6 +403,7 @@ btnSaveDefaultSettings.addEventListener('click', async () => {
         if (!response.ok) throw new Error(result.error || 'Standard-Einstellungen konnten nicht gespeichert werden.');
         appDefaultSettings = result;
         applyDefaultsToNewProjectForms();
+        await saveExportPathSettings();
         settingsModal.hide();
     } catch (error) {
         settingsSaveStatus.textContent = error.message;
@@ -531,6 +655,7 @@ async function loadMetadata() {
             seriesSelect.appendChild(option);
         });
         updateSelectionAvailability();
+        populateExportPathSeriesSelect();
     } catch (error) {
         console.error('Fehler beim Laden der Serien-Metadaten', error);
     }

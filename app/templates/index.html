@@ -620,6 +620,7 @@
                     <ul class="nav nav-tabs" id="settingsModalTabs" role="tablist">
                         <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#settings-srt">SRT-Modul</a></li>
                         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#settings-edtech">EdTech-Modul</a></li>
+                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#settings-paths">Pfade</a></li>
                     </ul>
                     <div class="tab-content mt-3">
                         <div class="tab-pane fade show active" id="settings-srt">
@@ -698,6 +699,24 @@
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                        <div class="tab-pane fade" id="settings-paths">
+                            <div class="mb-3">
+                                <label class="form-label small" for="exportPathSeriesSelect">Serie</label>
+                                <select class="form-select form-select-sm" id="exportPathSeriesSelect"></select>
+                            </div>
+                            <p class="text-muted small">Leeres Feld = keine Kopie. Ein leeres Staffel-Feld übernimmt automatisch den Serien-Standard.</p>
+                            <div class="row g-3 mb-2">
+                                <div class="col-md-6">
+                                    <label class="form-label small">Serien-Standard: Untertitel-Ordner (SRT/ASS)</label>
+                                    <input type="text" class="form-control form-control-sm" id="exportDefaultSubtitlesPath" placeholder="z.B. C:\Users\Name\Documents\Untertitel">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small">Serien-Standard: Vokabel-Ordner (CSV)</label>
+                                    <input type="text" class="form-control form-control-sm" id="exportDefaultVocabPath" placeholder="z.B. C:\Users\Name\Documents\Vokabeln">
+                                </div>
+                            </div>
+                            <div id="exportSeasonRows"></div>
                         </div>
                     </div>
                     <div id="settingsSaveStatus" class="small text-muted mt-2" aria-live="polite"></div>

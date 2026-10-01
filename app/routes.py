@@ -12,9 +12,11 @@ from app.db import (
     create_translation, get_translation_by_id, update_translation, 
     get_db_logs, get_all_translations, archive_translation, unarchive_translation,
     reset_translation_for_regeneration, update_translation_runtime_settings,
-    get_default_settings, save_default_settings
+    get_default_settings, save_default_settings,
+    get_export_locations, save_export_location, resolve_export_paths
 )
 from app.services.translation_service import start_translation_job
+from app.services.export_service import copy_file_to_export
 
 main_bp = Blueprint('main', __name__)
 load_dotenv()
@@ -123,6 +125,37 @@ def update_app_default_settings():
     })
     return jsonify(get_default_settings())
 
+def build_export_path_payload():
+    """Baut die nach Serie/Staffel gruppierte Antwortstruktur für die Export-Pfad-Settings."""
+    grouped = {}
+    for row in get_export_locations():
+        entry = grouped.setdefault(row['profile_key'], {})
+        entry[row['season'] or 'default'] = {
+            'subtitles_path': row['subtitles_path'] or '',
+            'vocab_path': row['vocab_path'] or '',
+        }
+    return grouped
+
+@main_bp.route('/api/settings/export-paths', methods=['GET'])
+def get_export_path_settings():
+    """Liefert alle konfigurierten Export-Zielordner, gruppiert nach Serie."""
+    return jsonify(build_export_path_payload())
+
+@main_bp.route('/api/settings/export-paths', methods=['POST'])
+def update_export_path_settings():
+    """Speichert Export-Zielordner für eine Serie (season='') und/oder einzelne Staffeln."""
+    data = request.get_json(silent=True) or {}
+    profile_key = (data.get('profile_key') or '').strip()
+    if not profile_key:
+        return jsonify({"error": "Serie fehlt."}), 400
+    entries = data.get('entries', [])
+    for entry in entries:
+        season = (entry.get('season') or '').strip()
+        subtitles_path = (entry.get('subtitles_path') or '').strip()
+        vocab_path = (entry.get('vocab_path') or '').strip()
+        save_export_location(profile_key, season, subtitles_path, vocab_path)
+    return jsonify(build_export_path_payload())
+
 def get_episode_summary(profile_key, episode_key):
     base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     summaries_path = os.path.join(base_dir, 'summaries.yaml')
@@ -188,7 +221,7 @@ def upload_file():
     except UnicodeDecodeError:
         subs = pysrt.open(file_path, encoding='iso-8859-1')
         
-    t_id = create_translation(filename, len(subs), sync_offset, profile_key)
+    t_id = create_translation(filename, len(subs), sync_offset, profile_key, episode_key)
     
     # Zusammenfassung und Upload-Einstellungen gemeinsam speichern.
     save_project_settings(t_id, {
@@ -386,6 +419,8 @@ def fix_edtech(t_id):
         
         if method == 'python' and ts_mismatches:
             fix_csv_timestamps(csv_file, rows, fieldnames, ts_mismatches)
+            _, vocab_path = resolve_export_paths(t.get('profile_key', 'default'), t.get('episode_key', ''))
+            copy_file_to_export(csv_file, vocab_path)
         elif method == 'gemini' and (kw_mismatches or data_issues):
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key: return jsonify({"error": "API Key fehlt"}), 500
@@ -397,6 +432,8 @@ def fix_edtech(t_id):
                 german_srt_path=german_srt,
                 model=t.get('edtech_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite'
             )
+            _, vocab_path = resolve_export_paths(t.get('profile_key', 'default'), t.get('episode_key', ''))
+            copy_file_to_export(csv_file, vocab_path)
         elif method == 'ignore':
             pass
         else:
@@ -501,11 +538,16 @@ def generate_edtech(t_id):
         if generate_csv_only:
             if res_csv and os.path.exists(res_csv):
                 update_edtech_status(t_id, 0)
+                _, vocab_path = resolve_export_paths(merged_settings.get('profile_key', 'default'), t.get('episode_key', ''))
+                copy_file_to_export(res_csv, vocab_path)
                 return jsonify({"message": "CSV erfolgreich generiert"})
             return jsonify({"error": "CSV generiert, Datei aber auf dem Laufwerk nicht gefunden"}), 500
         else:
             if res_ass and os.path.exists(res_ass) and res_csv and os.path.exists(res_csv):
                 update_edtech_status(t_id, 1)
+                subtitles_path, vocab_path = resolve_export_paths(merged_settings.get('profile_key', 'default'), t.get('episode_key', ''))
+                copy_file_to_export(res_ass, subtitles_path)
+                copy_file_to_export(res_csv, vocab_path)
                 return jsonify({"message": "ASS und CSV erfolgreich generiert"})
             return jsonify({"error": "Generierung lief durch, aber Dateien fehlen auf dem Laufwerk"}), 500
             

@@ -66,6 +66,7 @@ def init_db():
         "export_path": "TEXT DEFAULT ''",
         "archived": "INTEGER DEFAULT 0",
         "translation_started": "INTEGER DEFAULT 0",
+        "episode_key": "TEXT DEFAULT ''",
         # --- NEU FÜR DEN HEARTBEAT & LEASE ---
         "heartbeat_at": "REAL DEFAULT 0",
         "worker_token": "TEXT DEFAULT NULL"
@@ -109,8 +110,67 @@ def init_db():
         )
     ''')
 
+    # Export-Zielordner je Serie (season='') und optional pro Staffel, getrennt nach Untertitel/Vokabeln.
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS export_locations (
+            profile_key TEXT NOT NULL,
+            season TEXT NOT NULL DEFAULT '',
+            subtitles_path TEXT DEFAULT '',
+            vocab_path TEXT DEFAULT '',
+            PRIMARY KEY (profile_key, season)
+        )
+    ''')
+
     conn.commit()
     conn.close()
+
+def get_export_locations():
+    """Liefert alle konfigurierten Export-Zielordner (seriengenau und/oder pro Staffel)."""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT profile_key, season, subtitles_path, vocab_path FROM export_locations")
+    rows = [dict(row) for row in c.fetchall()]
+    conn.close()
+    return rows
+
+def save_export_location(profile_key, season, subtitles_path, vocab_path):
+    """Legt einen Export-Zielordner an/aktualisiert ihn; löscht den Eintrag, wenn beide Pfade leer sind."""
+    conn = get_db_connection()
+    c = conn.cursor()
+    if not subtitles_path and not vocab_path:
+        c.execute("DELETE FROM export_locations WHERE profile_key = ? AND season = ?", (profile_key, season))
+    else:
+        c.execute('''
+            INSERT INTO export_locations (profile_key, season, subtitles_path, vocab_path)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(profile_key, season) DO UPDATE SET
+                subtitles_path = excluded.subtitles_path,
+                vocab_path = excluded.vocab_path
+        ''', (profile_key, season, subtitles_path, vocab_path))
+    conn.commit()
+    conn.close()
+
+def resolve_export_paths(profile_key, episode_key):
+    """Ermittelt Untertitel-/Vokabel-Zielordner: Staffel-Override hat Vorrang vor dem Serien-Standard."""
+    season = episode_key.split('x')[0] if episode_key and 'x' in episode_key else ''
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute(
+        "SELECT subtitles_path, vocab_path FROM export_locations WHERE profile_key = ? AND season = ?",
+        (profile_key, season)
+    )
+    season_row = c.fetchone()
+    c.execute(
+        "SELECT subtitles_path, vocab_path FROM export_locations WHERE profile_key = ? AND season = ''",
+        (profile_key,)
+    )
+    default_row = c.fetchone()
+    conn.close()
+    subtitles_path = (season_row['subtitles_path'] if season_row and season_row['subtitles_path'] else None) \
+        or (default_row['subtitles_path'] if default_row and default_row['subtitles_path'] else None)
+    vocab_path = (season_row['vocab_path'] if season_row and season_row['vocab_path'] else None) \
+        or (default_row['vocab_path'] if default_row and default_row['vocab_path'] else None)
+    return subtitles_path, vocab_path
 
 def get_default_settings():
     """Liefert die globalen Default-Einstellungen je Modul (srt/edtech), gemerged mit Fallbacks."""
@@ -336,13 +396,13 @@ def get_translation_by_id(t_id):
     conn.close()
     return dict(row) if row else None
 
-def create_translation(filename, total_lines, sync_offset, profile_key):
+def create_translation(filename, total_lines, sync_offset, profile_key, episode_key=''):
     conn = get_db_connection()
     c = conn.cursor()
     c.execute('''
-        INSERT INTO translations (original_filename, status, total_lines, translated_lines, last_updated, sync_offset, profile_key)
-        VALUES (?, 'pausiert', ?, 0, ?, ?, ?)
-    ''', (filename, total_lines, datetime.now().isoformat(), sync_offset, profile_key))
+        INSERT INTO translations (original_filename, status, total_lines, translated_lines, last_updated, sync_offset, profile_key, episode_key)
+        VALUES (?, 'pausiert', ?, 0, ?, ?, ?, ?)
+    ''', (filename, total_lines, datetime.now().isoformat(), sync_offset, profile_key, episode_key))
     t_id = c.lastrowid
     conn.commit()
     conn.close()

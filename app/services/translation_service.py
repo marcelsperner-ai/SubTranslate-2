@@ -18,9 +18,11 @@ from app.db import (
     acquire_translation_lock, 
     update_translation_progress,
     update_heartbeat,
-    set_translation_status
+    set_translation_status,
+    resolve_export_paths
 )
 from app.prompt_manager import load_prompts, get_system_instruction, append_episode_summary
+from app.services.export_service import copy_file_to_export
 
 def send_email_with_attachments(receiver_email, subject, body, file_paths):
     sender_email = os.getenv("EMAIL_SENDER")
@@ -255,6 +257,8 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
 
             set_translation_status(t_id, 'abgeschlossen', worker_token)
             log_cb("🎉 Datei vollständig übersetzt!")
+            subtitles_path, _ = resolve_export_paths(t.get('profile_key', 'default'), t.get('episode_key', ''))
+            copy_file_to_export(out_path, subtitles_path, log_cb)
 
     except Exception as e:
         log_cb(f"❌ Systemfehler: {str(e)}")
