@@ -967,13 +967,15 @@ function createPreviewWindow(type) {
                 .ass-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
                 .ass-filter { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; cursor: pointer; }
                 .ass-filter input { margin: 0; }
-                .csv-preview-actions { display: flex; flex-wrap: wrap; gap: 6px; min-width: 150px; }
+                .csv-preview-actions { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; margin-bottom: 8px; }
                 .csv-preview-actions button { border: 1px solid #84919a; border-radius: 4px; background: #fff; color: #20262b; padding: 4px 8px; font: inherit; font-size: .8rem; cursor: pointer; }
                 .csv-preview-actions button.primary { border-color: #176b58; background: #176b58; color: #fff; }
                 .csv-preview-actions button:disabled { opacity: .6; cursor: wait; }
+                .csv-row-actions { width: 1%; padding-right: 5px; padding-left: 5px; text-align: center; white-space: nowrap; }
                 .csv-cell-editor { display: block; width: 100%; min-width: 150px; min-height: 2rem; padding: 4px 6px; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; overflow: hidden; resize: none; }
                 .csv-cell-editor:focus { border-color: #6b9b8e; outline: 2px solid #d3e7e1; background: #fff; }
                 .csv-delete-row { width: 28px; height: 28px; padding: 0 !important; font-size: 1.2rem !important; line-height: 1; }
+                .csv-subtitle-preview { min-width: 220px; max-width: 420px; padding: 8px 10px; background: #000; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; }
                 .empty { padding: 20px; color: #59636c; }
                 @media (max-width: 700px) { main { padding: 18px 12px 32px; } .timestamp { min-width: 170px; } .subtitle { min-width: 260px; } }
             </style>
@@ -1021,11 +1023,43 @@ function resizeCsvEditor(editor) {
     editor.style.height = `${editor.scrollHeight}px`;
 }
 
-function renderCsvPreview(popup, rows, fieldnames, projectId) {
+function createSrtCueIndex(text, offsetMs = 0) {
+    const byCueId = new Map();
+    const byStartTime = new Map();
+    parseSrtPreview(text).forEach((cue) => {
+        if (cue.cueId && !byCueId.has(cue.cueId)) byCueId.set(cue.cueId, cue);
+        const timestampKey = srtStartTimeKey(cue.start, offsetMs);
+        if (timestampKey !== null && !byStartTime.has(timestampKey)) byStartTime.set(timestampKey, cue);
+    });
+    return {byCueId, byStartTime};
+}
+
+function findCsvSubtitleCue(index, record) {
+    const cueId = String(record.Cue_ID || record.cue_id || '').trim();
+    if (cueId && index.byCueId.has(cueId)) return index.byCueId.get(cueId);
+    const timestamp = String(record.Zeitstempel || record.timestamp || '').trim();
+    const timestampKey = srtStartTimeKey(timestamp);
+    return timestampKey === null ? null : index.byStartTime.get(timestampKey) || null;
+}
+
+function createCsvSubtitleCell(popup, cue) {
+    const cell = popup.document.createElement('td');
+    const content = popup.document.createElement('div');
+    content.className = 'csv-subtitle-preview';
+    content.dir = 'auto';
+    if (cue) appendSrtMarkup(popup.document, content, cue.text);
+    else content.textContent = '—';
+    cell.append(content);
+    return cell;
+}
+
+function renderCsvPreview(popup, rows, fieldnames, projectId, farsiSrt = '', germanSrt = '', translationSyncOffsetMs = 0) {
     if (!fieldnames.length) {
         showPreviewMessage(popup, 'Keine CSV-Daten vorhanden.');
         return;
     }
+    const farsiCueIndex = createSrtCueIndex(farsiSrt);
+    const germanCueIndex = createSrtCueIndex(germanSrt, Number(translationSyncOffsetMs || 0));
     const actions = popup.document.createElement('div');
     actions.className = 'csv-preview-actions';
     const saveButton = popup.document.createElement('button');
@@ -1042,10 +1076,11 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
     rebuildButton.textContent = 'ASS neu generieren';
     rebuildButton.hidden = true;
     actions.append(saveButton, discardButton, rebuildButton);
-    const headings = [actions, ...fieldnames];
+    const headings = ['', ...fieldnames, 'Deutscher Untertitel (SRT)', 'Farsi-Untertitel (SRT)'];
     const tableRows = rows.map((record) => {
         const row = popup.document.createElement('tr');
         const controls = popup.document.createElement('td');
+        controls.className = 'csv-row-actions';
         const deleteButton = popup.document.createElement('button');
         deleteButton.type = 'button';
         deleteButton.className = 'csv-delete-row';
@@ -1064,10 +1099,16 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
             cell.append(editor);
             row.append(cell);
         });
+        row.append(
+            createCsvSubtitleCell(popup, findCsvSubtitleCue(germanCueIndex, record)),
+            createCsvSubtitleCell(popup, findCsvSubtitleCue(farsiCueIndex, record))
+        );
         return row;
     });
     appendPreviewTable(popup, headings, tableRows, 'csv-preview-table');
+    popup.document.getElementById('preview-content').prepend(actions);
     const table = popup.document.querySelector('.csv-preview-table');
+    table.querySelector('thead th:first-child').className = 'csv-row-actions';
     table.querySelectorAll('.csv-cell-editor').forEach(resizeCsvEditor);
     const body = table.tBodies[0];
     let dirty = false;
@@ -1127,7 +1168,15 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
             const response = await fetch(`/api/edtech/preview/${projectId}`);
             const result = await response.json();
             if (!response.ok) throw new Error(result.error || 'CSV konnte nicht neu geladen werden.');
-            renderCsvPreview(popup, result.csv || [], result.csv_fieldnames || [], projectId);
+            renderCsvPreview(
+                popup,
+                result.csv || [],
+                result.csv_fieldnames || [],
+                projectId,
+                result.srt || '',
+                result.original_srt || '',
+                result.translation_sync_offset_ms || 0
+            );
         } catch (error) {
             showPreviewMessage(popup, error.message || 'CSV konnte nicht neu geladen werden.');
         } finally {
@@ -1473,7 +1522,15 @@ async function loadPreviewIntoPopup(popup, type, projectId) {
         const files = await response.json();
         if (!response.ok) throw new Error(files.error || 'Vorschau konnte nicht geladen werden.');
         if (popup.closed || previewRequestIds.get(popup) !== requestId) return;
-        if (type === 'csv') renderCsvPreview(popup, files.csv || [], files.csv_fieldnames || [], projectId);
+        if (type === 'csv') renderCsvPreview(
+            popup,
+            files.csv || [],
+            files.csv_fieldnames || [],
+            projectId,
+            files.srt || '',
+            files.original_srt || '',
+            files.translation_sync_offset_ms || 0
+        );
         else if (type === 'srt') renderSrtPreview(popup, files.srt || '', files.original_srt || '');
         else renderAssPreview(
             popup,
