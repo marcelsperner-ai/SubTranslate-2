@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lernkarten{{ ' – ' + project_name if project_name else '' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flashcards.css') }}">
+</head>
+<body>
+    <main class="flashcards-page" data-t-id="{{ t_id }}" data-project-missing="{{ 'true' if project_missing else 'false' }}">
+        <header class="fc-header">
+            <h1>🎴 Lernkarten{{ ' – ' + project_name if project_name else '' }}</h1>
+            <div class="fc-direction-toggle" role="group" aria-label="Lernrichtung">
+                <button type="button" class="fc-direction-btn is-active" id="btnDirDeFa" data-direction="de-fa">Deutsch → Farsi</button>
+                <button type="button" class="fc-direction-btn" id="btnDirFaDe" data-direction="fa-de">Farsi → Deutsch</button>
+            </div>
+        </header>
+
+        <div id="fcStatus" class="fc-status">Lernkarten werden geladen …</div>
+
+        <section id="fcDeck" class="fc-deck d-none">
+            <p class="fc-progress"><span id="fcProgressCurrent">0</span> / <span id="fcProgressTotal">0</span></p>
+
+            <div class="fc-card" id="fcCard" tabindex="0" role="button" aria-label="Karte umdrehen">
+                <div class="fc-card-inner" id="fcCardInner">
+                    <div class="fc-card-face fc-card-front">
+                        <p class="fc-card-label" id="fcFrontLabel"></p>
+                        <p class="fc-card-text" id="fcFrontText"></p>
+                    </div>
+                    <div class="fc-card-face fc-card-back">
+                        <p class="fc-card-label" id="fcBackLabel"></p>
+                        <p class="fc-card-text" id="fcBackText"></p>
+                        <p class="fc-card-context" id="fcBackContext"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fc-controls">
+                <button type="button" id="btnFcPrev" class="fc-btn">‹ Vorherige</button>
+                <button type="button" id="btnFcFlip" class="fc-btn fc-btn-primary">Umdrehen</button>
+                <button type="button" id="btnFcNext" class="fc-btn">Nächste ›</button>
+            </div>
+            <div class="fc-controls fc-controls-secondary">
+                <button type="button" id="btnFcShuffle" class="fc-btn-link">🔀 Mischen</button>
+            </div>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/flashcards.js') }}"></script>
+</body>
+</html>

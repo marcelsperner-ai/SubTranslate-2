@@ -1249,13 +1249,20 @@ btnPauseResume.addEventListener('click', async () => {
 
 // --- EDTECH LOGIK ---
 const previewLinks = document.getElementById('previewLinks');
+const btnOpenFlashcards = document.getElementById('btnOpenFlashcards');
 
 function setPreviewAvailability(availableDownloads) {
     previewLinks.querySelectorAll('[data-preview-type]').forEach((button) => {
         button.style.display = availableDownloads[button.dataset.previewType] ? 'inline-block' : 'none';
     });
+    btnOpenFlashcards.classList.toggle('d-none', !availableDownloads.csv);
     previewLinks.classList.toggle('d-none', !Object.values(availableDownloads).some(Boolean));
 }
+
+btnOpenFlashcards.addEventListener('click', () => {
+    if (!currentProjectId) return;
+    window.open(`/lernkarten/${currentProjectId}`, '_blank');
+});
 
 function createPreviewWindow(type) {
     const popup = window.open('', '_blank', 'popup=yes,width=1440,height=960,resizable=yes,scrollbars=yes');

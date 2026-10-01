@@ -105,6 +105,15 @@ def index():
     """Lädt das Haupt-Frontend."""
     return render_template('index.html')
 
+@main_bp.route('/lernkarten/<int:t_id>', methods=['GET'])
+def flashcards_page(t_id):
+    """Lädt die eigenständige Lernkarten-Seite (öffnet sich im neuen Tab)."""
+    t = get_translation_by_id(t_id)
+    if not t:
+        return render_template('flashcards.html', t_id=t_id, project_name='', project_missing=True), 404
+    add_project_display_names(t)
+    return render_template('flashcards.html', t_id=t_id, project_name=t['project_name'], project_missing=False)
+
 @main_bp.route('/api/settings/defaults', methods=['GET'])
 def get_app_default_settings():
     """Liefert die globalen Default-Einstellungen für neue Projekte."""
