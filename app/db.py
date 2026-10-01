@@ -67,6 +67,7 @@ def init_db():
         "archived": "INTEGER DEFAULT 0",
         "translation_started": "INTEGER DEFAULT 0",
         "episode_key": "TEXT DEFAULT ''",
+        "project_name": "TEXT DEFAULT ''",
         # --- NEU FÜR DEN HEARTBEAT & LEASE ---
         "heartbeat_at": "REAL DEFAULT 0",
         "worker_token": "TEXT DEFAULT NULL"
@@ -396,17 +397,29 @@ def get_translation_by_id(t_id):
     conn.close()
     return dict(row) if row else None
 
-def create_translation(filename, total_lines, sync_offset, profile_key, episode_key=''):
+def create_translation(filename, total_lines, sync_offset, profile_key, episode_key='', project_name=''):
     conn = get_db_connection()
     c = conn.cursor()
     c.execute('''
-        INSERT INTO translations (original_filename, status, total_lines, translated_lines, last_updated, sync_offset, profile_key, episode_key)
-        VALUES (?, 'pausiert', ?, 0, ?, ?, ?, ?)
-    ''', (filename, total_lines, datetime.now().isoformat(), sync_offset, profile_key, episode_key))
+        INSERT INTO translations (original_filename, status, total_lines, translated_lines, last_updated, sync_offset, profile_key, episode_key, project_name)
+        VALUES (?, 'pausiert', ?, 0, ?, ?, ?, ?, ?)
+    ''', (filename, total_lines, datetime.now().isoformat(), sync_offset, profile_key, episode_key, project_name))
     t_id = c.lastrowid
     conn.commit()
     conn.close()
     return t_id
+
+def update_project_name(t_id, project_name):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute(
+        "UPDATE translations SET project_name = ?, last_updated = ? WHERE id = ?",
+        (project_name, datetime.now().isoformat(), t_id)
+    )
+    success = c.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
 
 def update_translation(t_id, translated_lines, status):
     conn = get_db_connection()

@@ -13,7 +13,8 @@ from app.db import (
     get_db_logs, get_all_translations, archive_translation, unarchive_translation,
     reset_translation_for_regeneration, update_translation_runtime_settings,
     get_default_settings, save_default_settings,
-    get_export_locations, save_export_location, resolve_export_paths
+    get_export_locations, save_export_location, resolve_export_paths,
+    update_project_name
 )
 from app.services.translation_service import start_translation_job
 from app.services.export_service import copy_file_to_export
@@ -31,12 +32,40 @@ GEMINI_MODEL_IDS = {
     'gemini-3.1-pro-preview',
 }
 
+def suggested_project_name(profile_key, episode_key='', original_filename='', prompt_profiles=None):
+    if profile_key == 'default':
+        return os.path.splitext(original_filename)[0] or 'Projekt'
+    try:
+        profiles = prompt_profiles if prompt_profiles is not None else load_prompts()
+        profile = profiles.get(profile_key, {})
+    except (OSError, yaml.YAMLError):
+        profile = {}
+    series_name = (profile.get('label') or profile.get('name') or profile_key).split(' (', 1)[0].strip()
+    episode_name = episode_key.replace('x', '.') if episode_key and episode_key != '__custom__' else ''
+    return f"{series_name} {episode_name}".strip()
+
+def add_project_display_names(project, prompt_profiles=None):
+    suggested_name = suggested_project_name(
+        project.get('profile_key', 'default'),
+        project.get('episode_key', ''),
+        project.get('original_filename', ''),
+        prompt_profiles
+    )
+    project['suggested_project_name'] = suggested_name
+    project['project_name'] = project.get('project_name') or suggested_name
+    return project
+
 @main_bp.route('/api/projects', methods=['GET'])
 def list_projects():
     """Liefert aktive und archivierte Projekte samt Dateistatus für die UI."""
     outputs_dir = current_app.config['OUTPUTS_DIR']
     projects = get_all_translations()
+    try:
+        prompt_profiles = load_prompts()
+    except (OSError, yaml.YAMLError):
+        prompt_profiles = {}
     for project in projects:
+        add_project_display_names(project, prompt_profiles)
         base_name = project['original_filename'].replace('.srt', '')
         project['available_downloads'] = {
             'srt': os.path.exists(os.path.join(outputs_dir, f'{base_name}_FA.srt')),
@@ -221,7 +250,8 @@ def upload_file():
     except UnicodeDecodeError:
         subs = pysrt.open(file_path, encoding='iso-8859-1')
         
-    t_id = create_translation(filename, len(subs), sync_offset, profile_key, episode_key)
+    project_name = suggested_project_name(profile_key, episode_key, filename)
+    t_id = create_translation(filename, len(subs), sync_offset, profile_key, episode_key, project_name)
     
     # Zusammenfassung und Upload-Einstellungen gemeinsam speichern.
     save_project_settings(t_id, {
@@ -243,6 +273,22 @@ def upload_file():
     })
     
     return jsonify({"message": "Projekt angelegt", "id": t_id}), 201
+
+@main_bp.route('/api/project/<int:t_id>/name', methods=['PUT'])
+def rename_project(t_id):
+    project = get_translation_by_id(t_id)
+    if not project:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    data = request.get_json(silent=True) or {}
+    project_name = data.get('project_name')
+    if not isinstance(project_name, str):
+        return jsonify({"error": "Projektname muss Text sein."}), 400
+    project_name = project_name.strip()
+    if not project_name or len(project_name) > 120:
+        return jsonify({"error": "Der Projektname muss zwischen 1 und 120 Zeichen lang sein."}), 400
+    if not update_project_name(t_id, project_name):
+        return jsonify({"error": "Projektname konnte nicht gespeichert werden."}), 500
+    return jsonify({"project_name": project_name})
 
 @main_bp.route('/api/start/<int:t_id>', methods=['POST'])
 def start_job(t_id):
@@ -561,6 +607,7 @@ def get_project(t_id):
     t = get_translation_by_id(t_id)
     if not t:
         return jsonify({"error": "Projekt nicht gefunden"}), 404
+    add_project_display_names(t)
     base_name = t['original_filename'].replace('.srt', '')
     outputs_dir = current_app.config['OUTPUTS_DIR']
     t['available_downloads'] = {

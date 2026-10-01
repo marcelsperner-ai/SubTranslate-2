@@ -30,6 +30,14 @@ const episodeSummarySaveButton = document.getElementById('btnSaveEpisodeSummary'
 const episodeSummarySaveStatus = document.getElementById('episodeSummarySaveStatus');
 const sidebarList = document.getElementById('sidebarProjectList');
 const projectTitle = document.getElementById('currentProjectTitle');
+const projectFilename = document.getElementById('currentProjectFilename');
+const btnEditProjectName = document.getElementById('btnEditProjectName');
+const projectNameModalElement = document.getElementById('projectNameModal');
+const projectNameModal = new bootstrap.Modal(projectNameModalElement);
+const projectNameInput = document.getElementById('projectNameInput');
+const projectNameSaveStatus = document.getElementById('projectNameSaveStatus');
+const btnSaveProjectName = document.getElementById('btnSaveProjectName');
+const btnResetProjectName = document.getElementById('btnResetProjectName');
 const progressBar = document.getElementById('progressBar');
 const progressText = document.getElementById('progressText');
 const statusBadge = document.getElementById('statusBadge');
@@ -137,6 +145,7 @@ let episodeSummarySaved = true;
 let hasGeneratedAss = false;
 let savedEdtechSettings = null;
 let pendingArchiveProjectId = null;
+let currentSuggestedProjectName = '';
 let loadedTranslationSyncOffset = translationSyncOffsetInput.value;
 let pendingTranslationSyncOffset = null;
 let translationSettingsSaveTimer = null;
@@ -255,6 +264,42 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSelectionAvailability();
     loadDefaultSettings();
     loadExportPathSettings();
+});
+
+projectNameModalElement.addEventListener('show.bs.modal', () => {
+    projectNameInput.value = projectTitle.textContent;
+    projectNameSaveStatus.textContent = '';
+});
+
+btnResetProjectName.addEventListener('click', () => {
+    projectNameInput.value = currentSuggestedProjectName;
+    projectNameSaveStatus.textContent = '';
+});
+
+btnSaveProjectName.addEventListener('click', async () => {
+    const projectName = projectNameInput.value.trim();
+    if (!currentProjectId || !projectName || projectName.length > 120) {
+        projectNameSaveStatus.textContent = 'Bitte einen Namen mit 1 bis 120 Zeichen eingeben.';
+        return;
+    }
+    btnSaveProjectName.disabled = true;
+    projectNameSaveStatus.textContent = '';
+    try {
+        const response = await fetch(`/api/project/${currentProjectId}/name`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ project_name: projectName }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Projektname konnte nicht gespeichert werden.');
+        projectTitle.textContent = result.project_name;
+        projectNameModal.hide();
+        await loadProjects();
+    } catch (error) {
+        projectNameSaveStatus.textContent = error.message;
+    } finally {
+        btnSaveProjectName.disabled = false;
+    }
 });
 
 function populateDefaultSettingsForm(settings) {
@@ -767,7 +812,8 @@ async function openProjectFromElement(projectElement) {
     loadProjectToMain(
         projectId,
         projectElement.dataset.projectTitle,
-        projectElement.dataset.projectStatus
+        projectElement.dataset.projectStatus,
+        projectElement.dataset.projectFilename || ''
     );
 }
 
@@ -846,10 +892,11 @@ async function loadProjects() {
             let percent = p.total_lines > 0 ? Math.round((p.translated_lines / p.total_lines) * 100) : 0;
             let isActive = p.id === currentProjectId ? 'active' : '';
             let edtechDone = p.available_downloads?.ass ? 'done' : '';
-            let transDone = p.available_downloads?.srt ? 'done' : '';
+            let transDone = p.status === 'abgeschlossen' && p.available_downloads?.srt ? 'done' : '';
             let progressColor = p.status === 'abgeschlossen' ? 'bg-success' : 'var(--purple-accent)';
-            let name = p.original_filename.replace('.srt', '');
+            let name = p.project_name || p.original_filename.replace('.srt', '');
             let safeName = escapeHtml(name);
+            let safeFilename = escapeHtml(p.original_filename);
             let safeStatus = escapeHtml(p.status);
             let canArchive = p.status === 'abgeschlossen'
                 && p.available_downloads?.srt && p.available_downloads?.ass;
@@ -859,10 +906,11 @@ async function loadProjects() {
                 : '';
             let sidebarHtml = `
             <div class="mini-project ${isActive}">
-                <button type="button" class="mini-project-open" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}">
+                <button type="button" class="mini-project-open" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}" data-project-filename="${safeFilename}">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="text-truncate" style="max-width: 68%;">
                             <div class="fw-bold fs-6 text-truncate">${safeName}</div>
+                            <div class="text-muted small text-truncate" title="${safeFilename}">${safeFilename}</div>
                             <div class="text-muted" style="font-size: 0.8em;">Status: ${safeStatus}</div>
                         </div>
                         <div class="d-flex gap-1 me-1">
@@ -880,15 +928,16 @@ async function loadProjects() {
         });
 
         archivedProjects.forEach(p => {
-            const safeName = escapeHtml(p.original_filename.replace('.srt', ''));
+            const safeName = escapeHtml(p.project_name || p.original_filename.replace('.srt', ''));
+            const safeFilename = escapeHtml(p.original_filename);
             const safeStatus = escapeHtml(p.status);
             let badgeClass = p.status === 'abgeschlossen' ? 'bg-success' : (p.status === 'laufend' ? 'bg-primary' : 'bg-secondary');
             let archiveHtml = `
             <tr>
-                <td>${safeName}</td>
+                <td>${safeName}<div class="small text-muted" title="${safeFilename}">${safeFilename}</div></td>
                 <td><span class="badge ${badgeClass}">${safeStatus}</span></td>
                 <td class="text-muted small">${new Date(p.last_updated).toLocaleString()}</td>
-                <td><button class="btn btn-sm btn-outline-secondary" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}" data-project-archived="true">Öffnen</button></td>
+                <td><button class="btn btn-sm btn-outline-secondary" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}" data-project-filename="${safeFilename}" data-project-archived="true">Öffnen</button></td>
             </tr>`;
             archiveTableBody.insertAdjacentHTML('beforeend', archiveHtml);
         });
@@ -908,13 +957,16 @@ function startProjectListPolling() {
 }
 
 // 3. PROJEKT-DATEN, SETTINGS & PROMPTS LADEN
-async function loadProjectToMain(id, title, status) {
+async function loadProjectToMain(id, title, status, filename = '') {
     const loadSequence = ++projectLoadSequence;
     setProjectLoading(true);
     setTranslationStarted(false);
     currentProjectId = id;
     btnNewProject.classList.remove('active');
-    projectTitle.textContent = title; // XSS-Schutz
+    projectTitle.textContent = title;
+    projectFilename.textContent = filename;
+    projectFilename.title = filename;
+    btnEditProjectName.classList.remove('d-none');
     progressSection.style.display = 'block';
     document.getElementById('previewLinks').classList.add('d-none');
     lockEdtechPane();
@@ -932,6 +984,10 @@ async function loadProjectToMain(id, title, status) {
         if (loadSequence !== projectLoadSequence) return;
         if(pRes.ok) {
             let pData = await pRes.json();
+            projectTitle.textContent = pData.project_name || title;
+            projectFilename.textContent = pData.original_filename || filename;
+            projectFilename.title = pData.original_filename || filename;
+            currentSuggestedProjectName = pData.suggested_project_name || pData.project_name || title;
             translationSyncOffsetInput.value = pData.sync_offset ?? 0;
             loadedTranslationSyncOffset = translationSyncOffsetInput.value;
             setTranslationStarted(Boolean(pData.translation_started));
@@ -1009,7 +1065,9 @@ form.addEventListener('submit', async (e) => {
     const episodeKey = formData.get('episode');
     const profile = yamlMetadata[profileKey];
     const profileName = profile?.name || profileKey;
-    const projectTitleText = episodeKey ? `${profileName} - ${episodeKey}` : profileName;
+    const projectTitleText = episodeKey && episodeKey !== '__custom__'
+        ? `${profileName.split(' (', 1)[0]} ${episodeKey.replace('x', '.')}`
+        : profileName.split(' (', 1)[0];
     formData.set('custom_translation_prompt', translationPromptInput.value);
     if (isCustomEpisodeSelected()) {
         formData.set('episode_summary_override', episodeSummaryInput.value);
@@ -1026,11 +1084,11 @@ form.addEventListener('submit', async (e) => {
             const startRes = await fetch(`/api/start/${currentProjectId}`, { method: 'POST' });
             if (!startRes.ok) {
                 const startData = await startRes.json();
-                loadProjectToMain(currentProjectId, projectTitleText, 'pausiert');
+                loadProjectToMain(currentProjectId, projectTitleText, 'pausiert', formData.get('file').name);
                 alert("Projekt wurde angelegt, konnte aber nicht gestartet werden: " + startData.error);
                 return;
             }
-            loadProjectToMain(currentProjectId, projectTitleText, 'laufend');
+            loadProjectToMain(currentProjectId, projectTitleText, 'laufend', formData.get('file').name);
         } else {
             alert("Upload fehlgeschlagen: " + uploadData.error);
             formSection.classList.remove('locked');
@@ -1128,6 +1186,10 @@ btnNewProject.addEventListener('click', () => {
     if (pollInterval) clearInterval(pollInterval);
     
     projectTitle.textContent = "Neues Projekt";
+    projectFilename.textContent = '';
+    projectFilename.title = '';
+    btnEditProjectName.classList.add('d-none');
+    currentSuggestedProjectName = '';
     formSection.classList.remove('locked');
     form.reset();
     episodeSelect.replaceChildren(new Option('Episode...', ''));

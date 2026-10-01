@@ -387,13 +387,44 @@
         <!-- OBERES FENSTER: Translation -->
         <div class="split-pane pane-top pane-maximized" id="translationZone">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <h3 id="currentProjectTitle" class="m-0">Neues Projekt</h3>
+                <div style="min-width: 0;">
+                    <div class="d-flex align-items-center gap-2">
+                        <h3 id="currentProjectTitle" class="m-0 text-truncate">Neues Projekt</h3>
+                        <button type="button" class="btn btn-sm btn-outline-secondary d-none" id="btnEditProjectName" data-bs-toggle="modal" data-bs-target="#projectNameModal">Umbenennen</button>
+                    </div>
+                    <div id="currentProjectFilename" class="small text-muted text-truncate" title=""></div>
+                </div>
                 <ul class="nav nav-tabs border-0" id="transTabs" role="tablist">
                     <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#trans-main">Main</a></li>
                     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#trans-settings">Settings</a></li>
                     <li class="nav-item"><a class="nav-link disabled" id="transPromptsTab" data-bs-toggle="tab" href="#trans-prompts" aria-disabled="true" tabindex="-1">Prompts</a></li>
                 </ul>
             </div>
+
+        <div class="modal fade" id="projectNameModal" tabindex="-1" aria-labelledby="projectNameModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="projectNameModalLabel">Projektnamen ändern</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="form-label" for="projectNameInput">Projektname</label>
+                        <input type="text" class="form-control" id="projectNameInput" maxlength="120" required>
+                        <div id="projectNameSaveStatus" class="small text-danger mt-2" aria-live="polite"></div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btnResetProjectName">Vorgeschlagenen Namen wiederherstellen</button>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                            <button type="button" class="btn btn-sm btn-primary" id="btnSaveProjectName">Speichern</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HAUPTBEREICH -->
 
             <div class="tab-content translation-tab-content pane-body flex-grow-1 mt-2">
                 <div class="tab-pane fade show active" id="trans-main">
