@@ -1411,7 +1411,7 @@ function renderCsvPreview(popup, rows, fieldnames, projectId, farsiSrt = '', ger
     rebuildButton.textContent = 'ASS neu generieren';
     rebuildButton.hidden = true;
     actions.append(saveButton, discardButton, rebuildButton);
-    const headings = ['', ...fieldnames, 'Deutscher Untertitel (SRT)', 'Farsi-Untertitel (SRT)'];
+    const headings = ['', 'Deutscher Untertitel (SRT)', 'Farsi-Untertitel (SRT)', ...fieldnames];
     const tableRows = rows.map((record) => {
         const row = popup.document.createElement('tr');
         const controls = popup.document.createElement('td');
@@ -1424,6 +1424,10 @@ function renderCsvPreview(popup, rows, fieldnames, projectId, farsiSrt = '', ger
         deleteButton.setAttribute('aria-label', 'CSV-Zeile löschen');
         controls.append(deleteButton);
         row.append(controls);
+        row.append(
+            createCsvSubtitleCell(popup, findCsvSubtitleCue(germanCueIndex, record)),
+            createCsvSubtitleCell(popup, findCsvSubtitleCue(farsiCueIndex, record))
+        );
         fieldnames.forEach((fieldname) => {
             const cell = popup.document.createElement('td');
             const editor = popup.document.createElement('textarea');
@@ -1434,10 +1438,6 @@ function renderCsvPreview(popup, rows, fieldnames, projectId, farsiSrt = '', ger
             cell.append(editor);
             row.append(cell);
         });
-        row.append(
-            createCsvSubtitleCell(popup, findCsvSubtitleCue(germanCueIndex, record)),
-            createCsvSubtitleCell(popup, findCsvSubtitleCue(farsiCueIndex, record))
-        );
         return row;
     });
     appendPreviewTable(popup, headings, tableRows, 'csv-preview-table');

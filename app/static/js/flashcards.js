@@ -41,7 +41,7 @@
         if (!word) return quote;
         const pattern = new RegExp(escapeRegExp(word), 'i');
         if (!pattern.test(quote)) return quote;
-        return quote.replace(pattern, (match) => `<mark>${match}</mark>`);
+        return quote.replace(pattern, (match) => `<u>${match}</u>`);
     }
 
     function normalizeCards(rows) {
@@ -70,20 +70,24 @@
     function renderCard() {
         cardEl.classList.remove('is-flipped');
         const card = cards[order[currentIndex]];
-        const contextHtml = highlightWord(card.quoteDe, card.wordDe);
+        const quoteHtml = highlightWord(card.quoteDe, card.wordDe) || card.wordDe;
 
         if (direction === 'de-fa') {
             frontLabelEl.textContent = 'Deutsch';
-            frontTextEl.textContent = card.wordDe;
+            frontTextEl.innerHTML = quoteHtml;
+            frontTextEl.classList.add('fc-card-text--quote');
             backLabelEl.textContent = 'Farsi';
             backTextEl.textContent = card.keywordFa;
+            backTextEl.classList.remove('fc-card-text--quote');
         } else {
             frontLabelEl.textContent = 'Farsi';
             frontTextEl.textContent = card.keywordFa;
+            frontTextEl.classList.remove('fc-card-text--quote');
             backLabelEl.textContent = 'Deutsch';
-            backTextEl.textContent = card.wordDe;
+            backTextEl.innerHTML = quoteHtml;
+            backTextEl.classList.add('fc-card-text--quote');
         }
-        backContextEl.innerHTML = [card.explanationFa, contextHtml].filter(Boolean).join('<br><br>');
+        backContextEl.innerHTML = [card.explanationFa, card.contextDe].filter(Boolean).join('<br><br>');
 
         progressCurrentEl.textContent = String(currentIndex + 1);
         progressTotalEl.textContent = String(cards.length);

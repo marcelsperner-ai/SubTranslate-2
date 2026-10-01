@@ -36,6 +36,8 @@ body { margin: 0; }
 
 .fc-card-label { margin: 0; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: #84919a; }
 .fc-card-text { margin: 0; font-size: 1.5rem; font-weight: 600; unicode-bidi: plaintext; }
+.fc-card-text--quote { font-size: 1.15rem; font-weight: 500; line-height: 1.5; }
+.fc-card-text u { text-decoration-color: #176b58; text-decoration-thickness: 3px; text-underline-offset: 3px; font-weight: 700; }
 .fc-card-context { margin: 0; font-size: .95rem; color: #4d5962; unicode-bidi: plaintext; white-space: pre-wrap; }
 .fc-card-context mark { background: #ffe9a8; padding: 0 2px; border-radius: 3px; }
 
