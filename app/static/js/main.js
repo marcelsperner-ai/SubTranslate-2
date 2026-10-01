@@ -971,7 +971,7 @@ function createPreviewWindow(type) {
                 .csv-preview-actions button { border: 1px solid #84919a; border-radius: 4px; background: #fff; color: #20262b; padding: 4px 8px; font: inherit; font-size: .8rem; cursor: pointer; }
                 .csv-preview-actions button.primary { border-color: #176b58; background: #176b58; color: #fff; }
                 .csv-preview-actions button:disabled { opacity: .6; cursor: wait; }
-                .csv-cell-editor { display: block; width: 100%; min-width: 150px; min-height: 2rem; padding: 4px 6px; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; resize: vertical; }
+                .csv-cell-editor { display: block; width: 100%; min-width: 150px; min-height: 2rem; padding: 4px 6px; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; overflow: hidden; resize: none; }
                 .csv-cell-editor:focus { border-color: #6b9b8e; outline: 2px solid #d3e7e1; background: #fff; }
                 .csv-delete-row { width: 28px; height: 28px; padding: 0 !important; font-size: 1.2rem !important; line-height: 1; }
                 .empty { padding: 20px; color: #59636c; }
@@ -1016,6 +1016,11 @@ function showPreviewMessage(popup, message) {
     status.textContent = message;
 }
 
+function resizeCsvEditor(editor) {
+    editor.style.height = 'auto';
+    editor.style.height = `${editor.scrollHeight}px`;
+}
+
 function renderCsvPreview(popup, rows, fieldnames, projectId) {
     if (!fieldnames.length) {
         showPreviewMessage(popup, 'Keine CSV-Daten vorhanden.');
@@ -1025,14 +1030,18 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
     actions.className = 'csv-preview-actions';
     const saveButton = popup.document.createElement('button');
     saveButton.type = 'button';
-    saveButton.textContent = 'CSV speichern';
+    saveButton.textContent = 'Speichern';
     saveButton.hidden = true;
+    const discardButton = popup.document.createElement('button');
+    discardButton.type = 'button';
+    discardButton.textContent = 'Änderungen verwerfen';
+    discardButton.hidden = true;
     const rebuildButton = popup.document.createElement('button');
     rebuildButton.type = 'button';
     rebuildButton.className = 'primary';
     rebuildButton.textContent = 'ASS neu generieren';
     rebuildButton.hidden = true;
-    actions.append(saveButton, rebuildButton);
+    actions.append(saveButton, discardButton, rebuildButton);
     const headings = [actions, ...fieldnames];
     const tableRows = rows.map((record) => {
         const row = popup.document.createElement('tr');
@@ -1049,7 +1058,7 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
             const cell = popup.document.createElement('td');
             const editor = popup.document.createElement('textarea');
             editor.className = 'csv-cell-editor';
-            editor.rows = Math.min(4, Math.max(1, String(record[fieldname] ?? '').split('\n').length));
+            editor.rows = 1;
             editor.value = record[fieldname] ?? '';
             editor.setAttribute('aria-label', fieldname);
             cell.append(editor);
@@ -1059,16 +1068,20 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
     });
     appendPreviewTable(popup, headings, tableRows, 'csv-preview-table');
     const table = popup.document.querySelector('.csv-preview-table');
+    table.querySelectorAll('.csv-cell-editor').forEach(resizeCsvEditor);
     const body = table.tBodies[0];
     let dirty = false;
     const markDirty = () => {
         dirty = true;
         saveButton.hidden = false;
+        discardButton.hidden = false;
         rebuildButton.hidden = true;
         popup.document.getElementById('preview-status').textContent = 'Änderungen noch nicht gespeichert.';
     };
     body.addEventListener('input', (event) => {
-        if (event.target.matches('.csv-cell-editor')) markDirty();
+        if (!event.target.matches('.csv-cell-editor')) return;
+        resizeCsvEditor(event.target);
+        markDirty();
     });
     body.addEventListener('click', (event) => {
         if (!event.target.closest('.csv-delete-row')) return;
@@ -1095,6 +1108,7 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
             if (!response.ok) throw new Error(result.error || 'CSV konnte nicht gespeichert werden.');
             dirty = false;
             saveButton.hidden = true;
+            discardButton.hidden = true;
             rebuildButton.hidden = false;
             popup.document.getElementById('preview-status').textContent = `${result.row_count} CSV-Zeilen gespeichert.`;
         } catch (error) {
@@ -1102,7 +1116,22 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
         } finally {
             editors.forEach((editor) => { editor.disabled = false; });
             saveButton.disabled = false;
-            saveButton.textContent = 'CSV speichern';
+            saveButton.textContent = 'Speichern';
+        }
+    });
+    discardButton.addEventListener('click', async () => {
+        if (!popup.confirm('Ungespeicherte Änderungen verwerfen und die zuletzt gespeicherte CSV neu laden?')) return;
+        discardButton.disabled = true;
+        popup.document.getElementById('preview-status').textContent = 'Gespeicherte CSV wird neu geladen...';
+        try {
+            const response = await fetch(`/api/edtech/preview/${projectId}`);
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'CSV konnte nicht neu geladen werden.');
+            renderCsvPreview(popup, result.csv || [], result.csv_fieldnames || [], projectId);
+        } catch (error) {
+            showPreviewMessage(popup, error.message || 'CSV konnte nicht neu geladen werden.');
+        } finally {
+            discardButton.disabled = false;
         }
     });
     rebuildButton.addEventListener('click', async () => {
@@ -1124,6 +1153,9 @@ function renderCsvPreview(popup, rows, fieldnames, projectId) {
         rebuildButton.disabled = false;
     });
     const projectControls = csvPreviewControls.get(projectId) || new Set();
+    projectControls.forEach((control) => {
+        if (control.popup === popup) projectControls.delete(control);
+    });
     projectControls.add({popup, saveButton, rebuildButton});
     csvPreviewControls.set(projectId, projectControls);
     popup.addEventListener('pagehide', () => {
