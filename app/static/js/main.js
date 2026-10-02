@@ -1081,14 +1081,15 @@ form.addEventListener('submit', async (e) => {
 
         if (uploadRes.ok) {
             currentProjectId = uploadData.id;
+            const normalizedFilename = uploadData.original_filename || formData.get('file').name;
             const startRes = await fetch(`/api/start/${currentProjectId}`, { method: 'POST' });
             if (!startRes.ok) {
                 const startData = await startRes.json();
-                loadProjectToMain(currentProjectId, projectTitleText, 'pausiert', formData.get('file').name);
+                loadProjectToMain(currentProjectId, projectTitleText, 'pausiert', normalizedFilename);
                 alert("Projekt wurde angelegt, konnte aber nicht gestartet werden: " + startData.error);
                 return;
             }
-            loadProjectToMain(currentProjectId, projectTitleText, 'laufend', formData.get('file').name);
+            loadProjectToMain(currentProjectId, projectTitleText, 'laufend', normalizedFilename);
         } else {
             alert("Upload fehlgeschlagen: " + uploadData.error);
             formSection.classList.remove('locked');

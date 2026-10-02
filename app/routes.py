@@ -14,10 +14,11 @@ from app.db import (
     reset_translation_for_regeneration, update_translation_runtime_settings,
     get_default_settings, save_default_settings,
     get_export_locations, save_export_location, resolve_export_paths,
-    update_project_name
+    update_project_name, save_project_settings
 )
 from app.services.translation_service import start_translation_job
 from app.services.export_service import copy_file_to_export
+from app.services.subtitle_conversion_service import convert_ttml_to_srt
 
 main_bp = Blueprint('main', __name__)
 load_dotenv()
@@ -222,7 +223,7 @@ def build_prompt_payload(profile_key, episode_summary, custom_translation_prompt
 
 @main_bp.route('/api/upload', methods=['POST'])
 def upload_file():
-    """Nimmt eine SRT entgegen, speichert Einstellungen und legt ein Projekt an."""
+    """Nimmt SRT oder TTML entgegen und legt ein SRT-basiertes Projekt an."""
     if 'file' not in request.files:
         return jsonify({"error": "Keine Datei hochgeladen"}), 400
         
@@ -251,16 +252,55 @@ def upload_file():
     )
         
     filename = secure_filename(file.filename)
-    file_path = os.path.join(current_app.config['UPLOADS_DIR'], filename)
-    file.save(file_path)
-    
+    if not filename:
+        return jsonify({"error": "Ungueltiger Dateiname."}), 400
+
+    extension = os.path.splitext(filename)[1].lower()
+    if extension not in {'.srt', '.xml', '.ttml'}:
+        return jsonify({"error": "Unterstuetzte Formate: SRT, XML/TTML."}), 400
+
+    source_content = file.read()
+    if not source_content:
+        return jsonify({"error": "Die Datei ist leer."}), 400
+
+    stem = os.path.splitext(filename)[0]
+    content_prefix = source_content.lstrip(b'\xef\xbb\xbf \t\r\n')
+    is_ttml = extension in {'.xml', '.ttml'} or content_prefix.startswith((b'<?xml', b'<tt'))
+    if is_ttml:
+        try:
+            srt_content = convert_ttml_to_srt(source_content)
+        except ValueError as error:
+            return jsonify({"error": str(error)}), 400
+        project_filename = f'{stem}.srt'
+    else:
+        try:
+            srt_content = source_content.decode('utf-8-sig')
+        except UnicodeDecodeError:
+            srt_content = source_content.decode('iso-8859-1')
+        project_filename = f'{stem}.srt'
+
+    source_filename = filename
+    if is_ttml and source_filename.casefold() == project_filename.casefold():
+        source_filename = f'{stem}.source.xml'
+
     try:
-        subs = pysrt.open(file_path, encoding='utf-8')
-    except UnicodeDecodeError:
-        subs = pysrt.open(file_path, encoding='iso-8859-1')
+        subs = pysrt.from_string(srt_content)
+    except Exception as error:
+        return jsonify({"error": f"SRT konnte nicht gelesen werden: {error}"}), 400
+    if not subs:
+        return jsonify({"error": "Die Datei enthaelt keine Untertitel-Cues."}), 400
+
+    uploads_dir = current_app.config['UPLOADS_DIR']
+    source_path = os.path.join(uploads_dir, source_filename)
+    project_path = os.path.join(uploads_dir, project_filename)
+    with open(source_path, 'wb') as source_file:
+        source_file.write(source_content)
+    if project_path != source_path:
+        with open(project_path, 'w', encoding='utf-8', newline='') as project_file:
+            project_file.write(srt_content)
         
-    project_name = suggested_project_name(profile_key, episode_key, filename)
-    t_id = create_translation(filename, len(subs), sync_offset, profile_key, episode_key, project_name)
+    project_name = suggested_project_name(profile_key, episode_key, project_filename)
+    t_id = create_translation(project_filename, len(subs), sync_offset, profile_key, episode_key, project_name)
     
     # Zusammenfassung und Upload-Einstellungen gemeinsam speichern.
     save_project_settings(t_id, {
@@ -281,7 +321,13 @@ def upload_file():
         'hl_color': edtech_defaults['hl_color'],
     })
     
-    return jsonify({"message": "Projekt angelegt", "id": t_id}), 201
+    return jsonify({
+        "message": "Projekt angelegt",
+        "id": t_id,
+        "original_filename": project_filename,
+        "source_filename": source_filename,
+        "source_format": 'ttml' if is_ttml else 'srt',
+    }), 201
 
 @main_bp.route('/api/project/<int:t_id>/name', methods=['PUT'])
 def rename_project(t_id):

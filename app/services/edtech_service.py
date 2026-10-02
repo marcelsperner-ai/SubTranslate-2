@@ -348,9 +348,6 @@ GEPaarte UNTERTITEL-CUES:
         else:
             vokabeln_raw = json.loads(response.text)
             
-        if not 25 <= len(vokabeln_raw) <= 35:
-            raise ValueError(f'{len(vokabeln_raw)} Vokabeln erhalten; erwartet werden 25 bis 35.')
-
         canonicalize_vocabulary_cues(vokabeln_raw, cues)
         semantic_entries = [
             {'item_id': item_id, **vocabulary}

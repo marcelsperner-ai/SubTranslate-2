@@ -24,19 +24,19 @@ class FakeParsedItem:
 
 
 class FakeModels:
-    def __init__(self, invalid_count=False, semantic_warning=False, misassign_first=False):
+    def __init__(self, vocabulary_count=25, semantic_warning=False, misassign_first=False):
         self.calls = 0
-        self.invalid_count = invalid_count
+        self.vocabulary_count = vocabulary_count
         self.semantic_warning = semantic_warning
         self.misassign_first = misassign_first
 
     def generate_content(self, **kwargs):
         self.calls += 1
         if self.calls == 1:
-            cue_ids = range(1, 25) if self.invalid_count else range(1, 26)
+            cue_ids = range(1, self.vocabulary_count + 1)
             items = [
                 FakeParsedItem({
-                    'cue_id': 2 if self.misassign_first and cue_id == 1 else cue_id,
+                    'cue_id': 2 if self.misassign_first and cue_id == 1 else (cue_id - 1) % 25 + 1,
                     'german_quote': f'Wort{cue_id}',
                     'wort_deutsch': f'Wort{cue_id}',
                     'keyword_farsi': f'واژه{cue_id}',
@@ -52,7 +52,7 @@ class FakeModels:
                     'aligned': not (self.semantic_warning and cue_id == 1),
                     'reason': 'Bedeutung manuell prüfen' if self.semantic_warning and cue_id == 1 else '',
                 })
-                for cue_id in range(1, 26)
+                for cue_id in range(1, self.vocabulary_count + 1)
             ]
         return SimpleNamespace(parsed=items, text='')
 
@@ -195,21 +195,24 @@ class EdTechValidationTests(unittest.TestCase):
         edtech_service.canonicalize_vocabulary_cues([row], cues)
         self.assertEqual(row['Cue_ID'], 3)
 
-    def test_invalid_generation_keeps_existing_csv(self):
-        self.csv_path.write_text('previous csv content', encoding='utf-8')
+    def test_generation_above_recommended_vocabulary_count_writes_csv_and_ass(self):
         fake_client = FakeClient()
-        fake_client.models = FakeModels(invalid_count=True)
+        fake_client.models = FakeModels(vocabulary_count=36)
         with patch.object(edtech_service.genai, 'Client', return_value=fake_client):
-            with self.assertRaisesRegex(ValueError, '24 Vokabeln'):
-                edtech_service.generate_learning_subtitles(
-                    str(self.farsi_path),
-                    str(self.ass_path),
-                    german_srt_path=str(self.german_path),
-                    csv_filepath=str(self.csv_path),
-                    api_key='test-key',
-                    force_csv_regeneration=True,
-                )
-        self.assertEqual(self.csv_path.read_text(encoding='utf-8'), 'previous csv content')
+            ass_path, csv_path = edtech_service.generate_learning_subtitles(
+                str(self.farsi_path),
+                str(self.ass_path),
+                german_srt_path=str(self.german_path),
+                csv_filepath=str(self.csv_path),
+                api_key='test-key',
+                force_csv_regeneration=True,
+            )
+
+        with self.csv_path.open(encoding='utf-8-sig', newline='') as csv_file:
+            rows = list(csv.DictReader(csv_file))
+        self.assertEqual(len(rows), 36)
+        self.assertTrue(Path(ass_path).is_file())
+        self.assertTrue(Path(csv_path).is_file())
 
     def test_failed_ass_validation_keeps_existing_ass(self):
         self.write_valid_csv()

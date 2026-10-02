@@ -1,4 +1,4 @@
-1
+
 00:00:00,200 --> 00:00:02,920
 <font color="#0000FF">Untertitel:</font>
 <font color="#0000FF">Norddeutscher Rundfunk 2018</font>
