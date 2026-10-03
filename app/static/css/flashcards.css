@@ -38,6 +38,8 @@ body { margin: 0; }
 
 .fc-card-label { margin: 0; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: #84919a; }
 .fc-card-text { margin: 0; font-size: 1.5rem; font-weight: 600; unicode-bidi: plaintext; }
+.fc-card-word { margin: 0; font-size: 1.6rem; font-weight: 700; color: #176b58; }
+.fc-card-word.d-none { display: none; }
 .fc-card-text--quote { font-size: 1.15rem; font-weight: 500; line-height: 1.5; }
 .fc-card-text u { text-decoration-color: #176b58; text-decoration-thickness: 3px; text-underline-offset: 3px; font-weight: 700; }
 .fc-card-text .fc-blank { font-weight: 700; color: #176b58; letter-spacing: .1em; }

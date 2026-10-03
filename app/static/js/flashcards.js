@@ -11,6 +11,7 @@
     const frontLabelEl = document.getElementById('fcFrontLabel');
     const frontTextEl = document.getElementById('fcFrontText');
     const frontHintEl = document.getElementById('fcFrontHint');
+    const frontWordEl = document.getElementById('fcFrontWord');
     const backLabelEl = document.getElementById('fcBackLabel');
     const backTextEl = document.getElementById('fcBackText');
     const backContextEl = document.getElementById('fcBackContext');
@@ -143,6 +144,7 @@
 
     function renderCard() {
         cardEl.classList.remove('is-flipped');
+        frontWordEl.classList.add('d-none');
         const card = cards[order[currentIndex]];
         const quoteHtml = highlightWord(card) || escapeHtml(card.wordDe);
 
@@ -159,6 +161,8 @@
             backContextEl.innerHTML = [card.keywordFa, card.explanationFa, card.contextDe].filter(Boolean).join('<br><br>');
         } else if (direction === 'de-fa') {
             frontLabelEl.textContent = 'Deutsch';
+            frontWordEl.textContent = card.wordDe;
+            frontWordEl.classList.remove('d-none');
             frontTextEl.innerHTML = quoteHtml;
             frontTextEl.classList.add('fc-card-text--quote');
             frontHintEl.classList.add('d-none');
