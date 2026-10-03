@@ -25,7 +25,7 @@ from app.db import (
 )
 from app.prompt_manager import load_prompts, get_system_instruction, append_episode_summary
 from app.services.export_service import copy_file_to_export
-from app.services.review_service import find_duplicate_suspects, review_path, save_review_items, add_review_items
+from app.services.review_service import find_duplicate_suspects, restore_colors, review_path, save_review_items, add_review_items
 
 def send_email_with_attachments(receiver_email, subject, body, file_paths):
     sender_email = os.getenv("EMAIL_SENDER")
@@ -214,6 +214,10 @@ def translate_batch(client, text_batch, system_instruction, log_callback, model=
                 
                 trans_text = re.sub(r'</font>\s*<font', '</font>\n<font', trans_text)
                 
+                trans_text, colors_fixed = restore_colors(orig_text, trans_text)
+                if colors_fixed:
+                    log_callback(f"🎨 Farben bei Block {idx+1} aus dem Original wiederhergestellt.")
+
                 orig_lines = orig_text.count('\n')
                 trans_lines = trans_text.count('\n')
                 if orig_lines != trans_lines:

@@ -22,3 +22,20 @@ def test_review_items_are_stored_with_absolute_numbers(tmp_path):
     assert add_review_items(path, [(0, 2)], 25) == 1
     assert add_review_items(path, [(0, 2)], 25) == 0
     assert count_open(path) == 1
+
+
+from app.services.review_service import restore_colors
+
+
+def test_restore_colors_per_line():
+    src = '<font color="#00FF00">Hallo, Andi.</font>\n<font color="#FFFF00">Theo, du musst aufstehen.</font>'
+    tr = '<font color="#00FF00">سلام</font>\nباید پاشی'
+    fixed, changed = restore_colors(src, tr)
+    assert changed
+    assert fixed == '<font color="#00FF00">سلام</font>\n<font color="#FFFF00">باید پاشی</font>'
+
+
+def test_restore_colors_unchanged_when_equal_or_ambiguous():
+    src = '<font color="#FFFFFF">A</font>\n<font color="#FF0000">B</font>'
+    assert restore_colors(src, src) == (src, False)
+    assert restore_colors(src, "یک خط") == ("یک خط", False)

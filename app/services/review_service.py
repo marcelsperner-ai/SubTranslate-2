@@ -65,3 +65,30 @@ def add_review_items(path, pairs, offset):
 
 def count_open(path):
     return sum(1 for item in load_review_items(path) if item.get("status") == "open")
+
+
+_COLOR_RE = re.compile(r'<font\s+color="([^"]+)"', re.IGNORECASE)
+_FONT_TAG_RE = re.compile(r'</?font[^>]*>', re.IGNORECASE)
+
+
+def restore_colors(source, translated):
+    """Setzt die font-Farben des Originals wieder ein, wenn die Übersetzung abweicht.
+
+    Rückgabe: (Text, geändert). Nicht eindeutig zuordenbare Fälle bleiben unverändert.
+    """
+    source_colors = _COLOR_RE.findall(source)
+    if not source_colors or _COLOR_RE.findall(translated) == source_colors:
+        return translated, False
+    plain_lines = [line.strip() for line in _FONT_TAG_RE.sub("", translated).splitlines() if line.strip()]
+    source_lines = [line for line in source.splitlines() if line.strip()]
+    if len(plain_lines) == len(source_lines):
+        line_colors = [(_COLOR_RE.findall(line) or [None])[0] for line in source_lines]
+    elif len(set(source_colors)) == 1:
+        line_colors = [source_colors[0]] * len(plain_lines)
+    else:
+        return translated, False
+    rebuilt = [
+        f'<font color="{color}">{line}</font>' if color else line
+        for line, color in zip(plain_lines, line_colors)
+    ]
+    return "\n".join(rebuilt), True
