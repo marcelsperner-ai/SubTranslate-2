@@ -1407,7 +1407,7 @@ btnOpenFlashcards.addEventListener('click', () => {
     window.open(`/lernkarten/${currentProjectId}`, '_blank');
 });
 
-function createPreviewWindow(type) {
+function createPreviewWindow(type, projectName = projectTitle.textContent) {
     const popup = window.open('', '_blank', 'popup=yes,width=1440,height=960,resizable=yes,scrollbars=yes');
     if (!popup) {
         alert('Das Vorschaufenster wurde vom Browser blockiert. Bitte Pop-ups für diese Seite erlauben.');
@@ -1424,9 +1424,12 @@ function createPreviewWindow(type) {
                 :root { color-scheme: light; font: 15px/1.5 system-ui, sans-serif; color: #20262b; background: #f5f6f7; }
                 * { box-sizing: border-box; }
                 body { margin: 0; }
-                main { max-width: 1500px; margin: 0 auto; padding: 28px 32px 48px; }
-                h1 { margin: 0 0 16px; font-size: 1.5rem; font-weight: 650; }
-                #preview-status { margin: 12px 0; color: #59636c; }
+                .preview-header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px 32px; border-bottom: 1px solid #d9dee2; background: #fff; }
+                .preview-heading { min-width: 0; }
+                .preview-project-name { overflow: hidden; color: #20262b; font-size: .95rem; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+                h1 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+                #preview-status { margin: 0; color: #59636c; text-align: right; }
+                main { max-width: 1500px; margin: 0 auto; padding: 20px 32px 48px; }
                 .table-wrap { overflow: auto; max-height: calc(100vh - 120px); background: white; border: 1px solid #d9dee2; }
                 table { width: 100%; border-collapse: collapse; }
                 table.ass-table { width: max-content; min-width: 0; }
@@ -1455,13 +1458,14 @@ function createPreviewWindow(type) {
                 .csv-delete-row { width: 28px; height: 28px; padding: 0 !important; font-size: 1.2rem !important; line-height: 1; }
                 .csv-subtitle-preview { min-width: 220px; max-width: 420px; padding: 8px 10px; background: #000; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; unicode-bidi: plaintext; }
                 .empty { padding: 20px; color: #59636c; }
-                @media (max-width: 700px) { main { padding: 18px 12px 32px; } .timestamp { min-width: 170px; } .subtitle { min-width: 260px; } }
+                @media (max-width: 700px) { .preview-header { align-items: flex-start; flex-direction: column; gap: 4px; padding: 10px 12px; } #preview-status { text-align: left; } main { padding: 18px 12px 32px; } .timestamp { min-width: 170px; } .subtitle { min-width: 260px; } }
             </style>
         </head>
-        <body><main><h1 id="preview-title"></h1><div id="preview-status">Vorschau wird geladen ...</div><div id="preview-content"></div></main></body>
+        <body><header class="preview-header"><div class="preview-heading"><div class="preview-project-name" id="preview-project-name"></div><h1 id="preview-title"></h1></div><div id="preview-status">Vorschau wird geladen ...</div></header><main><div id="preview-content"></div></main></body>
         </html>`);
     popup.document.close();
-    popup.document.title = `${type.toUpperCase()}-Vorschau`;
+    popup.document.title = `${type.toUpperCase()}-Vorschau – ${projectName}`;
+    popup.document.getElementById('preview-project-name').textContent = projectName;
     popup.document.getElementById('preview-title').textContent = `${type.toUpperCase()}-Vorschau`;
     return popup;
 }
