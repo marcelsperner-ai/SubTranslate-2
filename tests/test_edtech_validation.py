@@ -9,7 +9,7 @@ import app.services.edtech_service as edtech_service
 
 
 CSV_FIELDS = [
-    'Cue_ID', 'Zeitstempel', 'Farsi_Keyword', 'German_Quote', 'Deutsches_Wort',
+    'Cue_ID', 'Zeitstempel', 'Farsi_Keyword', 'Farsi_Hervorhebung', 'German_Quote', 'Deutsches_Wort',
     'Erklärung auf Farsi', 'Erklärung im Kontext der Geschichte',
     'Semantik_Status', 'Semantik_Hinweis',
 ]
@@ -40,6 +40,7 @@ class FakeModels:
                     'german_quote': f'Wort{cue_id}',
                     'wort_deutsch': f'Wort{cue_id}',
                     'keyword_farsi': f'واژه{cue_id}',
+                    'highlight_farsi': f'واژه{cue_id}',
                     'erklaerung_farsi': f'معنی{cue_id}',
                     'erklaerung_kontext': f'Kontext {cue_id}',
                 })
@@ -90,6 +91,7 @@ class EdTechValidationTests(unittest.TestCase):
                 'Cue_ID': cue_id,
                 'Zeitstempel': f'00:00:{cue_id * 2:02d},000',
                 'Farsi_Keyword': f'واژه{cue_id}',
+                'Farsi_Hervorhebung': f'واژه{cue_id}',
                 'German_Quote': f'Wort{cue_id}',
                 'Deutsches_Wort': f'Wort{cue_id}',
                 'Erklärung auf Farsi': f'معنی{cue_id}',
@@ -113,6 +115,7 @@ class EdTechValidationTests(unittest.TestCase):
         self.farsi_path.write_text('\n\n'.join(self.farsi_subtitles), encoding='utf-8')
         rows[0].update({
             'Farsi_Keyword': 'سر',
+            'Farsi_Hervorhebung': 'سر',
             'German_Quote': 'Der Sohn',
             'Deutsches_Wort': 'Sohn',
         })
@@ -130,6 +133,55 @@ class EdTechValidationTests(unittest.TestCase):
         self.assertEqual(cue_one_mismatches[0]['other_cue_ids'], [2])
         self.assertTrue(any('Doppeltes Keyword' in issue['message'] for issue in report['data_issues']))
         self.assertFalse(report['ts_mismatches'])
+
+    def test_semantic_keyword_can_use_exact_distinct_highlight_phrase(self):
+        rows = self.write_valid_csv()
+        rows[0]['Farsi_Keyword'] = 'مفهوم'
+        rows[0]['Farsi_Hervorhebung'] = 'ترجمه'
+        with self.csv_path.open('w', encoding='utf-8-sig', newline='') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=CSV_FIELDS)
+            writer.writeheader()
+            writer.writerows(rows)
+
+        report = edtech_service.validate_edtech_csv(
+            str(self.german_path), str(self.farsi_path), str(self.csv_path)
+        )
+        self.assertFalse([item for item in report['kw_mismatches'] if item['cue_id'] == 1])
+
+        edtech_service.generate_learning_subtitles(
+            str(self.farsi_path), str(self.ass_path), german_srt_path=str(self.german_path),
+            csv_filepath=str(self.csv_path), highlight_underline=True,
+        )
+        dialogue = next(
+            line for line in self.ass_path.read_text(encoding='utf-8').splitlines()
+            if line.startswith('Dialogue: 0,0:00:02.00,')
+        )
+        self.assertIn(r'{\u1}ترجمه{\u0}', dialogue)
+        self.assertNotIn(r'{\u1}مفهوم{\u0}', dialogue)
+
+    def test_invalid_highlight_is_reported_and_not_applied(self):
+        rows = self.write_valid_csv()
+        rows[0]['Farsi_Hervorhebung'] = 'متن غایب'
+        with self.csv_path.open('w', encoding='utf-8-sig', newline='') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=CSV_FIELDS)
+            writer.writeheader()
+            writer.writerows(rows)
+
+        report = edtech_service.validate_edtech_csv(
+            str(self.german_path), str(self.farsi_path), str(self.csv_path)
+        )
+        mismatch = next(item for item in report['kw_mismatches'] if item['cue_id'] == 1)
+        self.assertEqual(mismatch['field'], 'Farsi_Hervorhebung')
+
+        edtech_service.generate_learning_subtitles(
+            str(self.farsi_path), str(self.ass_path), german_srt_path=str(self.german_path),
+            csv_filepath=str(self.csv_path), highlight_underline=True,
+        )
+        dialogue = next(
+            line for line in self.ass_path.read_text(encoding='utf-8').splitlines()
+            if line.startswith('Dialogue: 0,0:00:02.00,')
+        )
+        self.assertNotIn(r'{\u1}', dialogue)
 
     def test_generator_writes_cue_ids_and_semantic_warnings(self):
         fake_client = FakeClient()
@@ -150,6 +202,7 @@ class EdTechValidationTests(unittest.TestCase):
         self.assertEqual(len(rows), 25)
         self.assertEqual(rows[0]['Cue_ID'], '1')
         self.assertEqual(rows[0]['Zeitstempel'], '00:00:02,000')
+        self.assertEqual(rows[0]['Farsi_Hervorhebung'], 'واژه1')
         self.assertEqual(rows[0]['Semantik_Status'], 'PRÜFEN')
         ass_text = self.ass_path.read_text(encoding='utf-8')
         first_dialogue = next(

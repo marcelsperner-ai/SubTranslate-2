@@ -1,0 +1,23 @@
+{% macro subtranslate_loader(size=80) -%}
+<span class="subtranslate-loader" aria-hidden="true">
+    <svg viewBox="0 0 100 100" width="{{ size }}" height="{{ size }}" xmlns="http://www.w3.org/2000/svg">
+        <g class="film-ring">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#d8c8e8" stroke-width="8" opacity="0.5" />
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#7a8288" stroke-width="6" stroke-dasharray="4 8" stroke-linecap="round" />
+        </g>
+        <g class="flower-center">
+            <g fill="#c5aee0">
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" />
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" transform="rotate(45 50 50)" />
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" transform="rotate(90 50 50)" />
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" transform="rotate(135 50 50)" />
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" transform="rotate(180 50 50)" />
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" transform="rotate(225 50 50)" />
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" transform="rotate(270 50 50)" />
+                <path d="M50 18 C58 30, 58 42, 50 48 C42 42, 42 30, 50 18 Z" transform="rotate(315 50 50)" />
+            </g>
+            <circle cx="50" cy="50" r="5" fill="#7a8288" />
+        </g>
+    </svg>
+</span>
+{%- endmacro %}

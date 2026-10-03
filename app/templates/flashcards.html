@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lernkarten{{ ' – ' + project_name if project_name else '' }}</title>
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='images/subtranslate-header-mark.jpeg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/flashcards.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
+    {% from "macros/loader.html" import subtranslate_loader %}
 </head>
 <body>
     <main class="flashcards-page" data-t-id="{{ t_id }}" data-project-missing="{{ 'true' if project_missing else 'false' }}">
@@ -20,7 +23,10 @@
             </div>
         </header>
 
-        <div id="fcStatus" class="fc-status">Lernkarten werden geladen …</div>
+        <div id="fcStatus" class="fc-status" role="status" aria-live="polite">
+            {{ subtranslate_loader() }}
+            <span>Lernkarten werden geladen …</span>
+        </div>
 
         <section id="fcDeck" class="fc-deck d-none">
             <p class="fc-progress"><span id="fcProgressCurrent">0</span> / <span id="fcProgressTotal">0</span></p>

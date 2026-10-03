@@ -1938,6 +1938,7 @@ previewLinks.addEventListener('click', async (event) => {
 function unlockEdtech(availableDownloads = currentAvailableDownloads) {
     const wasLocked = edtechPaneLocked;
     currentAvailableDownloads = availableDownloads;
+    edtechPromptInput.disabled = !edtechPromptLoaded || !availableDownloads.srt;
     edtechZone.classList.remove('disabled-overlay');
     edtechStatusBox.style.display = 'none';
     edtechActiveBox.style.display = 'block';
@@ -1993,7 +1994,8 @@ function setMismatchActionsBusy(isBusy) {
 
 function showMismatchProgress(message) {
     validationResult.className = 'alert alert-info';
-    validationResult.innerHTML = `<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>${message}`;
+    const loaderTemplate = document.getElementById('subtranslateLoaderTemplate');
+    validationResult.replaceChildren(loaderTemplate.content.cloneNode(true), document.createTextNode(` ${message}`));
     validationResult.classList.remove('d-none');
 }
 
@@ -2132,6 +2134,8 @@ generateEdtechForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     btnGenerateEdtech.disabled = true;
     btnGenerateEdtech.textContent = 'Generiere CSV...';
+    const edtechMainTab = document.querySelector('#edtechZone .nav-link[href="#ed-main"]');
+    if (edtechMainTab) bootstrap.Tab.getOrCreateInstance(edtechMainTab).show();
     generateAssAfterValidation = true;
     setPreviewAvailability({...currentAvailableDownloads, ass: false});
     
@@ -2152,8 +2156,6 @@ generateEdtechForm.addEventListener('submit', async (e) => {
         let result = await res.json();
         
         if (res.ok) {
-            const edtechMainTab = document.querySelector('#edtechZone .nav-link[href="#ed-main"]');
-            if (edtechMainTab) bootstrap.Tab.getOrCreateInstance(edtechMainTab).show();
             currentAvailableDownloads.csv = true;
             currentAvailableDownloads.ass = false;
             hasGeneratedAss = false;

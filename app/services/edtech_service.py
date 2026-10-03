@@ -21,20 +21,22 @@ Felder je Eintrag:
 3. "wort_deutsch": Grundform für die Infobox (Infinitiv, Singular, ggf. mit Artikel oder "jemanden/etwas"; feste Wendungen in Grundform). Immer ein vollständiger, eigenständiger Ausdruck, kein Satzfragment (nicht "von ganz oben", sondern z.B. "die Riege"). Keine Satzzeichen, auch kein "!" oder "?" am Ende.
 4. "wortform_im_zitat": die Textstelle in german_quote, die dem Wort entspricht. MUSS eine zusammenhängende, zeichengenaue Teilzeichenkette von german_quote sein (inkl. Beugung, z.B. "Spinnt" für "spinnen", "angebaggert" für "anbaggern"). Darf nicht der ganze Satz sein und höchstens 4 Wörter umfassen. Leer lassen, wenn "luecken_segmente" gesetzt ist.
 5. "luecken_segmente": PFLICHT bei trennbaren Verben, deren Teile im Zitat getrennt stehen, und bei mehrteiligen Wendungen mit Lücke dazwischen (z.B. "in Rechnung stellen"): ALLE Bestandteile zeichengenau in Reihenfolge des Zitats, getrennt durch "|". Auch Verb und Präfix/Partikel gehören dazu: "bekommt|mit" (mitkriegen), "legt|auf" (auflegen), "hau|ab" (abhauen). Wortform allein (nur "mit" oder "legt") ist falsch. Bei langen Wendungen nur die Kernbestandteile als Segmente, Füllwörter (mir, mich, nicht, wieder, noch, da, ...) weglassen: "frier|den Arsch ab", "bringst|ins Grab". Steht das Verb am Stück (z.B. "abgehauen", "aufzumachen"), genügt wortform_im_zitat. Sonst leerer String.
-6. "keyword_farsi": MUSS zu 100 % zeichengenau aus dem Farsi-Text desselben Cue kopiert werden.
-7. "erklaerung_farsi": Bedeutung auf Farsi.
-8. "erklaerung_kontext": kurzer deutscher Satz zur Handlung.
-9. "stilregister": genau einer dieser Werte oder leer: "norddeutsch", "umgangssprachlich", "derb", "Jugendsprache", "gehoben". Nur setzen, wenn der Ausdruck auffällig vom neutralen Standarddeutsch abweicht; höchstens bei einem Drittel aller Einträge. Kein "Redewendung" oder ähnliche Typangaben, sonst leer.
+6. "keyword_farsi": Bedeutung des deutschen Ausdrucks auf Farsi; darf sinngemäß formuliert sein.
+7. "highlight_farsi": eine kurze, exakt und zusammenhängend aus dem Farsi-Text desselben Cues kopierte Stelle, die in den Untertiteln hervorgehoben wird. Keine Übersetzung oder Umformulierung. Wenn sich keine passende Stelle findet, leer lassen.
+8. "erklaerung_farsi": Bedeutung auf Farsi.
+9. "erklaerung_kontext": kurzer deutscher Satz zur Handlung.
+10. "stilregister": genau einer dieser Werte oder leer: "norddeutsch", "umgangssprachlich", "derb", "Jugendsprache", "gehoben". Nur setzen, wenn der Ausdruck auffällig vom neutralen Standarddeutsch abweicht; höchstens bei einem Drittel aller Einträge. Kein "Redewendung" oder ähnliche Typangaben, sonst leer.
 Regeln: wort_deutsch und german_quote dürfen nicht bis auf Satzzeichen identisch sein. Bei Grüßen/Interjektionen mit sehr kurzem Zitat (z.B. "Moin.") ist das nur erlaubt, wenn der Cue nicht mehr Text enthält; dann wortform_im_zitat leer lassen. german_quote enthält keine Musik- oder Sprecherzeichen (#, ♪, -).
 Beispiele:
 - Zitat "Spinnt ihr jetzt hier alle?" -> wort_deutsch "spinnen", wortform_im_zitat "Spinnt", luecken_segmente "".
 - Zitat "Ich hau jetzt ab!" -> wort_deutsch "abhauen", wortform_im_zitat "", luecken_segmente "hau|ab".
 - Zitat "Hier unten bekommt man vieles nicht mit." -> wort_deutsch "etwas mitkriegen", wortform_im_zitat "", luecken_segmente "bekommt|mit".
 - Zitat "Der hat mich mal angebaggert." -> wort_deutsch "jemanden anbaggern", wortform_im_zitat "angebaggert", luecken_segmente "".
+- Farsi_Keyword darf sinngemäß sein; highlight_farsi muss dagegen exakt aus demselben Farsi-Cue kopiert sein.
 - Zitat "Du bringst mich noch ins Grab." -> wort_deutsch "jemanden ins Grab bringen", wortform_im_zitat "", luecken_segmente "bringst|ins Grab" (nicht "bringst mich noch ins Grab").
 - Schlecht: wort_deutsch "Mal langsam!" bei Zitat "Mal langsam." (identisch bis auf Satzzeichen)."""
 EDTECH_CSV_COLUMNS = (
-    "Cue_ID", "Zeitstempel", "Farsi_Keyword", "German_Quote", "Deutsches_Wort",
+    "Cue_ID", "Zeitstempel", "Farsi_Keyword", "Farsi_Hervorhebung", "German_Quote", "Deutsches_Wort",
     "Wortform_im_Zitat", "Lücken_Segmente",
     "Erklärung auf Farsi", "Erklärung im Kontext der Geschichte", "Register",
     "Semantik_Status", "Semantik_Hinweis", "Form_Status", "Form_Hinweis",
@@ -47,6 +49,7 @@ class Vokabel(BaseModel):
     wortform_im_zitat: str
     luecken_segmente: str
     keyword_farsi: str
+    highlight_farsi: str
     erklaerung_farsi: str
     erklaerung_kontext: str
     stilregister: str
@@ -284,22 +287,31 @@ def validate_edtech_csv(german_srt_path, farsi_srt_path, csv_filepath):
                 'message': row.get('Form_Hinweis') or 'Wortform im Zitat prüfen.'
             })
 
-        if contains_persian_keyword(assigned_subtitle.text, keyword):
+        highlight_phrase = (
+            (row.get('Farsi_Hervorhebung') or '').strip()
+            if 'Farsi_Hervorhebung' in fieldnames
+            else keyword
+        )
+        if highlight_phrase and contains_persian_keyword(assigned_subtitle.text, highlight_phrase):
             actual_time = _srt_start_time(assigned_subtitle)
             if csv_time != actual_time:
                 timestamp_mismatches.append({
-                    'index': row_index, 'cue_id': cue_id, 'keyword': keyword,
+                    'index': row_index, 'cue_id': cue_id, 'keyword': highlight_phrase,
                     'csv_time': csv_time, 'srt_time': actual_time, 'other_cue_ids': []
                 })
             continue
 
+        checked_phrase = (
+            highlight_phrase if 'Farsi_Hervorhebung' in fieldnames else keyword
+        )
         neighboring_ids = [cue_id - 1, cue_id + 1]
         other_cue_ids = [
             neighbor_id for neighbor_id in neighboring_ids
-            if neighbor_id in farsi_by_id and contains_persian_keyword(farsi_by_id[neighbor_id].text, keyword)
+            if neighbor_id in farsi_by_id and contains_persian_keyword(farsi_by_id[neighbor_id].text, checked_phrase)
         ]
         keyword_mismatches.append({
-            'index': row_index, 'cue_id': cue_id, 'keyword': keyword,
+            'index': row_index, 'cue_id': cue_id, 'keyword': checked_phrase or '(Feld leer)',
+            'field': 'Farsi_Hervorhebung' if 'Farsi_Hervorhebung' in fieldnames else 'Farsi_Keyword',
             'csv_time': csv_time,
             'srt_time': _srt_start_time(farsi_by_id[other_cue_ids[0]]) if other_cue_ids else 'Nicht im Cue oder direkten Nachbar-Cues gefunden',
             'other_cue_ids': other_cue_ids,
@@ -373,7 +385,7 @@ def gemini_followup_fix_mismatches(
             if local_id in cue_lookup:
                 local_cues[local_id] = cue_lookup[local_id]
     prompt = f"""Du bist ein präziser Daten-Analyst für Untertitel.
-Korrigiere ausschließlich markierte CSV-Zeilen. Ein Farsi_Keyword darf nur im zugewiesenen Cue_ID oder seinen direkten Nachbar-Cues vorkommen.
+Korrigiere ausschließlich markierte CSV-Zeilen. Wenn field=Farsi_Hervorhebung, ändere nur dieses Feld: Es muss exakt aus dem Farsi-Text des zugewiesenen Cue_ID oder seiner direkten Nachbar-Cues kopiert werden. Lass Farsi_Keyword unverändert; es ist die sinngemäße Bedeutung und muss nicht wörtlich im Untertitel stehen.
 Ändere Cue_ID nur dann, wenn eine eindeutige lokale Zuordnung nachweisbar ist. Erfinde oder verschiebe keine Untertitelnummern.
 Zeitstempel müssen exakt zum Start des tatsächlich zugewiesenen Cue passen. Gib die vollständige CSV mit allen Originalspalten aus.
 
@@ -598,6 +610,7 @@ GEPaarte CUES:
                 'Cue_ID': cue_id,
                 'Zeitstempel': cue_time,
                 'Farsi_Keyword': vocabulary['keyword_farsi'],
+                'Farsi_Hervorhebung': vocabulary.get('highlight_farsi', ''),
                 'German_Quote': vocabulary['german_quote'],
                 'Deutsches_Wort': vocabulary['wort_deutsch'],
                 'Wortform_im_Zitat': vocabulary.get('wortform_im_zitat', ''),
@@ -658,6 +671,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 'cue_id': int(row['Cue_ID']) if row.get('Cue_ID', '').strip().isdigit() else None,
                 'zeit': row['Zeitstempel'].strip(), 
                 'keyword_farsi': row['Farsi_Keyword'].strip(),
+                'highlight_farsi': (
+                    (row.get('Farsi_Hervorhebung') or '').strip()
+                    if 'Farsi_Hervorhebung' in (reader.fieldnames or [])
+                    else row['Farsi_Keyword'].strip()
+                ),
                 'wort_deutsch': row['Deutsches_Wort'].strip(),
                 'erklaerung_farsi': row['Erklärung auf Farsi'].strip(),
                 'erklaerung_kontext': row['Erklärung im Kontext der Geschichte'].strip(),
@@ -732,11 +750,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 else:
                     highlight_tag = r"\1"
                     
-                regex_pattern = re.escape(vokabel['keyword_farsi']).replace(r'\ ', r'(?:\s+|\\N)')
-                keyword_pattern = re.compile(
-                    rf"(?:(?<=\\N)|(?<![\w\u200c]))({regex_pattern})(?![\w\u200c])"
-                )
-                text_farsi = keyword_pattern.sub(highlight_tag, text_farsi)
+                highlight_phrase = vokabel['highlight_farsi']
+                source_farsi = '\n'.join(lines[2:])
+                if highlight_phrase and contains_persian_keyword(source_farsi, highlight_phrase):
+                    regex_pattern = re.escape(highlight_phrase).replace(r'\ ', r'(?:\s+|\\N)')
+                    highlight_pattern = re.compile(
+                        rf"(?:(?<=\\N)|(?<![\w\u200c]))({regex_pattern})(?![\w\u200c])"
+                    )
+                    text_farsi = highlight_pattern.sub(highlight_tag, text_farsi)
                                
                 lemma_text = f"{{\\b1}}{vokabel['wort_deutsch']}{{\\b0}}"
                 if vokabel['register'] in INFOBOX_REGISTERS:

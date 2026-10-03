@@ -1,0 +1,37 @@
+.subtranslate-loader {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.subtranslate-loader svg {
+    display: block;
+}
+
+.film-ring {
+    transform-origin: 50px 50px;
+    animation: subtranslate-spin 2.5s linear infinite;
+}
+
+.flower-center {
+    transform-origin: 50px 50px;
+    animation: subtranslate-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes subtranslate-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes subtranslate-pulse {
+    0%, 100% { transform: scale(0.85) rotate(0deg); opacity: 0.85; }
+    50% { transform: scale(1.08) rotate(15deg); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .film-ring,
+    .flower-center {
+        animation: none;
+    }
+}
