@@ -166,9 +166,14 @@ def contains_persian_keyword(text, keyword):
 
 def _read_srt(path):
     try:
-        return pysrt.open(path, encoding='utf-8')
+        subs = pysrt.open(path, encoding='utf-8-sig')
     except UnicodeDecodeError:
-        return pysrt.open(path, encoding='iso-8859-1')
+        subs = pysrt.open(path, encoding='iso-8859-1')
+    # pysrt lässt nicht-numerische Nummern (BOM, fehlend) als str/None stehen
+    for position, sub in enumerate(subs, start=1):
+        if not isinstance(sub.index, int):
+            sub.index = position
+    return subs
 
 def _srt_start_time(subtitle):
     return f"{subtitle.start.hours:02d}:{subtitle.start.minutes:02d}:{subtitle.start.seconds:02d},{subtitle.start.milliseconds:03d}"

@@ -2,5 +2,5 @@ Flask==3.0.0
 google-genai==2.25.0
 # Den direkten pydantic-Pin entfernen; google-genai fordert selbst pydantic>=2.12.5,<3
 pysrt==1.1.2
-PyYAML==6.0.1
+PyYAML>=6.0.3
 python-dotenv==1.0.1
