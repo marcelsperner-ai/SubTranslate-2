@@ -10,6 +10,21 @@ import pysrt
 from pydantic import BaseModel
 from app.prompt_manager import append_episode_summary
 
+EDTECH_GENERATION_INSTRUCTIONS = """Erstelle 25 bis 35 Vokabeleinträge aus den exakt gepaarten Untertiteln.
+Für jeden Eintrag gib folgende Felder zurück:
+1. "cue_id": die Nummer des Untertitels, aus dem das deutsche Wort und Farsi-Keyword stammen.
+2. "german_quote": ein eindeutiges, wortgetreues deutsches Zitat aus genau diesem Untertitel.
+3. "wort_deutsch": das deutsche Wort.
+4. "keyword_farsi": MUSS zu 100 % zeichengenau aus dem Farsi-Text desselben Cue kopiert werden.
+5. "erklaerung_farsi": Bedeutung auf Farsi.
+6. "erklaerung_kontext": kurzer deutscher Satz zur Handlung.
+Wähle keine Wörter, deren deutsche und persische Stelle nicht eindeutig demselben Cue zugeordnet werden können."""
+EDTECH_CSV_COLUMNS = (
+    "Cue_ID", "Zeitstempel", "Farsi_Keyword", "German_Quote", "Deutsches_Wort",
+    "Erklärung auf Farsi", "Erklärung im Kontext der Geschichte",
+    "Semantik_Status", "Semantik_Hinweis",
+)
+
 class Vokabel(BaseModel):
     cue_id: int
     german_quote: str
@@ -316,15 +331,7 @@ def generate_learning_subtitles(
             for cue in cues
         )
         prompt = f"""{base_instruction}
-Erstelle 25 bis 35 Vokabeleinträge aus den exakt gepaarten Untertiteln.
-Für jeden Eintrag gib folgende Felder zurück:
-1. "cue_id": die Nummer des Untertitels, aus dem das deutsche Wort und Farsi-Keyword stammen.
-2. "german_quote": ein eindeutiges, wortgetreues deutsches Zitat aus genau diesem Untertitel.
-3. "wort_deutsch": das deutsche Wort.
-4. "keyword_farsi": MUSS zu 100 % zeichengenau aus dem Farsi-Text desselben Cue kopiert werden.
-5. "erklaerung_farsi": Bedeutung auf Farsi.
-6. "erklaerung_kontext": kurzer deutscher Satz zur Handlung.
-Wähle keine Wörter, deren deutsche und persische Stelle nicht eindeutig demselben Cue zugeordnet werden können.
+{EDTECH_GENERATION_INSTRUCTIONS}
 
 ZUSAMMENFASSUNG:
 {summary or 'Keine Episodenzusammenfassung angegeben.'}
@@ -400,11 +407,7 @@ GEPaarte CUES:
                 'Semantik_Hinweis': semantic.get('reason', '') if not semantic.get('aligned') else '',
             })
 
-        csv_fields = [
-            'Cue_ID', 'Zeitstempel', 'Farsi_Keyword', 'German_Quote', 'Deutsches_Wort',
-            'Erklärung auf Farsi', 'Erklärung im Kontext der Geschichte',
-            'Semantik_Status', 'Semantik_Hinweis',
-        ]
+        csv_fields = list(EDTECH_CSV_COLUMNS)
         temporary_csv = f'{csv_filepath}.tmp'
         try:
             with open(temporary_csv, 'w', encoding='utf-8-sig', newline='') as csv_file:

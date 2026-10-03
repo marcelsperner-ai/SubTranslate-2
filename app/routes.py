@@ -14,8 +14,9 @@ from app.db import (
     reset_translation_for_regeneration, update_translation_runtime_settings,
     get_default_settings, save_default_settings,
     get_export_locations, save_export_location, resolve_export_paths,
-    update_project_name, save_project_settings
+    update_project_name, save_project_settings, update_edtech_prompt
 )
+from app.services.edtech_service import EDTECH_CSV_COLUMNS, EDTECH_GENERATION_INSTRUCTIONS
 from app.services.translation_service import start_translation_job
 from app.services.export_service import copy_file_to_export
 from app.services.subtitle_conversion_service import convert_ttml_to_srt
@@ -209,16 +210,25 @@ def get_episode_summary(profile_key, episode_key):
         print(f"Fehler beim Lesen der summaries.yaml: {e}")
         return ""
 
-def build_prompt_payload(profile_key, episode_summary, custom_translation_prompt=''):
+def build_prompt_payload(
+    profile_key,
+    episode_summary,
+    custom_translation_prompt='',
+    custom_edtech_prompt=''
+):
     prompts_data = load_prompts()
     base_prompt = get_system_instruction(prompts_data, profile_key)
     trans_prompt = append_episode_summary(custom_translation_prompt or base_prompt, episode_summary)
     edtech_prompt = append_episode_summary(
-        get_edtech_instruction(prompts_data, profile_key), episode_summary
+        custom_edtech_prompt or get_edtech_instruction(prompts_data, profile_key),
+        episode_summary
     )
     return {
         "translation_prompt": trans_prompt,
-        "edtech_prompt": edtech_prompt
+        "edtech_prompt": edtech_prompt,
+        "edtech_prompt_is_custom": bool(custom_edtech_prompt),
+        "edtech_generation_instructions": EDTECH_GENERATION_INSTRUCTIONS,
+        "edtech_csv_columns": list(EDTECH_CSV_COLUMNS),
     }
 
 @main_bp.route('/api/upload', methods=['POST'])
@@ -573,6 +583,10 @@ def generate_edtech(t_id):
         episode_summary = data.get('episode_summary', t.get('episode_summary', ''))
         profile_key = data.get('profile_key', t.get('profile_key', 'default'))
         gemini_model = data.get('edtech_model', data.get('gemini_model', t.get('edtech_model') or t.get('gemini_model', 'gemini-3.1-flash-lite')))
+        if 'custom_edtech_prompt' in data:
+            if not isinstance(data['custom_edtech_prompt'], str):
+                return jsonify({"error": "Der EdTech-Prompt muss Text sein."}), 400
+            update_edtech_prompt(t_id, data['custom_edtech_prompt'].strip())
         custom_edtech_prompt = data.get('custom_edtech_prompt', '').strip()
 
         # 2. Sauberes Dictionary für die DB bauen und speichern
@@ -683,8 +697,22 @@ def get_prompts(t_id):
     return jsonify(build_prompt_payload(
         t.get('profile_key', 'default'),
         episode_summary,
-        t.get('custom_translation_prompt', '')
+        t.get('custom_translation_prompt', ''),
+        t.get('custom_edtech_prompt', '')
     ))
+
+@main_bp.route('/api/edtech/prompt/<int:t_id>', methods=['PUT'])
+def save_edtech_prompt(t_id):
+    if not get_translation_by_id(t_id):
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict) or not isinstance(data.get('prompt'), str):
+        return jsonify({"error": "Ein Prompt-Text ist erforderlich."}), 400
+    prompt = data['prompt'].strip()
+    if not prompt:
+        return jsonify({"error": "Der Prompt darf nicht leer sein."}), 400
+    update_edtech_prompt(t_id, prompt)
+    return jsonify({"message": "EdTech-Prompt für dieses Projekt gespeichert."})
 
 @main_bp.route('/api/edtech/preview/<int:t_id>', methods=['GET'])
 def preview_edtech_files(t_id):

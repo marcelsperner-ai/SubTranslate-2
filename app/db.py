@@ -60,6 +60,7 @@ def init_db():
         "infobox_content": "TEXT DEFAULT 'Nur deutsches Wort'",
         "episode_summary": "TEXT DEFAULT ''",
         "custom_translation_prompt": "TEXT DEFAULT ''",
+        "custom_edtech_prompt": "TEXT DEFAULT ''",
         "gemini_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
         "translation_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
         "edtech_model": "TEXT DEFAULT 'gemini-3.1-flash-lite'",
@@ -354,6 +355,18 @@ def update_translation_prompt(t_id, prompt):
     conn = get_db_connection()
     c = conn.cursor()
     c.execute("UPDATE translations SET custom_translation_prompt = ?, last_updated = ? WHERE id = ?", (prompt, datetime.now().isoformat(), t_id))
+    success = c.rowcount > 0
+    conn.commit()
+    conn.close()
+    return success
+
+def update_edtech_prompt(t_id, prompt):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute(
+        "UPDATE translations SET custom_edtech_prompt = ?, last_updated = ? WHERE id = ?",
+        (prompt, datetime.now().isoformat(), t_id)
+    )
     success = c.rowcount > 0
     conn.commit()
     conn.close()

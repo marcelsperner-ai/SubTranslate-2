@@ -224,6 +224,15 @@
         .edtech-prompt-header {
             flex: 0 0 auto;
         }
+        .edtech-generation-rules {
+            flex: 0 0 auto;
+            max-height: 35%;
+            overflow-y: auto;
+            margin-bottom: 0.5rem;
+        }
+        .edtech-generation-rules pre {
+            white-space: pre-wrap;
+        }
         .edtech-prompt-content {
             flex: 1 1 auto;
             min-height: 0;
@@ -650,6 +659,12 @@
                                 <span id="edtechPromptSaveStatus" class="text-muted small" aria-live="polite">Noch kein Prompt geladen.</span>
                             </div>
                         </div>
+                        <details class="edtech-generation-rules" open>
+                            <summary class="small fw-bold">Zusätzliche feste CSV-Generierungsanweisungen</summary>
+                            <p class="small text-muted mb-1">Diese Regeln werden zusammen mit dem Prompt oben an Gemini übergeben. Die gepaarten Untertitel-Cues des Projekts werden zur Generierung dynamisch ergänzt.</p>
+                            <pre id="edtechGenerationInstructions" class="small text-wrap mb-1"></pre>
+                            <p class="small mb-0"><strong>CSV-Spalten:</strong> <span id="edtechCsvColumns"></span></p>
+                        </details>
                         <div class="edtech-prompt-content">
                             <textarea id="edtechPromptInput" class="form-control font-monospace" dir="auto" spellcheck="false" disabled placeholder="SRT-Datei generieren, um den Prompt zu laden"></textarea>
                         </div>

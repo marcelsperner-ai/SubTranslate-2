@@ -63,6 +63,8 @@ const edtechPromptInput = document.getElementById('edtechPromptInput');
 const edtechPromptSaveButton = document.getElementById('btnSaveEdtechPrompt');
 const regenerateEdtechPromptButton = document.getElementById('btnRegenerateEdtechPrompt');
 const edtechPromptSaveStatus = document.getElementById('edtechPromptSaveStatus');
+const edtechGenerationInstructions = document.getElementById('edtechGenerationInstructions');
+const edtechCsvColumns = document.getElementById('edtechCsvColumns');
 const fixModal = new bootstrap.Modal(document.getElementById('fixModal'));
 const timestampMismatchList = document.getElementById('timestampMismatchList');
 const keywordMismatchList = document.getElementById('keywordMismatchList');
@@ -214,7 +216,7 @@ translationModelSelect.addEventListener('change', scheduleTranslationSettingsSav
 function updateEdtechPromptActions() {
     const hasPromptChange = edtechPromptLoaded && edtechPromptChanged && edtechPromptInput.value.trim();
     edtechPromptSaveButton.disabled = !hasPromptChange || edtechPromptConfirmed;
-    regenerateEdtechPromptButton.disabled = !hasPromptChange || !edtechPromptConfirmed || !currentProjectId || !currentAvailableDownloads.srt;
+    regenerateEdtechPromptButton.disabled = !edtechPromptConfirmed || !currentProjectId || !currentAvailableDownloads.srt;
 }
 
 translationSyncOffsetInput.addEventListener('change', () => {
@@ -524,11 +526,16 @@ function renderPromptTabs(promptData, editable = false) {
     if (edTab) {
         edtechPromptInput.value = promptData.edtech_prompt || '';
         edtechPromptInput.disabled = !editable || !currentAvailableDownloads.srt;
+        edtechGenerationInstructions.textContent = promptData.edtech_generation_instructions || '';
+        edtechCsvColumns.textContent = (promptData.edtech_csv_columns || []).join(', ');
+        if (!edtechPromptChanged) {
+            edtechPromptConfirmed = Boolean(promptData.edtech_prompt_is_custom);
+        }
         updateEdtechPromptActions();
         edtechPromptSaveStatus.textContent = editable && currentAvailableDownloads.srt
             ? (edtechPromptChanged
                 ? (edtechPromptConfirmed ? 'Prompt geändert – gilt nur für dieses Projekt.' : 'Prompt geändert – noch nicht bestätigt.')
-                : 'Prompt aus YAML geladen.')
+                : (promptData.edtech_prompt_is_custom ? 'Projektprompt geladen.' : 'Prompt aus YAML geladen.'))
             : 'Prompt-Vorschau';
     }
 }
@@ -637,10 +644,33 @@ edtechPromptInput.addEventListener('input', () => {
     updateEdtechPromptActions();
 });
 
-edtechPromptSaveButton.addEventListener('click', () => {
-    edtechPromptConfirmed = true;
-    edtechPromptSaveStatus.textContent = 'Prompt geändert – gilt nur für dieses Projekt.';
-    updateEdtechPromptActions();
+edtechPromptSaveButton.addEventListener('click', async () => {
+    if (!currentProjectId || !edtechPromptInput.value.trim()) return;
+    const projectId = currentProjectId;
+    const prompt = edtechPromptInput.value;
+    edtechPromptSaveButton.disabled = true;
+    edtechPromptSaveStatus.textContent = 'Prompt wird gespeichert...';
+    try {
+        const response = await fetch(`/api/edtech/prompt/${projectId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'EdTech-Prompt konnte nicht gespeichert werden.');
+        if (projectId === currentProjectId && prompt === edtechPromptInput.value) {
+            edtechPromptChanged = false;
+            edtechPromptConfirmed = true;
+            edtechPromptSaveStatus.textContent = result.message;
+        }
+    } catch (error) {
+        if (projectId === currentProjectId) {
+            edtechPromptConfirmed = false;
+            edtechPromptSaveStatus.textContent = error.message;
+        }
+    } finally {
+        if (projectId === currentProjectId) updateEdtechPromptActions();
+    }
 });
 
 regenerateEdtechPromptButton.addEventListener('click', () => {
@@ -2122,6 +2152,8 @@ generateEdtechForm.addEventListener('submit', async (e) => {
         let result = await res.json();
         
         if (res.ok) {
+            const edtechMainTab = document.querySelector('#edtechZone .nav-link[href="#ed-main"]');
+            if (edtechMainTab) bootstrap.Tab.getOrCreateInstance(edtechMainTab).show();
             currentAvailableDownloads.csv = true;
             currentAvailableDownloads.ass = false;
             hasGeneratedAss = false;
@@ -2131,7 +2163,7 @@ generateEdtechForm.addEventListener('submit', async (e) => {
             validationResult.textContent = 'CSV erstellt. Prüfung läuft...';
             validationResult.classList.remove('d-none');
             edtechPromptSaveStatus.textContent = edtechPromptConfirmed
-                ? 'CSV mit dem geänderten Prompt erstellt.'
+                ? 'CSV mit dem Projektprompt erstellt.'
                 : 'CSV erstellt.';
             await validateEdtech();
         } else {
