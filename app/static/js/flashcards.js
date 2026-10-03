@@ -43,23 +43,77 @@
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
-    function highlightWord(quote, word) {
-        if (!quote) return '';
-        if (!word) return quote;
-        const pattern = new RegExp(escapeRegExp(word), 'i');
-        if (!pattern.test(quote)) return quote;
-        return quote.replace(pattern, (match) => `<u>${match}</u>`);
+    function escapeHtml(text) {
+        return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    function blankWord(quote, word) {
-        if (!quote || !word) return null;
-        const pattern = new RegExp(escapeRegExp(word), 'i');
-        if (!pattern.test(quote)) return null;
-        return quote.replace(pattern, () => '<span class="fc-blank">_____</span>');
+    function foldQuotes(text) {
+        return text.replace(/[\u2018\u2019\u00b4`]/g, "'").toLowerCase();
+    }
+
+    function findParts(quote, parts) {
+        const folded = foldQuotes(quote);
+        const ranges = [];
+        let position = 0;
+        for (const part of parts) {
+            const needle = foldQuotes(part.trim());
+            if (!needle) continue;
+            const pattern = new RegExp(`(?<![\\p{L}\\p{N}_])${escapeRegExp(needle)}(?![\\p{L}\\p{N}_])`, 'u');
+            const match = pattern.exec(folded.slice(position));
+            if (!match) return null;
+            const start = position + match.index;
+            ranges.push([start, start + needle.length]);
+            position = start + needle.length;
+        }
+        return ranges.length ? ranges : null;
+    }
+
+    function findRanges(card) {
+        const quote = card.quoteDe;
+        if (!quote) return null;
+        if (card.segments.length) {
+            const bySegments = findParts(quote, card.segments);
+            if (bySegments) return bySegments;
+        }
+        if (card.formDe) {
+            const byForm = findParts(quote, [card.formDe]);
+            if (byForm) return byForm;
+        }
+        const index = foldQuotes(quote).indexOf(foldQuotes(card.wordDe));
+        return card.wordDe && index >= 0 ? [[index, index + card.wordDe.length]] : null;
+    }
+
+    function renderRanges(quote, ranges, wrap) {
+        if (!ranges) return escapeHtml(quote);
+        let html = '';
+        let cursor = 0;
+        ranges.forEach(([start, end]) => {
+            html += escapeHtml(quote.slice(cursor, start)) + wrap(escapeHtml(quote.slice(start, end)));
+            cursor = end;
+        });
+        return html + escapeHtml(quote.slice(cursor));
+    }
+
+    function highlightWord(card) {
+        if (!card.quoteDe) return '';
+        return renderRanges(card.quoteDe, findRanges(card), (text) => `<u>${text}</u>`);
+    }
+
+    function blankWord(card) {
+        const ranges = findRanges(card);
+        if (!ranges) return null;
+        return renderRanges(card.quoteDe, ranges, () => '<span class="fc-blank">_____</span>');
+    }
+
+    function stripPunctuation(text) {
+        return text.replace(/[^\p{L}\p{N}]/gu, '').toLowerCase();
     }
 
     function isClozeEligible(card) {
-        return card.quoteDe.trim().toLowerCase() !== card.wordDe.trim().toLowerCase();
+        const ranges = findRanges(card);
+        if (!ranges) return false;
+        const covered = ranges.map(([start, end]) => card.quoteDe.slice(start, end)).join('');
+        return stripPunctuation(covered) !== stripPunctuation(card.quoteDe);
     }
 
     function normalizeCards(rows) {
@@ -69,6 +123,8 @@
                 timestamp: row.Zeitstempel || '',
                 wordDe: (row.Deutsches_Wort || '').trim(),
                 quoteDe: (row.German_Quote || '').trim(),
+                formDe: (row['Wortform_im_Zitat'] || '').trim(),
+                segments: (row['Lücken_Segmente'] || '').split('|').map((part) => part.trim()).filter(Boolean),
                 keywordFa: (row.Farsi_Keyword || '').trim(),
                 explanationFa: (row['Erklärung auf Farsi'] || '').trim(),
                 contextDe: (row['Erklärung im Kontext der Geschichte'] || '').trim(),
@@ -88,10 +144,10 @@
     function renderCard() {
         cardEl.classList.remove('is-flipped');
         const card = cards[order[currentIndex]];
-        const quoteHtml = highlightWord(card.quoteDe, card.wordDe) || card.wordDe;
+        const quoteHtml = highlightWord(card) || escapeHtml(card.wordDe);
 
         if (mode === 'cloze') {
-            const blankedHtml = blankWord(card.quoteDe, card.wordDe) || '<span class="fc-blank">_____</span>';
+            const blankedHtml = blankWord(card) || '<span class="fc-blank">_____</span>';
             frontLabelEl.textContent = 'Lückentext';
             frontTextEl.innerHTML = blankedHtml;
             frontTextEl.classList.add('fc-card-text--quote');

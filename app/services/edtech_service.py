@@ -2,6 +2,7 @@ import os
 import re
 import csv
 import json
+import logging
 from io import StringIO
 from datetime import datetime, timedelta
 from google import genai
@@ -10,33 +11,138 @@ import pysrt
 from pydantic import BaseModel
 from app.prompt_manager import append_episode_summary
 
-EDTECH_GENERATION_INSTRUCTIONS = """Erstelle 25 bis 35 Vokabeleinträge aus den exakt gepaarten Untertiteln.
-Für jeden Eintrag gib folgende Felder zurück:
+logger = logging.getLogger(__name__)
+
+EDTECH_GENERATION_INSTRUCTIONS = """Erstelle bis zu 35 Vokabeleinträge aus den exakt gepaarten Untertiteln. Qualität vor Menge: nimm nur Einträge, deren deutsche und persische Stelle eindeutig demselben Cue zugeordnet werden können.
+Jeder Eintrag hat zwei Verwendungen: (A) eine Infobox, die die Grundform (Lemma) zeigt, und (B) Lernmodi (Karteikarte, Lückentext), die die tatsächliche Wortform im Zitat unterstreichen bzw. ausblenden. Dafür gibt es getrennte Felder.
+Felder je Eintrag:
 1. "cue_id": die Nummer des Untertitels, aus dem das deutsche Wort und Farsi-Keyword stammen.
-2. "german_quote": ein eindeutiges, wortgetreues deutsches Zitat aus genau diesem Untertitel.
-3. "wort_deutsch": das deutsche Wort.
-4. "keyword_farsi": MUSS zu 100 % zeichengenau aus dem Farsi-Text desselben Cue kopiert werden.
-5. "erklaerung_farsi": Bedeutung auf Farsi.
-6. "erklaerung_kontext": kurzer deutscher Satz zur Handlung.
-Wähle keine Wörter, deren deutsche und persische Stelle nicht eindeutig demselben Cue zugeordnet werden können."""
+2. "german_quote": wortgetreues deutsches Zitat aus genau diesem Untertitel. Es soll der vollständige Satz oder Teilsatz aus dem Cue sein, nicht nur die Wendung selbst.
+3. "wort_deutsch": Grundform für die Infobox (Infinitiv, Singular, ggf. mit Artikel oder "jemanden/etwas"; feste Wendungen in Grundform). Immer ein vollständiger, eigenständiger Ausdruck, kein Satzfragment (nicht "von ganz oben", sondern z.B. "die Riege"). Keine Satzzeichen, auch kein "!" oder "?" am Ende.
+4. "wortform_im_zitat": die Textstelle in german_quote, die dem Wort entspricht. MUSS eine zusammenhängende, zeichengenaue Teilzeichenkette von german_quote sein (inkl. Beugung, z.B. "Spinnt" für "spinnen", "angebaggert" für "anbaggern"). Darf nicht der ganze Satz sein und höchstens 4 Wörter umfassen. Leer lassen, wenn "luecken_segmente" gesetzt ist.
+5. "luecken_segmente": PFLICHT bei trennbaren Verben, deren Teile im Zitat getrennt stehen, und bei mehrteiligen Wendungen mit Lücke dazwischen (z.B. "in Rechnung stellen"): ALLE Bestandteile zeichengenau in Reihenfolge des Zitats, getrennt durch "|". Auch Verb und Präfix/Partikel gehören dazu: "bekommt|mit" (mitkriegen), "legt|auf" (auflegen), "hau|ab" (abhauen). Wortform allein (nur "mit" oder "legt") ist falsch. Bei langen Wendungen nur die Kernbestandteile als Segmente, Füllwörter (mir, mich, nicht, wieder, noch, da, ...) weglassen: "frier|den Arsch ab", "bringst|ins Grab". Steht das Verb am Stück (z.B. "abgehauen", "aufzumachen"), genügt wortform_im_zitat. Sonst leerer String.
+6. "keyword_farsi": MUSS zu 100 % zeichengenau aus dem Farsi-Text desselben Cue kopiert werden.
+7. "erklaerung_farsi": Bedeutung auf Farsi.
+8. "erklaerung_kontext": kurzer deutscher Satz zur Handlung.
+9. "stilregister": genau einer dieser Werte oder leer: "norddeutsch", "umgangssprachlich", "derb", "Jugendsprache", "gehoben". Nur setzen, wenn der Ausdruck auffällig vom neutralen Standarddeutsch abweicht; höchstens bei einem Drittel aller Einträge. Kein "Redewendung" oder ähnliche Typangaben, sonst leer.
+Regeln: wort_deutsch und german_quote dürfen nicht bis auf Satzzeichen identisch sein. Bei Grüßen/Interjektionen mit sehr kurzem Zitat (z.B. "Moin.") ist das nur erlaubt, wenn der Cue nicht mehr Text enthält; dann wortform_im_zitat leer lassen. german_quote enthält keine Musik- oder Sprecherzeichen (#, ♪, -).
+Beispiele:
+- Zitat "Spinnt ihr jetzt hier alle?" -> wort_deutsch "spinnen", wortform_im_zitat "Spinnt", luecken_segmente "".
+- Zitat "Ich hau jetzt ab!" -> wort_deutsch "abhauen", wortform_im_zitat "", luecken_segmente "hau|ab".
+- Zitat "Hier unten bekommt man vieles nicht mit." -> wort_deutsch "etwas mitkriegen", wortform_im_zitat "", luecken_segmente "bekommt|mit".
+- Zitat "Der hat mich mal angebaggert." -> wort_deutsch "jemanden anbaggern", wortform_im_zitat "angebaggert", luecken_segmente "".
+- Zitat "Du bringst mich noch ins Grab." -> wort_deutsch "jemanden ins Grab bringen", wortform_im_zitat "", luecken_segmente "bringst|ins Grab" (nicht "bringst mich noch ins Grab").
+- Schlecht: wort_deutsch "Mal langsam!" bei Zitat "Mal langsam." (identisch bis auf Satzzeichen)."""
 EDTECH_CSV_COLUMNS = (
     "Cue_ID", "Zeitstempel", "Farsi_Keyword", "German_Quote", "Deutsches_Wort",
-    "Erklärung auf Farsi", "Erklärung im Kontext der Geschichte",
-    "Semantik_Status", "Semantik_Hinweis",
+    "Wortform_im_Zitat", "Lücken_Segmente",
+    "Erklärung auf Farsi", "Erklärung im Kontext der Geschichte", "Register",
+    "Semantik_Status", "Semantik_Hinweis", "Form_Status", "Form_Hinweis",
 )
 
 class Vokabel(BaseModel):
     cue_id: int
     german_quote: str
     wort_deutsch: str
+    wortform_im_zitat: str
+    luecken_segmente: str
     keyword_farsi: str
     erklaerung_farsi: str
     erklaerung_kontext: str
+    stilregister: str
 
 class SemanticAlignment(BaseModel):
     item_id: int
     aligned: bool
     reason: str
+
+class WordFormFix(BaseModel):
+    item_id: int
+    wortform_im_zitat: str
+    luecken_segmente: str
+
+def _fold_german(text):
+    text = (text or '').replace('\u2019', "'").replace('\u2018', "'").replace('\u00b4', "'").replace('`', "'")
+    return re.sub(r'\s+', ' ', text).strip().casefold()
+
+MAX_FORM_WORDS = 4
+INFOBOX_REGISTERS = {'norddeutsch', 'derb', 'gehoben', 'Jugendsprache'}
+ALLOWED_REGISTERS = {
+    'norddeutsch': 'norddeutsch', 'umgangssprachlich': 'umgangssprachlich', 'derb': 'derb',
+    'jugendsprache': 'Jugendsprache', 'gehoben': 'gehoben',
+}
+SEPARABLE_PREFIXES = (
+    'zurück', 'zusammen', 'weiter', 'heraus', 'hinein', 'herum', 'raus', 'rein', 'rum', 'runter', 'rauf',
+    'herab', 'herauf', 'heran', 'hinaus', 'hinunter', 'hinzu', 'dazu', 'dabei', 'davon', 'vorbei',
+    'fest', 'fort', 'frei', 'dicht', 'bereit', 'teil', 'statt', 'weg', 'los', 'hin', 'her', 'mit', 'nach',
+    'vor', 'auf', 'aus', 'ab', 'an', 'ein', 'zu', 'um', 'durch', 'über', 'unter',
+)
+LEMMA_FILLER_WORDS = {
+    'etwas', 'jemanden', 'jemandem', 'jemand', 'sich', 'mir', 'mich', 'ein', 'eine', 'einen', 'einem',
+    'der', 'die', 'das', 'den', 'dem', 'des', 'zu',
+}
+_EDGE_PUNCTUATION = ' \t\u2026.!?,;:"\'\u201e\u201c\u201d\u00bb\u00ab'
+_QUOTE_NOISE = ' \t#*\u266a\u266b\u2013\u2014-'
+
+def clean_lemma(lemma):
+    return (lemma or '').strip(_EDGE_PUNCTUATION)
+
+def clean_quote(quote):
+    return re.sub(r'\s+', ' ', (quote or '').strip(_QUOTE_NOISE)).strip()
+
+def normalize_register(value):
+    return ALLOWED_REGISTERS.get(_fold_german(value), '')
+
+def _word_tokens(text):
+    return re.findall(r"[\w']+", text or '')
+
+def plausibility_issue(lemma, wortform, segments):
+    """Erkennt zu schwache Wortformen: trennbares Verb oder Wendung nur durch ein Einzelwort abgedeckt."""
+    if (segments or '').strip():
+        return ''
+    form_tokens = _word_tokens(wortform)
+    if len(form_tokens) > MAX_FORM_WORDS:
+        return f'Wortform hat {len(form_tokens)} Wörter; nur Kernbestandteile als Segmente verwenden (max. {MAX_FORM_WORDS}).'
+    if len(form_tokens) != 1:
+        return ''
+    form = _fold_german(form_tokens[0])
+    lemma_tokens = _word_tokens(clean_lemma(lemma))
+    content = [t for t in lemma_tokens if t.casefold() not in LEMMA_FILLER_WORDS]
+    if len(content) >= 2:
+        return f'Wortform "{form_tokens[0]}" deckt die mehrteilige Wendung "{clean_lemma(lemma)}" nicht ab.'
+    if not lemma_tokens or not lemma_tokens[-1][:1].islower():
+        return ''
+    verb = _fold_german(lemma_tokens[-1])
+    prefix = next((p for p in SEPARABLE_PREFIXES if verb.startswith(p) and len(verb) > len(p) + 2), None)
+    if prefix and (prefix not in form or len(form) <= len(prefix) + 1):
+        return f'Trennbares Verb "{clean_lemma(lemma)}": Wortform "{form_tokens[0]}" enthält Präfix "{prefix}" nicht; Segmente verwenden.'
+    return ''
+
+def verify_word_form(quote, wortform, segments, lemma=''):
+    """Prüft Wortform bzw. Lücken-Segmente gegen das Zitat.
+    Status: OK, KEINE_LÜCKE (Zitat nicht lückentauglich), PRÜFEN (fehlerhaft)."""
+    folded_quote = _fold_german(quote)
+    parts = [_fold_german(part) for part in (segments or '').split('|') if part.strip()]
+    form = _fold_german(wortform)
+    if not parts and not form:
+        if _normalized_quote(quote) == _normalized_quote(lemma) or len(folded_quote.split()) < 2:
+            return 'KEINE_LÜCKE', 'Zitat ist (bis auf Satzzeichen) mit dem Wort identisch oder zu kurz.'
+        return 'PRÜFEN', 'Weder Wortform noch Lücken-Segmente angegeben.'
+    position = 0
+    for part in (parts or [form]):
+        match = re.compile(r'(?<!\w)' + re.escape(part) + r'(?!\w)').search(folded_quote, position)
+        if not match:
+            return 'PRÜFEN', f'"{part}" kommt nicht (in dieser Reihenfolge) im Zitat vor.'
+        position = match.end()
+    covered = ''.join(parts or [form])
+    if _normalized_quote(covered).replace(' ', '') == _normalized_quote(quote).replace(' ', ''):
+        if len(_word_tokens(quote)) > MAX_FORM_WORDS:
+            return 'PRÜFEN', f'Wortform deckt das ganze Zitat ab ({len(_word_tokens(quote))} Wörter); nur Kernbestandteile als Segmente verwenden (max. {MAX_FORM_WORDS}).'
+        return 'KEINE_LÜCKE', 'Wortform entspricht dem ganzen Zitat.'
+    issue = plausibility_issue(lemma, wortform, segments)
+    if issue:
+        return 'PRÜFEN', issue
+    return 'OK', ''
 
 def normalize_persian(text):
     if not text:
@@ -172,6 +278,12 @@ def validate_edtech_csv(german_srt_path, farsi_srt_path, csv_filepath):
                 'message': row.get('Semantik_Hinweis') or 'Semantische Zuordnung prüfen.'
             })
 
+        if row.get('Form_Status') == 'PRÜFEN':
+            data_issues.append({
+                'index': row_index, 'cue_id': cue_id,
+                'message': row.get('Form_Hinweis') or 'Wortform im Zitat prüfen.'
+            })
+
         if contains_persian_keyword(assigned_subtitle.text, keyword):
             actual_time = _srt_start_time(assigned_subtitle)
             if csv_time != actual_time:
@@ -291,6 +403,88 @@ REGELN:
             os.remove(temporary_csv)
     return True
 
+def _log_usage(label, response):
+    usage = getattr(response, 'usage_metadata', None)
+    if usage:
+        logger.info(
+            'EdTech-%s: Eingabe-Tokens=%s, Ausgabe-Tokens=%s, Gesamt=%s',
+            label, usage.prompt_token_count, usage.candidates_token_count, usage.total_token_count
+        )
+
+def _clean_vocabulary(vokabeln):
+    for vocabulary in vokabeln:
+        vocabulary['wort_deutsch'] = clean_lemma(vocabulary.get('wort_deutsch', ''))
+        vocabulary['german_quote'] = clean_quote(vocabulary.get('german_quote', ''))
+        vocabulary['wortform_im_zitat'] = (vocabulary.get('wortform_im_zitat') or '').strip()
+        vocabulary['stilregister'] = normalize_register(vocabulary.get('stilregister', ''))
+    return vokabeln
+
+def _flag_duplicate_lemmas(vokabeln):
+    seen = {}
+    for vocabulary in vokabeln:
+        key = _fold_german(vocabulary.get('wort_deutsch', ''))
+        if key in seen and not vocabulary.get('form_hinweis'):
+            vocabulary['form_hinweis'] = f'Lemma doppelt (wie Cue {seen[key]}).'
+        seen.setdefault(key, vocabulary.get('cue_id'))
+
+def _apply_form_status(vocabulary):
+    status, hint = verify_word_form(
+        vocabulary.get('german_quote', ''), vocabulary.get('wortform_im_zitat', ''),
+        vocabulary.get('luecken_segmente', ''), vocabulary.get('wort_deutsch', '')
+    )
+    vocabulary['form_status'] = status
+    vocabulary['form_hinweis'] = hint
+    return status
+
+def _verify_and_fix_word_forms(client, model, vokabeln, cues):
+    """Verifiziert Wortformen per Code und korrigiert Fehler gezielt in einem Zusatzaufruf."""
+    failed = [index for index, vocabulary in enumerate(vokabeln) if _apply_form_status(vocabulary) == 'PRÜFEN']
+    if not failed or client is None:
+        return vokabeln
+    cue_by_id = {cue['cue_id']: cue for cue in cues}
+    entries = []
+    for index in failed:
+        vocabulary = vokabeln[index]
+        cue = cue_by_id.get(int(vocabulary['cue_id']), {})
+        entries.append({
+            'item_id': index + 1,
+            'german_quote': vocabulary['german_quote'],
+            'wort_deutsch': vocabulary['wort_deutsch'],
+            'wortform_im_zitat': vocabulary.get('wortform_im_zitat', ''),
+            'luecken_segmente': vocabulary.get('luecken_segmente', ''),
+            'problem': vocabulary['form_hinweis'],
+            'cue_deutsch': cue.get('german_text', ''),
+        })
+    prompt = f"""Korrigiere für jeden Eintrag nur die Felder wortform_im_zitat und luecken_segmente.
+wortform_im_zitat muss eine zusammenhängende, zeichengenaue Teilzeichenkette von german_quote sein (gebeugte Form des Worts, nicht der ganze Satz).
+Die Wortform hat höchstens 4 Wörter; bei längeren Wendungen nur die Kernbestandteile als Segmente ohne Füllwörter (mir, mich, nicht, wieder, noch, da, ...), z.B. "frier|den Arsch ab".
+Bei getrennten Teilen (z.B. trennbare Verben) wortform_im_zitat leer lassen und luecken_segmente als zeichengenaue Teile in Zitat-Reihenfolge mit "|" trennen, z.B. "hau|ab".
+Gib genau ein Ergebnis je item_id zurück.
+
+EINTRÄGE:
+{json.dumps(entries, ensure_ascii=False)}"""
+    try:
+        response = client.models.generate_content(
+            model=model, contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0,
+                response_schema=list[WordFormFix],
+                thinking_config=types.ThinkingConfig(thinking_budget=0)
+            )
+        )
+        _log_usage('Wortform-Korrektur', response)
+        fixes = [item.model_dump() for item in response.parsed] if response.parsed else json.loads(response.text)
+    except Exception as error:
+        logger.warning('EdTech-Wortform-Korrektur fehlgeschlagen: %s', error)
+        return vokabeln
+    for fix in fixes:
+        index = int(fix['item_id']) - 1
+        if index in failed:
+            vokabeln[index]['wortform_im_zitat'] = fix.get('wortform_im_zitat', '')
+            vokabeln[index]['luecken_segmente'] = fix.get('luecken_segmente', '')
+            _apply_form_status(vokabeln[index])
+    return vokabeln
+
 def generate_learning_subtitles(
     farsi_srt_path, ass_filepath, summary="", api_key=None, german_srt_path=None, 
     csv_filepath=None, generate_csv_only=False, custom_system_instruction=None,
@@ -350,12 +544,16 @@ GEPaarte UNTERTITEL-CUES:
             model=model, contents=prompt, config=config
         )
         
+        _log_usage('Generierung', response)
         if response.parsed:
             vokabeln_raw = [v.model_dump() for v in response.parsed]
         else:
             vokabeln_raw = json.loads(response.text)
             
         canonicalize_vocabulary_cues(vokabeln_raw, cues)
+        _clean_vocabulary(vokabeln_raw)
+        _verify_and_fix_word_forms(client, model, vokabeln_raw, cues)
+        _flag_duplicate_lemmas(vokabeln_raw)
         semantic_entries = [
             {'item_id': item_id, **vocabulary}
             for item_id, vocabulary in enumerate(vokabeln_raw, start=1)
@@ -378,6 +576,7 @@ GEPaarte CUES:
                 thinking_config=types.ThinkingConfig(thinking_budget=0)
             )
         )
+        _log_usage('Semantik-Prüfung', semantic_response)
         if semantic_response.parsed:
             semantic_results = [item.model_dump() for item in semantic_response.parsed]
         else:
@@ -401,10 +600,15 @@ GEPaarte CUES:
                 'Farsi_Keyword': vocabulary['keyword_farsi'],
                 'German_Quote': vocabulary['german_quote'],
                 'Deutsches_Wort': vocabulary['wort_deutsch'],
+                'Wortform_im_Zitat': vocabulary.get('wortform_im_zitat', ''),
+                'Lücken_Segmente': vocabulary.get('luecken_segmente', ''),
                 'Erklärung auf Farsi': vocabulary['erklaerung_farsi'],
                 'Erklärung im Kontext der Geschichte': vocabulary.get('erklaerung_kontext', ''),
+                'Register': vocabulary.get("stilregister", ""),
                 'Semantik_Status': 'OK' if semantic.get('aligned') else 'PRÜFEN',
                 'Semantik_Hinweis': semantic.get('reason', '') if not semantic.get('aligned') else '',
+                'Form_Status': vocabulary.get('form_status', ''),
+                'Form_Hinweis': vocabulary.get('form_hinweis', ''),
             })
 
         csv_fields = list(EDTECH_CSV_COLUMNS)
@@ -456,7 +660,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 'keyword_farsi': row['Farsi_Keyword'].strip(),
                 'wort_deutsch': row['Deutsches_Wort'].strip(),
                 'erklaerung_farsi': row['Erklärung auf Farsi'].strip(),
-                'erklaerung_kontext': row['Erklärung im Kontext der Geschichte'].strip()
+                'erklaerung_kontext': row['Erklärung im Kontext der Geschichte'].strip(),
+                'register': (row.get('Register') or '').strip(),
             }
             vocabulary_key = (vokabel['zeit'], normalize_persian(vokabel['keyword_farsi']))
             if not vocabulary_key[1] or vocabulary_key in seen_vocabulary:
@@ -533,12 +738,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 )
                 text_farsi = keyword_pattern.sub(highlight_tag, text_farsi)
                                
+                lemma_text = f"{{\\b1}}{vokabel['wort_deutsch']}{{\\b0}}"
+                if vokabel['register'] in INFOBOX_REGISTERS:
+                    lemma_text += f" {{\\fs32\\c&HC0C0C0&}}({vokabel['register']}){{\\r}}"
                 if infobox_content == "german_and_farsi_keyword":
-                    box_text = f"{{\\b1}}{vokabel['wort_deutsch']}{{\\b0}}\\N{{\\c&H00FFFF&}}{vokabel['keyword_farsi']}{{\\c}}"
+                    box_text = f"{lemma_text}\\N{{\\c&H00FFFF&}}{vokabel['keyword_farsi']}{{\\c}}"
                 elif infobox_content == "german_and_farsi_explanation":
-                    box_text = f"{{\\b1}}{vokabel['wort_deutsch']}{{\\b0}}\\N{{\\c&H00FFFF&}}{vokabel['erklaerung_farsi']}{{\\c}}"
+                    box_text = f"{lemma_text}\\N{{\\c&H00FFFF&}}{vokabel['erklaerung_farsi']}{{\\c}}"
                 else:
-                    box_text = f"{{\\b1}}{vokabel['wort_deutsch']}{{\\b0}}"
+                    box_text = lemma_text
                 
                 h, m, s_ms = start_srt.strip().split(':')
                 s, ms = s_ms.split(',')

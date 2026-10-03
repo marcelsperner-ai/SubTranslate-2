@@ -232,3 +232,78 @@ class EdTechValidationTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class WordFormVerificationTests(unittest.TestCase):
+    def test_inflected_form_is_found(self):
+        self.assertEqual(edtech_service.verify_word_form('Spinnt ihr jetzt hier alle?', 'Spinnt', '', 'spinnen')[0], 'OK')
+        self.assertEqual(edtech_service.verify_word_form("Kapier's grad nicht.", "Kapier's", '', 'kapieren')[0], 'OK')
+
+    def test_segments_must_follow_quote_order(self):
+        self.assertEqual(edtech_service.verify_word_form('Ich hau jetzt ab!', '', 'hau|ab', 'abhauen')[0], 'OK')
+        self.assertEqual(edtech_service.verify_word_form('Ich hau jetzt ab!', '', 'ab|hau', 'abhauen')[0], 'PRÜFEN')
+
+    def test_form_missing_in_quote_is_flagged(self):
+        self.assertEqual(edtech_service.verify_word_form('Ich hau jetzt ab!', 'spinnt', '', 'spinnen')[0], 'PRÜFEN')
+        self.assertEqual(edtech_service.verify_word_form('Ich hau jetzt ab!', '', '', 'abhauen')[0], 'PRÜFEN')
+
+    def test_quote_identical_to_word_is_not_cloze_capable(self):
+        self.assertEqual(edtech_service.verify_word_form('Mal langsam.', '', '', 'Mal langsam!')[0], 'KEINE_LÜCKE')
+        self.assertEqual(edtech_service.verify_word_form('Moin.', 'Moin', '', 'Moin')[0], 'KEINE_LÜCKE')
+
+    def test_failed_forms_are_corrected_by_followup_call(self):
+        rows = [{'cue_id': 1, 'german_quote': 'Spinnt ihr jetzt?', 'wort_deutsch': 'spinnen',
+                 'wortform_im_zitat': 'spinnen', 'luecken_segmente': ''}]
+        cues = [{'cue_id': 1, 'german_text': 'Spinnt ihr jetzt?', 'farsi_text': '', 'zeit': ''}]
+        fix = {'item_id': 1, 'wortform_im_zitat': 'Spinnt', 'luecken_segmente': ''}
+        client = SimpleNamespace(models=SimpleNamespace(generate_content=lambda **kw: SimpleNamespace(
+            parsed=[SimpleNamespace(model_dump=lambda: fix)], usage_metadata=None)))
+        edtech_service._verify_and_fix_word_forms(client, 'm', rows, cues)
+        self.assertEqual(rows[0]['form_status'], 'OK')
+        self.assertEqual(rows[0]['wortform_im_zitat'], 'Spinnt')
+
+
+class WordFormPostProcessingTests(unittest.TestCase):
+    def test_weak_single_token_for_separable_verb_is_flagged(self):
+        verify = edtech_service.verify_word_form
+        self.assertEqual(verify('Hier unten bekommt man vieles nicht mit.', 'mit', '', 'etwas mitkriegen')[0], 'PRÜFEN')
+        self.assertEqual(verify('Ein Kumpel von mir legt da auf.', 'legt', '', 'auflegen')[0], 'PRÜFEN')
+        self.assertEqual(verify('Ein Kumpel von mir legt da auf.', '', 'legt|auf', 'auflegen')[0], 'OK')
+
+    def test_closed_verb_forms_stay_ok(self):
+        verify = edtech_service.verify_word_form
+        self.assertEqual(verify('Der hat mich mal angebaggert.', 'angebaggert', '', 'jemanden anbaggern')[0], 'OK')
+        self.assertEqual(verify('Du bist ja abgehauen.', 'abgehauen', '', 'abhauen')[0], 'OK')
+        self.assertEqual(verify('Einfach mal Emotionen raushauen.', 'raushauen', '', 'etwas raushauen')[0], 'OK')
+        self.assertEqual(verify('Spinnt ihr jetzt?', 'Spinnt', '', 'spinnen')[0], 'OK')
+
+    def test_cleaning_and_register_normalization(self):
+        rows = [{'wort_deutsch': 'Mal langsam!', 'german_quote': '# Krass, krass ...', 'wortform_im_zitat': ' Krass ',
+                 'stilregister': 'Redewendung'},
+                {'wort_deutsch': 'Kacke', 'german_quote': 'Kacke.', 'wortform_im_zitat': '', 'stilregister': 'Derb'}]
+        edtech_service._clean_vocabulary(rows)
+        self.assertEqual(rows[0]['wort_deutsch'], 'Mal langsam')
+        self.assertEqual(rows[0]['german_quote'], 'Krass, krass ...')
+        self.assertEqual(rows[0]['stilregister'], '')
+        self.assertEqual(rows[1]['stilregister'], 'derb')
+
+    def test_duplicate_lemma_gets_hint_only(self):
+        rows = [{'cue_id': 326, 'wort_deutsch': 'abhauen'}, {'cue_id': 411, 'wort_deutsch': 'abhauen'}]
+        edtech_service._flag_duplicate_lemmas(rows)
+        self.assertNotIn('form_hinweis', rows[0])
+        self.assertIn('326', rows[1]['form_hinweis'])
+
+
+class LongWordFormTests(unittest.TestCase):
+    def test_overlong_form_is_flagged_and_segments_are_ok(self):
+        verify = edtech_service.verify_word_form
+        quote = 'Aber ich frier mir nicht wieder den Arsch ab.'
+        self.assertEqual(verify(quote, 'frier mir nicht wieder den Arsch ab', '', 'sich den Arsch abfrieren')[0], 'PRÜFEN')
+        self.assertEqual(verify(quote, '', 'frier|den Arsch ab', 'sich den Arsch abfrieren')[0], 'OK')
+
+
+class WholeQuoteLengthTests(unittest.TestCase):
+    def test_long_whole_quote_form_is_flagged_but_short_one_is_not(self):
+        verify = edtech_service.verify_word_form
+        self.assertEqual(verify('Sagt mir leider gar nix.', 'Sagt mir leider gar nix', '', 'jemandem nichts sagen')[0], 'PRÜFEN')
+        self.assertEqual(verify('Sagt mir leider gar nix.', '', 'Sagt|nix', 'jemandem nichts sagen')[0], 'OK')
+        self.assertEqual(verify('Mein lieber Gesangverein.', 'Mein lieber Gesangverein', '', 'Mein lieber Gesangverein')[0], 'KEINE_LÜCKE')
