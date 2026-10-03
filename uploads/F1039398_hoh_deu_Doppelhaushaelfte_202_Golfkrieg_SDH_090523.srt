@@ -1,0 +1,2231 @@
+1
+00:00:14,600 --> 00:00:16,600
+<font color="#FFFFFF">* Schelmische Musik *</font>
+
+2
+00:00:22,000 --> 00:00:25,720
+<font color="#FFFF00">Andi</font>
+
+3
+00:00:28,240 --> 00:00:32,000
+<font color="#FF00FF">Tracy</font>
+
+4
+00:00:34,760 --> 00:00:38,440
+<font color="#00FF00">Mari</font>
+
+5
+00:00:44,480 --> 00:00:46,480
+<font color="#00FFFF">Theo</font>
+
+6
+00:00:46,520 --> 00:00:48,040
+<font color="#FFFFFF">Zoe?</font>
+<font color="#FFFFFF">- Hm?</font>
+
+7
+00:00:48,080 --> 00:00:50,680
+<font color="#FFFFFF">Was machst du da?</font>
+<font color="#FFFFFF">- Ich male einen Hitlerbart?</font>
+
+8
+00:00:51,560 --> 00:00:55,480
+<font color="#FFFFFF">Das geht gar nicht, Zoe, alle und</font>
+<font color="#FFFFFF">jeden immer als Nazis zu bezeichnen</font>
+
+9
+00:00:55,520 --> 00:00:58,560
+<font color="#FFFFFF">und Hitlerbärte zu malen,</font>
+<font color="#FFFFFF">relativiert den Holocaust.</font>
+
+10
+00:00:58,600 --> 00:01:00,480
+<font color="#FFFFFF">Originell ist es auch nicht.</font>
+
+11
+00:01:00,520 --> 00:01:02,440
+<font color="#FFFFFF">Oh Mann, stimmt. Tut mir voll leid.</font>
+
+12
+00:01:02,600 --> 00:01:05,720
+<font color="#FFFFFF">Soll ich es wieder wegmachen?</font>
+<font color="#FFFFFF">- Nein, das sieht man voll.</font>
+
+13
+00:01:05,760 --> 00:01:09,800
+<font color="#FFFFFF">Noch schlimmer als Relativieren ist,</font>
+<font color="#FFFFFF">wenn wir unentschlossen wirken.</font>
+
+14
+00:01:09,840 --> 00:01:12,640
+<font color="#FFFFFF">Dann können wir es bleiben lassen.</font>
+<font color="#FFFFFF">- Ach so, okay.</font>
+
+15
+00:01:13,400 --> 00:01:16,680
+<font color="#FFFFFF">Guck mal, Zoe,</font>
+<font color="#FFFFFF">ziviler Ungehorsam bedeutet,</font>
+
+16
+00:01:16,720 --> 00:01:19,480
+<font color="#FFFFFF">dass du dich bewusst</font>
+<font color="#FFFFFF">gegen Autoritäten stellst.</font>
+
+17
+00:01:19,520 --> 00:01:22,680
+<font color="#FFFFFF">Warum solltest du das tun,</font>
+<font color="#FFFFFF">wenn du dir nicht sicher bist?</font>
+
+18
+00:01:22,720 --> 00:01:24,760
+<font color="#FFFFFF">Dann wirkst du wie eine Mitläuferin.</font>
+
+19
+00:01:26,160 --> 00:01:28,640
+<font color="#FFFFFF">Du hast recht, Charly.</font>
+<font color="#FFFFFF">- Klar habe ich recht.</font>
+
+20
+00:01:34,640 --> 00:01:36,120
+<font color="#FFFFFF">Fuck.</font>
+<font color="#FFFFFF">- Fuck.</font>
+
+21
+00:01:36,160 --> 00:01:38,000
+<font color="#FFFFFF">Stehen bleiben oder ich schieße!</font>
+
+22
+00:01:38,520 --> 00:01:40,240
+<font color="#FFFFFF">Mann, ich weiß, wo die wohnen.</font>
+
+23
+00:01:41,680 --> 00:01:43,800
+<font color="#FFFFFF">Eckner, mach langsam.</font>
+
+24
+00:01:52,400 --> 00:01:55,920
+<font color="#00FFFF">Ich finde es ja gut, dass du</font>
+<font color="#00FFFF">dich politisch engagieren willst,</font>
+
+25
+00:01:55,960 --> 00:01:57,920
+<font color="#00FFFF">aber da gibt es andere Wege.</font>
+
+26
+00:01:58,080 --> 00:02:00,440
+<font color="#00FFFF">Ihr könnt euch</font>
+<font color="#00FFFF">nicht übers Gesetz erheben,</font>
+
+27
+00:02:00,480 --> 00:02:03,120
+<font color="#00FFFF">weil ihr denkt,</font>
+<font color="#00FFFF">nur eure Meinung ist richtig.</font>
+
+28
+00:02:03,280 --> 00:02:06,920
+<font color="#FFFFFF">Die wollen den Schönefelder Forst...</font>
+<font color="#FFFFFF">- Da haben Sie recht.</font>
+
+29
+00:02:06,960 --> 00:02:09,440
+<font color="#FFFFFF">Entschuldigung.</font>
+<font color="#00FF00">Was ist denn hier los?</font>
+
+30
+00:02:10,640 --> 00:02:12,760
+<font color="#00FF00">Ist was passiert?</font>
+<font color="#FFFFFF">Sachbeschädigung.</font>
+
+31
+00:02:12,800 --> 00:02:16,560
+<font color="#FFFFFF">Verdacht auf Paragraf 86 StGB,</font>
+<font color="#FFFFFF">Verbreitung von Propagandamitteln</font>
+
+32
+00:02:16,720 --> 00:02:19,000
+<font color="#FFFFFF">verfassungswidriger Organisationen.</font>
+
+33
+00:02:19,160 --> 00:02:23,120
+<font color="#FFFFFF">Na ja, Eckner, so weit würde ich...</font>
+<font color="#FFFFFF">- Was hier passiert, ist so crazy.</font>
+
+34
+00:02:23,160 --> 00:02:24,760
+<font color="#FFFFFF">Und alle machen die Augen zu.</font>
+
+35
+00:02:24,920 --> 00:02:27,760
+<font color="#FFFFFF">Wenn keiner hinguckt</font>
+<font color="#FFFFFF">und ein Verbrechen passiert,</font>
+
+36
+00:02:27,800 --> 00:02:30,240
+<font color="#FFFFFF">muss man</font>
+<font color="#FFFFFF">mit zivilem Ungehorsam antworten.</font>
+
+37
+00:02:30,840 --> 00:02:34,200
+<font color="#00FF00">Was für ein Verbrechen?</font>
+<font color="#FFFFFF">Die wollen den Golfplatz ausbauen.</font>
+
+38
+00:02:34,240 --> 00:02:35,760
+<font color="#FFFFFF">Der zieht so viel Wasser...</font>
+
+39
+00:02:35,920 --> 00:02:38,920
+<font color="#00FFFF">Weißt du,</font>
+<font color="#00FFFF">was ziviler Ungehorsam bedeutet?</font>
+
+40
+00:02:38,960 --> 00:02:42,800
+<font color="#00FF00">Hat sie gerade gesagt, wenn man mit</font>
+<font color="#00FF00">Mitteln des friedlichen Protests</font>
+
+41
+00:02:42,840 --> 00:02:45,440
+<font color="#00FF00">gegen autoritäre Strukturen angeht,</font>
+
+42
+00:02:45,600 --> 00:02:47,920
+<font color="#00FF00">obwohl sie</font>
+<font color="#00FF00">vom Gesetz her verboten sind.</font>
+
+43
+00:02:47,960 --> 00:02:51,520
+<font color="#00FF00">Ziviler Ungehorsam ist Pflicht,</font>
+<font color="#00FF00">das sagte Henry David Thoreau.</font>
+
+44
+00:02:51,680 --> 00:02:53,720
+<font color="#FFFFFF">Thoreau war ein alter, weißer Mann.</font>
+
+45
+00:02:53,880 --> 00:02:56,280
+<font color="#00FF00">Dann Gandhi,</font>
+<font color="#00FF00">der hat was Ähnliches gesagt.</font>
+
+46
+00:02:56,440 --> 00:02:59,200
+<font color="#FFFFFF">Gandhi war noch älter</font>
+<font color="#FFFFFF">und ein misogynes Schwein.</font>
+
+47
+00:02:59,360 --> 00:03:01,880
+<font color="#00FF00">Ich argumentiere für dich,</font>
+<font color="#00FF00">nicht gegen dich.</font>
+
+48
+00:03:02,040 --> 00:03:04,280
+<font color="#FFFFFF">Sie sollten</font>
+<font color="#FFFFFF">den Kindern mal beibringen,</font>
+
+49
+00:03:04,320 --> 00:03:06,600
+<font color="#FFFFFF">dass man nicht</font>
+<font color="#FFFFFF">an Plakatwände schmiert.</font>
+
+50
+00:03:06,760 --> 00:03:09,200
+<font color="#00FFFF">Da haben Sie recht.</font>
+<font color="#00FFFF">Das habe ich versucht...</font>
+
+51
+00:03:09,240 --> 00:03:12,400
+<font color="#00FF00">Ich bin stolz, dass Zoe</font>
+<font color="#00FF00">sich gegen eine Maßnahme wehrt,</font>
+
+52
+00:03:12,440 --> 00:03:15,720
+<font color="#00FF00">die so problematisch ist,</font>
+<font color="#00FF00">wie der Golfsport dumm ist.</font>
+
+53
+00:03:16,240 --> 00:03:18,680
+<font color="#00FF00">Wenn man das "Sport" nennen kann.</font>
+<font color="#FFFFFF">So.</font>
+
+54
+00:03:19,280 --> 00:03:21,440
+<font color="#FFFFFF">Morgen</font>
+<font color="#FFFFFF">ist die Schmiererei überklebt.</font>
+
+55
+00:03:21,600 --> 00:03:23,560
+<font color="#FFFFFF">Kontakt zur Druckerei haben wir.</font>
+
+56
+00:03:23,720 --> 00:03:26,640
+<font color="#FFFFFF">Pinsel und Kleister</font>
+<font color="#FFFFFF">besorgen Sie selbständig.</font>
+
+57
+00:03:26,680 --> 00:03:29,800
+<font color="#FFFFFF">Und wenn das alles gemacht ist,</font>
+<font color="#FFFFFF">und nur dann,</font>
+
+58
+00:03:29,840 --> 00:03:31,640
+<font color="#FFFFFF">drücken wir noch mal ein Auge zu.</font>
+
+59
+00:03:44,760 --> 00:03:47,560
+<font color="#FFFF00">Vergiss nicht,</font>
+<font color="#FFFF00">von jetzt an nennst du mich Pierre.</font>
+
+60
+00:03:47,600 --> 00:03:49,920
+<font color="#FFFFFF">Kann ich nicht Papa sagen?</font>
+<font color="#FFFF00">Das geht auch.</font>
+
+61
+00:03:49,960 --> 00:03:52,320
+<font color="#FFFFFF">Entschuldigung.</font>
+<font color="#FFFF00">Nicht stehen bleiben.</font>
+
+62
+00:03:52,360 --> 00:03:54,360
+<font color="#FFFFFF">Entschuldigung?</font>
+<font color="#FFFFFF">- Der meint uns.</font>
+
+63
+00:03:54,400 --> 00:03:56,720
+<font color="#FFFF00">Der meint uns nicht, mach schon.</font>
+<font color="#FFFFFF">Ihr zwei.</font>
+
+64
+00:03:56,760 --> 00:03:59,280
+<font color="#FFFFFF">Hallo? Ich rede mit euch.</font>
+<font color="#FFFF00">(mit Akzent) Bitte?</font>
+
+65
+00:03:59,320 --> 00:04:00,920
+<font color="#FFFF00">Mon Dieu.</font>
+
+66
+00:04:01,720 --> 00:04:05,160
+<font color="#FFFFFF">Andi, was soll das? Dich erkennt</font>
+<font color="#FFFFFF">ein Blinder mit Krückstock.</font>
+
+67
+00:04:06,000 --> 00:04:08,840
+<font color="#FFFFFF">Du kannst nicht aufs Gelände,</font>
+<font color="#FFFFFF">du hast Platzverbot.</font>
+
+68
+00:04:09,000 --> 00:04:12,200
+<font color="#FFFF00">Ich will nur</font>
+<font color="#FFFF00">meinen Lümmel zum Turnier anmelden.</font>
+
+69
+00:04:12,360 --> 00:04:15,360
+<font color="#FFFF00">Geht nur im Beisein</font>
+<font color="#FFFF00">eines Erziehungsberechtigten.</font>
+
+70
+00:04:15,400 --> 00:04:18,120
+<font color="#FFFFFF">Wenn Gert dich sieht,</font>
+<font color="#FFFFFF">dann bin ich meinen Job los.</font>
+
+71
+00:04:18,160 --> 00:04:21,000
+<font color="#FFFF00">Ist ein Ehrenamt.</font>
+<font color="#FFFFFF">Ja, aber ein entspanntes.</font>
+
+72
+00:04:21,040 --> 00:04:23,400
+<font color="#FFFFFF">Du kannst nirgends</font>
+<font color="#FFFFFF">so gut essen wie hier,</font>
+
+73
+00:04:23,440 --> 00:04:25,480
+<font color="#FFFFFF">manchmal kriege ich Nudeln umsonst.</font>
+
+74
+00:04:25,640 --> 00:04:27,760
+<font color="#FFFF00">Pass mal auf, Sascha.</font>
+<font color="#FFFF00">Das ist wichtig.</font>
+
+75
+00:04:27,800 --> 00:04:31,320
+<font color="#FFFF00">Wenn Rocco das größte Golftalent</font>
+<font color="#FFFF00">seiner Generation ist,</font>
+
+76
+00:04:31,360 --> 00:04:35,360
+<font color="#FFFF00">es aber daran scheitert, dass du</font>
+<font color="#FFFF00">päpstlicher bist als der Papst?</font>
+
+77
+00:04:35,400 --> 00:04:38,240
+<font color="#FFFF00">Kannst du das</font>
+<font color="#FFFF00">mit deiner Golfer-Ehre vereinbaren?</font>
+
+78
+00:04:40,160 --> 00:04:42,760
+<font color="#FFFFFF">Na gut, aber reiß dich zusammen.</font>
+
+79
+00:04:44,160 --> 00:04:45,640
+<font color="#FFFF00">Komm.</font>
+
+80
+00:04:46,640 --> 00:04:48,480
+<font color="#FFFF00">Rocco?</font>
+
+81
+00:04:48,640 --> 00:04:50,640
+<font color="#FFFFFF">Schönes Spiel.</font>
+<font color="#FFFF00">Komm, Rocci.</font>
+
+82
+00:04:53,080 --> 00:04:55,200
+<font color="#FFFFFF">Warum hast du Platzverbot, Papa?</font>
+
+83
+00:04:55,240 --> 00:04:57,600
+<font color="#FFFF00">Ich habe mal,</font>
+<font color="#FFFF00">als ich noch Mitglied war,</font>
+
+84
+00:04:57,640 --> 00:05:01,160
+<font color="#FFFF00">den Besitzer aus Versehen</font>
+<font color="#FFFF00">mit dem Querschläger abgeschossen.</font>
+
+85
+00:05:01,200 --> 00:05:02,680
+<font color="#FFFFFF">Ist er tot?</font>
+
+86
+00:05:04,440 --> 00:05:07,160
+<font color="#FFFF00">Schön wäre es.</font>
+<font color="#FFFF00">Nee, der sitzt im Rollstuhl.</font>
+
+87
+00:05:07,200 --> 00:05:10,360
+<font color="#FFFF00">Es war gar nicht so schlimm,</font>
+<font color="#FFFF00">Streifschuss, sage ich mal.</font>
+
+88
+00:05:10,400 --> 00:05:14,000
+<font color="#FFFF00">Aber der hatte was mit der Hüfte,</font>
+<font color="#FFFF00">kein Wunder bei seinem Gewicht.</font>
+
+89
+00:05:14,560 --> 00:05:17,040
+<font color="#FFFF00">Da brauchten sie</font>
+<font color="#FFFF00">einen schwarzen Peter.</font>
+
+90
+00:05:19,240 --> 00:05:21,200
+<font color="#FFFFFF">Aber ich bin nicht Peter, sondern?</font>
+
+91
+00:05:21,240 --> 00:05:23,120
+<font color="#FFFFFF">Pierre.</font>
+<font color="#FFFF00">Richtig.</font>
+
+92
+00:05:25,800 --> 00:05:28,080
+<font color="#FFFFFF">Sie wollen sich</font>
+<font color="#FFFFFF">fürs Turnier anmelden?</font>
+
+93
+00:05:28,240 --> 00:05:32,000
+<font color="#FFFF00">(mit Akzent)</font>
+<font color="#FFFF00">Ähm, die lebenslange Mitgliedschaft</font>
+
+94
+00:05:32,560 --> 00:05:35,160
+<font color="#FFFF00">äh,</font>
+<font color="#FFFF00">gilt auch für den neuen Golfclub?</font>
+
+95
+00:05:35,200 --> 00:05:37,920
+<font color="#FFFFFF">Ja, aber nur,</font>
+<font color="#FFFFFF">wenn Sie das Turnier auch gewinnen.</font>
+
+96
+00:05:39,440 --> 00:05:42,920
+<font color="#FFFFFF">Gut. Wie ist denn Ihr Name?</font>
+<font color="#FFFF00">Ich will gar nicht mitspielen.</font>
+
+97
+00:05:42,960 --> 00:05:44,800
+<font color="#FFFF00">Aber mein Sohn hier.</font>
+
+98
+00:05:44,840 --> 00:05:47,120
+<font color="#FFFF00">Den können Sie einschreiben.</font>
+
+99
+00:05:48,440 --> 00:05:52,320
+<font color="#FFFFFF">Fantastisch. Sie haben sicherlich</font>
+<font color="#FFFFFF">einen Personalausweis für mich?</font>
+
+100
+00:05:52,360 --> 00:05:55,240
+<font color="#FFFF00">Glauben Sie nicht,</font>
+<font color="#FFFF00">dass er mein Sohn ist? Oder was?</font>
+
+101
+00:05:56,160 --> 00:06:00,160
+<font color="#FFFFFF">Na ja... Also, äh, besonders</font>
+<font color="#FFFFFF">ähnlich sehen Sie sich nicht.</font>
+
+102
+00:06:00,320 --> 00:06:04,800
+<font color="#FFFF00">Rocco hat</font>
+<font color="#FFFF00">seinen Kinderausweis nicht dabei.</font>
+
+103
+00:06:04,960 --> 00:06:07,680
+<font color="#FFFFFF">Dann geht das leider nicht.</font>
+<font color="#FFFF00">Äh... Pourquoi?</font>
+
+104
+00:06:07,720 --> 00:06:09,600
+<font color="#FFFFFF">Alles in Ordnung, Maus?</font>
+<font color="#FFFFFF">- Ja.</font>
+
+105
+00:06:09,640 --> 00:06:11,960
+<font color="#FFFFFF">Ich muss die Spielregeln erklären.</font>
+
+106
+00:06:12,120 --> 00:06:16,160
+<font color="#FFFFFF">Pierre hat meinen Ausweis vergessen</font>
+<font color="#FFFFFF">und wir dürfen nicht mitmachen.</font>
+
+107
+00:06:16,200 --> 00:06:19,160
+<font color="#FFFFFF">So ist das nun mal.</font>
+<font color="#FFFFFF">- Schatz, lass doch.</font>
+
+108
+00:06:19,200 --> 00:06:23,200
+<font color="#FFFFFF">Dann drücken wir eben ein Auge zu.</font>
+<font color="#FFFF00">Sie sind ja ein echter Machertyp.</font>
+
+109
+00:06:23,240 --> 00:06:26,280
+<font color="#FFFF00">Was, Jochen?</font>
+<font color="#FFFFFF">Entschuldigung. Kennen wir uns?</font>
+
+110
+00:06:28,280 --> 00:06:30,080
+<font color="#FFFF00">Ich kenne Sie.</font>
+
+111
+00:06:31,560 --> 00:06:35,320
+<font color="#FFFFFF">Von der Werbung. Deshalb sind</font>
+<font color="#FFFFFF">wir auch hier. Wegen dem Turnier.</font>
+
+112
+00:06:36,040 --> 00:06:37,840
+<font color="#FFFFFF">Ach so, klar.</font>
+
+113
+00:06:37,880 --> 00:06:39,360
+<font color="#FFFFFF">Natürlich.</font>
+
+114
+00:06:40,240 --> 00:06:41,920
+<font color="#FFFFFF">Ähm ... ist okay.</font>
+
+115
+00:06:42,080 --> 00:06:44,600
+<font color="#FFFFFF">Gut.</font>
+<font color="#FFFFFF">- Viel Glück, junger Mann.</font>
+
+116
+00:06:44,760 --> 00:06:46,240
+<font color="#FFFFFF">Tschüss.</font>
+
+117
+00:06:46,800 --> 00:06:48,280
+<font color="#FFFF00">Au revoir.</font>
+
+118
+00:06:48,440 --> 00:06:51,000
+<font color="#FFFFFF">Also, wie ist denn dein Name?</font>
+<font color="#FFFF00">Knüppé.</font>
+
+119
+00:06:51,880 --> 00:06:55,120
+<font color="#FFFF00">So wie "Knuppe"</font>
+<font color="#FFFF00">nur mit einem Akzent.</font>
+
+120
+00:06:56,280 --> 00:06:58,280
+<font color="#FFFFFF">* Sie lachen. *</font>
+
+121
+00:06:59,560 --> 00:07:01,920
+<font color="#FFFFFF">Mein Gott, so ein Scheiß, ey.</font>
+
+122
+00:07:06,520 --> 00:07:08,560
+<font color="#FF00FF">Was steht da?</font>
+<font color="#FF00FF">Was kann man gewinnen?</font>
+
+123
+00:07:11,080 --> 00:07:14,760
+<font color="#FFFFFF">Woher sollen wir denn das wissen?</font>
+<font color="#FF00FF">Stell dich nicht so an, lies vor.</font>
+
+124
+00:07:14,800 --> 00:07:18,160
+<font color="#FF00FF">Ich habe meine Brille vergessen.</font>
+<font color="#FFFFFF">Da steht gar nichts.</font>
+
+125
+00:07:18,200 --> 00:07:21,240
+<font color="#FF00FF">Ich sehe, dass da was steht.</font>
+<font color="#FFFFFF">Aber nichts zum Preisgeld.</font>
+
+126
+00:07:21,280 --> 00:07:24,440
+<font color="#FF00FF">Werde nicht frech, Fräulein, ja?</font>
+<font color="#FF00FF">Das Kleingedruckte.</font>
+
+127
+00:07:27,000 --> 00:07:30,360
+<font color="#FFFFFF">Hier steht "Teilnahme kostenlos"</font>
+<font color="#FFFFFF">und ein QR-Code.</font>
+
+128
+00:07:30,520 --> 00:07:32,160
+<font color="#FF00FF">Mach mal mit dem Handy.</font>
+
+129
+00:07:37,080 --> 00:07:39,000
+<font color="#FF00FF">Bist du nicht die von der Dorit?</font>
+
+130
+00:07:40,160 --> 00:07:43,840
+<font color="#FF00FF">Die ist eine meiner längsten</font>
+<font color="#FF00FF">Kunden, ich weiß alles über dich.</font>
+
+131
+00:07:44,680 --> 00:07:46,800
+<font color="#FFFFFF">"Lebenslange Mitgliedschaft.</font>
+
+132
+00:07:46,840 --> 00:07:48,600
+<font color="#FFFFFF">10.000 Euro."</font>
+
+133
+00:07:48,640 --> 00:07:50,200
+<font color="#FFFFFF">Und so Golfsachen...</font>
+
+134
+00:07:52,400 --> 00:07:55,640
+<font color="#FF00FF">Hm. Danke, Püppi.</font>
+
+135
+00:08:00,920 --> 00:08:02,640
+<font color="#FFFFFF">So weird, Alter.</font>
+
+136
+00:08:02,800 --> 00:08:04,280
+<font color="#FFFF00">So.</font>
+
+137
+00:08:06,000 --> 00:08:08,480
+<font color="#FFFFFF">Einfach ganz weit weg schlagen?</font>
+<font color="#FFFF00">Ganz Genau.</font>
+
+138
+00:08:16,440 --> 00:08:18,480
+<font color="#FFFF00">Alter Schwede!</font>
+
+139
+00:08:18,640 --> 00:08:21,840
+<font color="#FFFF00">Sag mal, Rocci, was bist du</font>
+<font color="#FFFF00">denn für ein geiler Typ, ey.</font>
+
+140
+00:08:21,880 --> 00:08:23,360
+<font color="#FFFF00">Das ist ja der Wahnsinn.</font>
+
+141
+00:08:24,520 --> 00:08:27,920
+<font color="#FFFF00">So gewinnen wir auf alle Fälle, du.</font>
+<font color="#FFFF00">Komm her, mein Kleiner.</font>
+
+142
+00:08:28,480 --> 00:08:31,520
+<font color="#FFFF00">Weißt du, wie lieb ich dich habe?</font>
+<font color="#FFFF00">Komm, gleich noch mal.</font>
+
+143
+00:08:40,120 --> 00:08:42,600
+<font color="#FFFF00">Ja, haha.</font>
+<font color="#FFFF00">Sehr witzig, du Knalltüte.</font>
+
+144
+00:08:42,640 --> 00:08:44,440
+<font color="#FFFF00">So, komm, gleich noch mal.</font>
+
+145
+00:08:54,520 --> 00:08:56,080
+<font color="#FFFF00">Bist du bescheuert?</font>
+
+146
+00:08:58,200 --> 00:08:59,760
+<font color="#FFFF00">Das ist...</font>
+
+147
+00:09:00,280 --> 00:09:02,880
+<font color="#FFFF00">Was ist denn los?</font>
+<font color="#FFFFFF">Keine Ahnung.</font>
+
+148
+00:09:02,920 --> 00:09:04,400
+<font color="#FFFF00">Willst du nicht, oder?</font>
+
+149
+00:09:06,160 --> 00:09:09,440
+<font color="#FFFF00">Du musst ehrgeiziger sein, Rocco.</font>
+
+150
+00:09:10,280 --> 00:09:12,760
+<font color="#FFFF00">Du musst das wollen,</font>
+<font color="#FFFF00">und zwar so richtig.</font>
+
+151
+00:09:12,800 --> 00:09:14,360
+<font color="#FFFFFF">* Scheppern *</font>
+
+152
+00:09:14,400 --> 00:09:15,880
+<font color="#FFFFFF">(Mann) Oh Mann!</font>
+
+153
+00:09:15,920 --> 00:09:19,760
+<font color="#FFFF00">Die größten Männer der Geschichte</font>
+<font color="#FFFF00">waren die mit dem größten Ehrgeiz.</font>
+
+154
+00:09:19,800 --> 00:09:21,280
+<font color="#FFFF00">Lothar Matthäus.</font>
+
+155
+00:09:22,160 --> 00:09:23,640
+<font color="#FFFF00">Peter Maffay.</font>
+
+156
+00:09:24,200 --> 00:09:25,680
+<font color="#FFFF00">Angela Merkel.</font>
+
+157
+00:09:28,080 --> 00:09:30,320
+<font color="#FFFF00">Rocci? Wo ist denn der Lümmel?</font>
+
+158
+00:09:30,480 --> 00:09:31,960
+<font color="#FFFF00">Rocci?</font>
+
+159
+00:09:33,920 --> 00:09:35,400
+<font color="#FFFF00">Was ist denn da?</font>
+
+160
+00:09:36,240 --> 00:09:37,720
+<font color="#FFFF00">Äh...</font>
+
+161
+00:09:38,320 --> 00:09:40,600
+<font color="#FFFF00">Das... Das ist doch...</font>
+
+162
+00:09:41,120 --> 00:09:43,520
+<font color="#FFFFFF">Theodor Henri Kröger.</font>
+
+163
+00:09:45,560 --> 00:09:47,760
+<font color="#FFFF00">Theodor?</font>
+<font color="#FFFFFF">Theodor Henri Kröger.</font>
+
+164
+00:09:47,800 --> 00:09:49,800
+<font color="#FFFFFF">Der "Bobbele des Golfsports".</font>
+
+165
+00:09:49,840 --> 00:09:53,520
+<font color="#FFFFFF">Das größte U18-Golftalent</font>
+<font color="#FFFFFF">seiner Generation.</font>
+
+166
+00:09:53,680 --> 00:09:56,800
+<font color="#FFFFFF">Wenn er nur die Emotionen</font>
+<font color="#FFFFFF">unter Kontrolle gehabt hätte.</font>
+
+167
+00:09:57,600 --> 00:09:59,080
+<font color="#FFFFFF">Was hat er gemacht?</font>
+
+168
+00:09:59,240 --> 00:10:02,920
+<font color="#FFFFFF">Als Theodor Henri Kröger</font>
+<font color="#FFFFFF">bei den Junior Golf Masters in Issum</font>
+
+169
+00:10:02,960 --> 00:10:04,960
+<font color="#FFFFFF">wegen eines falsch sitzenden Polos</font>
+
+170
+00:10:05,120 --> 00:10:08,640
+<font color="#FFFFFF">zum Strafschlag verurteilt wurde,</font>
+<font color="#FFFFFF">ist er so ausgerastet,</font>
+
+171
+00:10:08,680 --> 00:10:11,520
+<font color="#FFFFFF">dass er mit seinem Schläger</font>
+<font color="#FFFFFF">auf die Juroren los ist.</font>
+
+172
+00:10:12,000 --> 00:10:16,000
+<font color="#FFFFFF">Seitdem warnt man sich in der</font>
+<font color="#FFFFFF">Golfwelt immer mit "Henri Fore",</font>
+
+173
+00:10:16,720 --> 00:10:19,640
+<font color="#FFFFFF">wenn ein Spieler durchdreht</font>
+<font color="#FFFFFF">und andere attackiert.</font>
+
+174
+00:10:19,680 --> 00:10:22,600
+<font color="#FFFFFF">Wo ist Theodor Henri Kröger jetzt?</font>
+<font color="#FFFFFF">- Verschwunden.</font>
+
+175
+00:10:22,640 --> 00:10:24,120
+<font color="#FFFFFF">* Rauschen *</font>
+<font color="#FFFFFF">Moment.</font>
+
+176
+00:10:24,280 --> 00:10:26,080
+<font color="#FFFFFF">* Funkspruch *</font>
+
+177
+00:10:26,240 --> 00:10:29,000
+<font color="#FFFFFF">Jo, komme gleich.</font>
+<font color="#FFFFFF">Muss noch kurz was aufsaugen.</font>
+
+178
+00:10:29,760 --> 00:10:32,040
+<font color="#FFFFFF">Theodor Henri Kröger</font>
+<font color="#FFFFFF">hat die Golfwelt</font>
+
+179
+00:10:32,080 --> 00:10:36,360
+<font color="#FFFFFF">für einen kurzen Moment verzaubert</font>
+<font color="#FFFFFF">und ihr dann den Rücken gekehrt.</font>
+
+180
+00:10:37,160 --> 00:10:39,920
+<font color="#FFFFFF">Niemand weiß,</font>
+<font color="#FFFFFF">wohin ihn die Winde getragen haben.</font>
+
+181
+00:10:40,080 --> 00:10:42,440
+<font color="#FFFF00">Quatsch.</font>
+<font color="#FFFF00">Das ist Theo, mein Nachbar.</font>
+
+182
+00:10:42,480 --> 00:10:46,440
+<font color="#FFFF00">Der wohnt gleich nebenan bei uns.</font>
+<font color="#FFFFFF">Theodor Henri Kröger lebt?</font>
+
+183
+00:10:46,600 --> 00:10:48,080
+<font color="#FFFF00">Klar lebt der.</font>
+
+184
+00:10:48,120 --> 00:10:50,760
+<font color="#FFFFFF">Der hat sogar eine Familie</font>
+<font color="#FFFFFF">und ist Musiklehrer.</font>
+
+185
+00:10:55,240 --> 00:10:57,520
+<font color="#FFFF00">Theodor Henri Kröger.</font>
+
+186
+00:10:58,640 --> 00:11:01,280
+<font color="#FFFF00">Der Bobbele des Golfsports.</font>
+
+187
+00:11:02,320 --> 00:11:04,560
+<font color="#00FFFF">Ich weiß nicht,</font>
+<font color="#00FFFF">wovon du sprichst, Andi.</font>
+
+188
+00:11:05,320 --> 00:11:07,440
+<font color="#FFFF00">Hast du lieber für dich behalten,</font>
+<font color="#FFFF00">was?</font>
+
+189
+00:11:09,560 --> 00:11:12,160
+<font color="#00FFFF">Wolltest du irgendetwas Bestimmtes?</font>
+<font color="#FFFF00">Du.</font>
+
+190
+00:11:12,200 --> 00:11:14,480
+<font color="#FFFF00">Es geht nicht um mich,</font>
+<font color="#FFFF00">sondern um Rocco.</font>
+
+191
+00:11:14,520 --> 00:11:17,000
+<font color="#FFFF00">Der Junge ist ein Golftalent,</font>
+<font color="#FFFF00">das spüre ich.</font>
+
+192
+00:11:17,040 --> 00:11:19,560
+<font color="#FFFF00">Dem fehlt nur noch</font>
+<font color="#FFFF00">das gewisse Feingefühl.</font>
+
+193
+00:11:19,600 --> 00:11:21,760
+<font color="#FFFF00">Und das kannst</font>
+<font color="#FFFF00">du ihm beibringen, Theo.</font>
+
+194
+00:11:32,840 --> 00:11:36,600
+<font color="#FFFF00">Du kannst dich verstecken, aber du</font>
+<font color="#FFFF00">kannst nicht ändern, wer du bist.</font>
+
+195
+00:11:36,760 --> 00:11:38,640
+<font color="#FFFF00">Theodor Henri Kröger!</font>
+
+196
+00:11:42,680 --> 00:11:44,600
+<font color="#FFFFFF">* Nachrichtenton *</font>
+
+197
+00:11:44,640 --> 00:11:46,120
+<font color="#FFFFFF">Fridays?</font>
+
+198
+00:11:47,280 --> 00:11:50,840
+<font color="#FFFFFF">Was haben die geschrieben?</font>
+<font color="#FFFFFF">- "Wir sind zu dem Schluss gekommen,</font>
+
+199
+00:11:50,880 --> 00:11:53,600
+<font color="#FFFFFF">dass wir euch</font>
+<font color="#FFFFFF">nicht unterstützen können,</font>
+
+200
+00:11:53,640 --> 00:11:56,600
+<font color="#FFFFFF">da euer Anliegen ...</font>
+<font color="#FFFFFF">zu wenig substanziell ist.</font>
+
+201
+00:11:56,640 --> 00:11:58,360
+<font color="#FFFFFF">Selbst wenn der neue Golfplatz</font>
+
+202
+00:11:58,400 --> 00:12:00,800
+<font color="#FFFFFF">nicht gebaut wird,</font>
+<font color="#FFFFFF">gibt es noch den alten."</font>
+
+203
+00:12:01,920 --> 00:12:03,400
+<font color="#FFFFFF">Und was antwortest du?</font>
+
+204
+00:12:03,560 --> 00:12:05,720
+<font color="#FFFFFF">Ob die wenigstens</font>
+<font color="#FFFFFF">unser Video teilen.</font>
+
+205
+00:12:09,960 --> 00:12:11,800
+<font color="#FFFFFF">* Nachrichtenton *</font>
+
+206
+00:12:12,320 --> 00:12:14,760
+<font color="#FFFFFF">Und? Was haben die geantwortet?</font>
+<font color="#FFFFFF">- "Nein."</font>
+
+207
+00:12:17,320 --> 00:12:21,000
+<font color="#FFFFFF">Glaubst du, wegen dem Hitlerbart?</font>
+<font color="#FFFFFF">- Ja, weswegen sonst?</font>
+
+208
+00:12:21,880 --> 00:12:23,600
+<font color="#FFFFFF">Wir brauchen eine neue Aktion.</font>
+
+209
+00:12:25,000 --> 00:12:28,280
+<font color="#FFFFFF">Wenn wir den Golfclub</font>
+<font color="#FFFFFF">mit Eiern und Tomaten bewerfen?</font>
+
+210
+00:12:28,840 --> 00:12:31,320
+<font color="#FFFFFF">Das bleibt</font>
+<font color="#FFFFFF">nur an den ArbeiterInnen hängen.</font>
+
+211
+00:12:31,360 --> 00:12:33,840
+<font color="#FFFFFF">Willst du das?</font>
+<font color="#FFFFFF">- Nein, natürlich nicht.</font>
+
+212
+00:12:34,480 --> 00:12:35,960
+<font color="#FFFFFF">Sorry.</font>
+
+213
+00:12:37,560 --> 00:12:39,800
+<font color="#FFFFFF">Und wenn wir uns irgendwo anketten?</font>
+
+214
+00:12:41,000 --> 00:12:42,920
+<font color="#FFFFFF">Zu zweit?</font>
+
+215
+00:12:45,640 --> 00:12:48,640
+<font color="#00FF00">Wenn ich euch</font>
+<font color="#00FF00">einen klitzekleinen Rat geben darf?</font>
+
+216
+00:12:48,800 --> 00:12:50,480
+<font color="#FFFFFF">Kannst du nicht klopfen?</font>
+
+217
+00:12:51,560 --> 00:12:53,960
+<font color="#00FF00">Ihr müsst systematischer vorgehen.</font>
+
+218
+00:12:54,120 --> 00:12:57,400
+<font color="#FFFFFF">Danke, werden wir machen.</font>
+<font color="#FFFFFF">Kannst du wieder rausgehen?</font>
+
+219
+00:12:57,960 --> 00:13:00,400
+<font color="#00FF00">Ich wollte euch</font>
+<font color="#00FF00">nur den Tee vorbeibringen.</font>
+
+220
+00:13:01,080 --> 00:13:03,800
+<font color="#FFFFFF">Hast du deswegen</font>
+<font color="#FFFFFF">drei Tassen mitgebracht?</font>
+
+221
+00:13:04,560 --> 00:13:07,280
+<font color="#FFFFFF">Was meinen Sie</font>
+<font color="#FFFFFF">mit "systematischer vorgehen"?</font>
+
+222
+00:13:08,080 --> 00:13:10,200
+<font color="#00FF00">Wisst ihr,</font>
+<font color="#00FF00">was eine SWOT-Analyse ist?</font>
+
+223
+00:13:11,400 --> 00:13:13,800
+<font color="#00FF00">Stärken, Schwächen,</font>
+<font color="#00FF00">Chancen, Risiken.</font>
+
+224
+00:13:13,960 --> 00:13:15,960
+<font color="#FFFFFF">Cool.</font>
+<font color="#FFFFFF">- Och...</font>
+
+225
+00:13:31,280 --> 00:13:33,080
+<font color="#00FFFF">Achte auf deine Füße, Rocco.</font>
+
+226
+00:13:33,240 --> 00:13:36,560
+<font color="#00FFFF">Der Ball muss in einer Linie</font>
+<font color="#00FFFF">mit deiner linken Ferse liegen,</font>
+
+227
+00:13:36,600 --> 00:13:38,080
+<font color="#00FFFF">nicht in der Mitte.</font>
+
+228
+00:13:44,920 --> 00:13:46,600
+<font color="#FFFFFF">* Ruhige Musik *</font>
+
+229
+00:14:02,000 --> 00:14:04,000
+<font color="#FFFFFF">* Schelmische Musik *</font>
+
+230
+00:14:06,720 --> 00:14:08,280
+<font color="#00FF00">Los!</font>
+
+231
+00:14:10,640 --> 00:14:12,120
+<font color="#00FF00">Da lang.</font>
+
+232
+00:14:19,200 --> 00:14:21,520
+<font color="#FFFFFF">Ich kann nicht mehr, Mama.</font>
+
+233
+00:14:22,680 --> 00:14:24,440
+<font color="#00FF00">Das muss irgendwo hier sein.</font>
+
+234
+00:14:24,480 --> 00:14:26,720
+<font color="#00FF00">Sie stecken</font>
+<font color="#00FF00">doch Fähnchen in die Löcher.</font>
+
+235
+00:14:26,880 --> 00:14:29,120
+<font color="#FFFFFF">Vielleicht sind die nachts zu?</font>
+<font color="#00FF00">Mist.</font>
+
+236
+00:14:29,720 --> 00:14:31,200
+<font color="#FFFFFF">Da.</font>
+<font color="#00FF00">Los.</font>
+
+237
+00:14:43,760 --> 00:14:45,600
+<font color="#FFFFFF">Was ist denn das?</font>
+<font color="#00FF00">Reste.</font>
+
+238
+00:14:46,200 --> 00:14:47,960
+<font color="#00FF00">Schimmliger Kohl, faule Eier,</font>
+
+239
+00:14:48,120 --> 00:14:50,400
+<font color="#00FF00">gammliges Hack,</font>
+<font color="#00FF00">gegorene Muttermilch.</font>
+
+240
+00:14:50,440 --> 00:14:53,240
+<font color="#FFFFFF">Stinkt aber wie Scheiße.</font>
+<font color="#00FF00">Disruption muss wehtun.</font>
+
+241
+00:14:53,400 --> 00:14:54,880
+<font color="#00FF00">Wer will?</font>
+
+242
+00:15:02,120 --> 00:15:04,640
+<font color="#FFFFFF">SWOT-Analyse, my ass.</font>
+
+243
+00:15:08,280 --> 00:15:10,280
+<font color="#FFFFFF">* Spannungsvolle Musik *</font>
+
+244
+00:15:27,800 --> 00:15:29,920
+<font color="#00FF00">Warte. Ich habe was Besseres.</font>
+
+245
+00:15:29,960 --> 00:15:31,440
+<font color="#00FF00">Folie.</font>
+
+246
+00:15:39,120 --> 00:15:41,480
+<font color="#FFFFFF">Ist das nicht auch</font>
+<font color="#FFFFFF">schlecht für die Umwelt?</font>
+
+247
+00:15:42,280 --> 00:15:44,320
+<font color="#00FF00">Wo gehobelt wird,</font>
+<font color="#00FF00">fallen auch Späne.</font>
+
+248
+00:15:45,200 --> 00:15:47,200
+<font color="#FFFFFF">* Treibende Musik *</font>
+
+249
+00:16:10,640 --> 00:16:12,120
+<font color="#FFFFFF">* Scheppern *</font>
+
+250
+00:16:18,680 --> 00:16:20,680
+<font color="#FFFFFF">* Ein Hund bellt. *</font>
+
+251
+00:16:31,480 --> 00:16:33,280
+<font color="#FFFFFF">Meine lieben Damen und Herren.</font>
+
+252
+00:16:33,440 --> 00:16:37,720
+<font color="#FFFFFF">Ich bin Jochen Reimers, CEO und</font>
+<font color="#FFFFFF">Chairman der "Der Golfplatz-Gruppe".</font>
+
+253
+00:16:37,880 --> 00:16:41,680
+<font color="#FFFFFF">Ich heiße Sie willkommen auf</font>
+<font color="#FFFFFF">dem Gelände des Clubs Schönefelde,</font>
+
+254
+00:16:41,840 --> 00:16:46,360
+<font color="#FFFFFF">der als "Der Golfplatz Schönefelde"</font>
+<font color="#FFFFFF">bald in neuem Glanz erstrahlen wird.</font>
+
+255
+00:16:46,520 --> 00:16:48,360
+<font color="#FFFFFF">Die Einnahmen des heutigen Tages</font>
+
+256
+00:16:48,400 --> 00:16:52,640
+<font color="#FFFFFF">werden direkt an wohltätige</font>
+<font color="#FFFFFF">Golfprojekte in Südafrika gespendet.</font>
+
+257
+00:16:56,440 --> 00:16:58,760
+<font color="#FF00FF">Super. Ganz toll.</font>
+
+258
+00:17:00,280 --> 00:17:03,920
+<font color="#FFFFFF">In den letzten Wochen wurde viel</font>
+<font color="#FFFFFF">über unser Vorhaben berichtet.</font>
+
+259
+00:17:03,960 --> 00:17:06,920
+<font color="#FFFFFF">Es gab Beiträge in der lokalen</font>
+<font color="#FFFFFF">und regionalen Presse.</font>
+
+260
+00:17:06,960 --> 00:17:10,160
+<font color="#FFFF00">Mausi, was machst du denn hier?</font>
+<font color="#FF00FF">Was denn wohl?</font>
+
+261
+00:17:10,320 --> 00:17:12,520
+<font color="#FFFF00">So einen Fummel</font>
+<font color="#FFFF00">haben nur Spieler an.</font>
+
+262
+00:17:12,680 --> 00:17:15,040
+<font color="#FF00FF">Genau,</font>
+<font color="#FF00FF">ich habe mich auch angemeldet.</font>
+
+263
+00:17:15,200 --> 00:17:17,560
+<font color="#FFFFFF">...Sie sind heute gekommen...</font>
+<font color="#FFFF00">Was hast du?</font>
+
+264
+00:17:17,600 --> 00:17:19,560
+<font color="#FFFF00">Tracy, Rocco ist ein Nervenbündel.</font>
+
+265
+00:17:19,720 --> 00:17:23,360
+<font color="#FFFF00">Was passiert, wenn der gegen</font>
+<font color="#FFFF00">seine eigene Mutter antreten muss?</font>
+
+266
+00:17:23,520 --> 00:17:25,600
+<font color="#FFFF00">Das kannst du ihm nicht antun.</font>
+<font color="#FF00FF">Und ob.</font>
+
+267
+00:17:25,640 --> 00:17:28,040
+<font color="#FFFF00">Setzen wir sein Talent</font>
+<font color="#FFFF00">nicht aufs Spiel.</font>
+
+268
+00:17:28,200 --> 00:17:29,880
+<font color="#FFFF00">Wir müssen ihn unterstützen.</font>
+
+269
+00:17:29,920 --> 00:17:32,280
+<font color="#FF00FF">Du unterstützt</font>
+<font color="#FF00FF">nur seine Mitgliedschaft.</font>
+
+270
+00:17:32,320 --> 00:17:34,400
+<font color="#FF00FF">Damit du auch reinkannst.</font>
+<font color="#FFFF00">Das ist...</font>
+
+271
+00:17:34,560 --> 00:17:37,720
+<font color="#FFFF00">Ich trainiere jeden Tag,</font>
+<font color="#FFFF00">damit aus dem ein Großer wird.</font>
+
+272
+00:17:37,760 --> 00:17:39,720
+<font color="#FFFFFF">Hey, pst!</font>
+
+273
+00:17:39,880 --> 00:17:43,960
+<font color="#FF00FF">Wenn er ein Großer werden will,</font>
+<font color="#FF00FF">muss er mit Konkurrenz klarkommen.</font>
+
+274
+00:17:44,120 --> 00:17:45,760
+<font color="#FFFFFF">* Jubel *</font>
+<font color="#FF00FF">Ganz toll.</font>
+
+275
+00:17:45,920 --> 00:17:47,400
+<font color="#FF00FF">Ganz toll.</font>
+
+276
+00:17:47,440 --> 00:17:50,800
+<font color="#FFFFFF">...und weil wir den Weg</font>
+<font color="#FFFFFF">des visionären Nocheigentümers</font>
+
+277
+00:17:50,960 --> 00:17:53,360
+<font color="#FFFFFF">Gert Behnke fortführen wollen.</font>
+
+278
+00:17:53,400 --> 00:17:56,360
+<font color="#FFFFFF">Gert hat sein Leben</font>
+<font color="#FFFFFF">dem Golfsport verschrieben.</font>
+
+279
+00:17:56,400 --> 00:17:59,800
+<font color="#FFFFFF">Er hat alles auf dem Platz gelassen.</font>
+<font color="#FFFFFF">Sogar seine Gesundheit.</font>
+
+280
+00:18:02,280 --> 00:18:05,120
+<font color="#FFFFFF">Ich sollte eine Bemerkung</font>
+<font color="#FFFFFF">zu einem Brief machen,</font>
+
+281
+00:18:05,160 --> 00:18:08,040
+<font color="#FFFFFF">den wir heute erhalten haben</font>
+<font color="#FFFFFF">von Umweltaktivsten.</font>
+
+282
+00:18:08,200 --> 00:18:11,040
+<font color="#FFFFFF">Anonym natürlich.</font>
+<font color="#FFFF00">(mit Akzent) Diese Feiglinge.</font>
+
+283
+00:18:11,080 --> 00:18:12,640
+<font color="#FFFF00">Diese Flitzpiepen.</font>
+
+284
+00:18:12,800 --> 00:18:16,480
+<font color="#FFFFFF">Sie haben damit gedroht, die</font>
+<font color="#FFFFFF">Erweiterung verhindern zu wollen.</font>
+
+285
+00:18:16,640 --> 00:18:19,080
+<font color="#FFFFFF">Den jämmerlichen</font>
+<font color="#FFFFFF">Möchtegern-Terroristen</font>
+
+286
+00:18:19,240 --> 00:18:21,160
+<font color="#FFFFFF">wollen wir mit dem Turnier zeigen,</font>
+
+287
+00:18:21,200 --> 00:18:24,480
+<font color="#FFFFFF">dass die Bürger aus Schönefelde,</font>
+<font color="#FFFFFF">Sie alle, hinter uns sind.</font>
+
+288
+00:18:25,800 --> 00:18:28,800
+<font color="#FFFFFF">In diesem Sinne</font>
+<font color="#FFFFFF">möchte ich das Turnier eröffnen.</font>
+
+289
+00:18:30,160 --> 00:18:31,640
+<font color="#FFFFFF">Bravo!</font>
+
+290
+00:18:35,360 --> 00:18:36,920
+<font color="#FFFFFF">* Plätschern *</font>
+<font color="#FFFFFF">Jawohl!</font>
+
+291
+00:18:36,960 --> 00:18:38,440
+<font color="#FFFFFF">Ja.</font>
+
+292
+00:18:44,600 --> 00:18:46,240
+<font color="#FFFFFF">Hat es hier gestern geregnet?</font>
+
+293
+00:18:46,400 --> 00:18:48,040
+<font color="#FFFFFF">* Alle lachen. *</font>
+
+294
+00:18:58,320 --> 00:19:00,000
+<font color="#FFFFFF">Oh Mann, ey.</font>
+
+295
+00:19:00,160 --> 00:19:03,840
+<font color="#FFFFFF">So, wir kommen jetzt zum ersten Teil</font>
+<font color="#FFFFFF">der Vorrunde, dem Abschlag.</font>
+
+296
+00:19:03,880 --> 00:19:06,040
+<font color="#FFFFFF">Hier trennt</font>
+<font color="#FFFFFF">sich die Spreu vom Weizen.</font>
+
+297
+00:19:06,080 --> 00:19:07,800
+<font color="#FFFFFF">Unsere ersten Spieler sind:</font>
+
+298
+00:19:07,840 --> 00:19:10,200
+<font color="#FFFFFF">Michael Latzek.</font>
+<font color="#FFFFFF">* Jubel *</font>
+
+299
+00:19:10,360 --> 00:19:12,480
+<font color="#FFFFFF">Tracy Knuppe.</font>
+<font color="#FFFFFF">* Jubel *</font>
+
+300
+00:19:12,520 --> 00:19:14,320
+<font color="#FFFFFF">Und Rocco ...</font>
+
+301
+00:19:14,360 --> 00:19:15,840
+<font color="#FFFFFF">Knüppé.</font>
+
+302
+00:19:15,880 --> 00:19:17,680
+<font color="#FFFF00">Zeig es ihnen, Rocco!</font>
+
+303
+00:19:19,600 --> 00:19:22,560
+<font color="#FFFFFF">Hast du deinen Namen</font>
+<font color="#FFFFFF">auf deine Bälle geschrieben?</font>
+
+304
+00:19:23,080 --> 00:19:25,600
+<font color="#FFFF00">Natürlich hat er das.</font>
+<font color="#FFFF00">Was denken Sie denn?</font>
+
+305
+00:19:33,920 --> 00:19:35,720
+<font color="#FFFFFF">* Jubel *</font>
+<font color="#FFFFFF">Michael Latzek!</font>
+
+306
+00:19:35,880 --> 00:19:37,720
+<font color="#FFFFFF">Wow.</font>
+
+307
+00:19:39,240 --> 00:19:43,560
+<font color="#FFFFFF">Tracy Knuppe, was für ein Abschlag.</font>
+<font color="#FFFFFF">Diese Frau ist eine Naturgewalt.</font>
+
+308
+00:19:43,720 --> 00:19:46,960
+<font color="#FFFFFF">Unglaublich. Jetzt warten</font>
+<font color="#FFFFFF">wir gespannt auf Rocco.</font>
+
+309
+00:19:47,120 --> 00:19:49,320
+<font color="#FFFFFF">* Spannungsvolle Musik *</font>
+
+310
+00:20:00,320 --> 00:20:02,680
+<font color="#FFFF00">Probeschlag, nur ein Probeschlag.</font>
+
+311
+00:20:02,720 --> 00:20:05,400
+<font color="#FFFF00">Er macht immer Probeschlag.</font>
+<font color="#FFFFFF">Monsieur, echt.</font>
+
+312
+00:20:06,520 --> 00:20:08,760
+<font color="#FFFFFF">Der Spielleiter</font>
+<font color="#FFFFFF">gewährt den Mulligan.</font>
+
+313
+00:20:08,920 --> 00:20:12,240
+<font color="#FFFF00">Rocco, komm, konzentrier dich.</font>
+<font color="#FFFF00">Wie wir haben trainiert.</font>
+
+314
+00:20:12,400 --> 00:20:14,800
+<font color="#FFFF00">Blende alles aus</font>
+<font color="#FFFF00">und konzentriere dich.</font>
+
+315
+00:20:14,960 --> 00:20:17,640
+<font color="#FFFF00">Erinnere dich,</font>
+<font color="#FFFF00">kann doch nicht so schwer sein.</font>
+
+316
+00:20:17,680 --> 00:20:20,080
+<font color="#FFFFFF">* Unverständlicher Dialog *</font>
+
+317
+00:20:21,720 --> 00:20:23,720
+<font color="#FFFFFF">* Heroische Musik *</font>
+
+318
+00:20:40,400 --> 00:20:43,600
+<font color="#FFFFFF">* Jubel *</font>
+<font color="#FFFFFF">Was für eine Granate!</font>
+
+319
+00:20:43,760 --> 00:20:45,720
+<font color="#FFFFFF">Wow!</font>
+<font color="#FFFF00">Rocco!</font>
+
+320
+00:20:45,880 --> 00:20:50,520
+<font color="#FFFF00">Du Spitzentyp. Du Spitzentyp.</font>
+<font color="#FFFFFF">Wahnsinn, was für ein Abschlag!</font>
+
+321
+00:21:00,800 --> 00:21:02,800
+<font color="#FFFFFF">* Jubel *</font>
+
+322
+00:21:04,120 --> 00:21:07,760
+<font color="#FFFFFF">Tracy Knuppe hat sich im zweiten</font>
+<font color="#FFFFFF">Teil der Vorrunde durchgesetzt</font>
+
+323
+00:21:07,800 --> 00:21:09,760
+<font color="#FFFFFF">und steht überraschend im Finale.</font>
+
+324
+00:21:09,800 --> 00:21:11,440
+<font color="#FFFFFF">Und jetzt: Jeremy Hermstorf.</font>
+
+325
+00:21:11,480 --> 00:21:15,080
+<font color="#FFFFFF">Eigentlich als Favorit gestartet,</font>
+<font color="#FFFFFF">wird jetzt ganz schön knapp.</font>
+
+326
+00:21:15,120 --> 00:21:17,600
+<font color="#FFFFFF">Denn er ist</font>
+<font color="#FFFFFF">mit Rocco Knüppé gleichauf.</font>
+
+327
+00:21:21,360 --> 00:21:24,080
+<font color="#FFFFFF">Fuck! Warum?</font>
+
+328
+00:21:24,920 --> 00:21:27,600
+<font color="#FFFFFF">Hey, hey, hey! Henri Fore!</font>
+
+329
+00:21:30,160 --> 00:21:33,720
+<font color="#FFFFFF">Wahnsinn, was für eine Dramatik</font>
+<font color="#FFFFFF">hier am Vorrundentag.</font>
+
+330
+00:21:33,760 --> 00:21:37,640
+<font color="#FFFFFF">Und jetzt ... liegt alles</font>
+<font color="#FFFFFF">in der Hand von Rocco Knüppé.</font>
+
+331
+00:21:37,800 --> 00:21:40,920
+<font color="#FFFFFF">Wenn er einlocht, steht er</font>
+<font color="#FFFFFF">mit seiner eigenen Mutter...</font>
+
+332
+00:21:40,960 --> 00:21:42,440
+<font color="#FFFF00">Halt die Klappe.</font>
+<font color="#FFFFFF">Mann.</font>
+
+333
+00:21:42,480 --> 00:21:45,000
+<font color="#FFFF00">Bist nicht im Fernsehen. Mon Dieu.</font>
+<font color="#FFFFFF">Sag mal...</font>
+
+334
+00:21:46,080 --> 00:21:48,120
+<font color="#FFFFFF">Wird jetzt Rocco Knüppé es schaffen,</font>
+
+335
+00:21:48,160 --> 00:21:50,480
+<font color="#FFFFFF">das letzte Ticket</font>
+<font color="#FFFFFF">fürs Turnier zu ziehen?</font>
+
+336
+00:21:54,560 --> 00:21:56,560
+<font color="#FFFFFF">* Spannungsvolle Musik *</font>
+
+337
+00:22:09,000 --> 00:22:11,000
+<font color="#FFFFFF">* Jubel *</font>
+
+338
+00:22:12,000 --> 00:22:13,560
+<font color="#FFFFFF">Wahnsinn!</font>
+
+339
+00:22:13,600 --> 00:22:15,240
+<font color="#FFFFFF">Rocco!</font>
+
+340
+00:22:15,280 --> 00:22:16,920
+<font color="#FFFF00">Rocci!</font>
+
+341
+00:22:18,040 --> 00:22:20,200
+<font color="#FFFFFF">Wir haben</font>
+<font color="#FFFFFF">die Finalisten für Sonntag.</font>
+
+342
+00:22:20,240 --> 00:22:24,360
+<font color="#FFFFFF">Es sind Judith Reimers, Tracy Knuppe</font>
+<font color="#FFFFFF">und der fantastische Rocco.</font>
+
+343
+00:22:24,400 --> 00:22:26,200
+<font color="#FFFFFF">Wahnsinn!</font>
+
+344
+00:22:26,240 --> 00:22:28,240
+<font color="#FFFFFF">* Heroische Musik *</font>
+
+345
+00:22:36,600 --> 00:22:39,680
+<font color="#FFFFFF">Der dachte, dass das Regen war.</font>
+<font color="#00FF00">Weil er dumm ist.</font>
+
+346
+00:22:39,840 --> 00:22:43,400
+<font color="#FFFFFF">Du würdest auch nicht denken,</font>
+<font color="#FFFFFF">dass irgendwer reingepisst hat.</font>
+
+347
+00:22:43,440 --> 00:22:47,000
+<font color="#00FF00">Um den Bau zu stoppen, müssen wir</font>
+<font color="#00FF00">größere Geschütze auffahren.</font>
+
+348
+00:22:47,160 --> 00:22:49,720
+<font color="#FFFFFF">I.</font>
+<font color="#00FF00">So war das doch nicht gemeint.</font>
+
+349
+00:22:50,520 --> 00:22:52,440
+<font color="#00FF00">Wobei das auch ein Statement wäre,</font>
+
+350
+00:22:52,480 --> 00:22:55,160
+<font color="#00FF00">wenn da überall</font>
+<font color="#00FF00">kleine Häufchen rausgucken.</font>
+
+351
+00:23:00,840 --> 00:23:02,320
+<font color="#FFFFFF">Mama?</font>
+<font color="#00FF00">Ja?</font>
+
+352
+00:23:02,480 --> 00:23:04,880
+<font color="#FFFFFF">Wir müssen</font>
+<font color="#FFFFFF">mal kurz unter vier Augen reden.</font>
+
+353
+00:23:05,760 --> 00:23:09,520
+<font color="#00FF00">Also, das war jetzt nur ein Scherz.</font>
+<font color="#FFFFFF">Kannst du rausgehen?</font>
+
+354
+00:23:11,080 --> 00:23:13,480
+<font color="#00FF00">Ja, klar. Also, ja...</font>
+
+355
+00:23:15,800 --> 00:23:17,360
+<font color="#FFFFFF">(Zoe) Tür zu.</font>
+
+356
+00:23:23,120 --> 00:23:25,640
+<font color="#00FF00">Ich habe es.</font>
+<font color="#00FF00">Ich weiß, was wir machen.</font>
+
+357
+00:23:26,520 --> 00:23:29,560
+<font color="#FFFFFF">Wir müssen unsere Zusammenarbeit</font>
+<font color="#FFFFFF">mit dir beenden.</font>
+
+358
+00:23:29,720 --> 00:23:32,600
+<font color="#00FF00">Was? </font><font color="#FFFFFF">Es gibt</font>
+<font color="#FFFFFF">kein richtiges Leben im falschen.</font>
+
+359
+00:23:32,640 --> 00:23:34,760
+<font color="#FFFFFF">Wir konzentrieren uns</font>
+<font color="#FFFFFF">auf die Schule,</font>
+
+360
+00:23:34,800 --> 00:23:37,120
+<font color="#FFFFFF">werden Anwältinnen</font>
+<font color="#FFFFFF">oder Ministerinnen.</font>
+
+361
+00:23:37,280 --> 00:23:40,240
+<font color="#FFFFFF">Wir wollen das System</font>
+<font color="#FFFFFF">von innen bekämpfen.</font>
+
+362
+00:23:40,400 --> 00:23:42,680
+<font color="#FFFFFF">Nicht</font>
+<font color="#FFFFFF">in irgendwelche Löcher pinkeln.</font>
+
+363
+00:23:45,320 --> 00:23:46,800
+<font color="#00FF00">Okay.</font>
+
+364
+00:23:48,520 --> 00:23:50,000
+<font color="#FFFFFF">Los, Mama, raus.</font>
+
+365
+00:24:04,560 --> 00:24:06,160
+<font color="#00FFFF">Hey, Champ.</font>
+
+366
+00:24:09,000 --> 00:24:10,480
+<font color="#00FFFF">Alles klar?</font>
+
+367
+00:24:11,640 --> 00:24:13,440
+<font color="#00FFFF">Was ist denn los?</font>
+
+368
+00:24:14,480 --> 00:24:16,520
+<font color="#00FFFF">Freust du dich</font>
+<font color="#00FFFF">nicht auf das Turnier?</font>
+
+369
+00:24:18,240 --> 00:24:21,160
+<font color="#FFFFFF">Wenn ich verliere,</font>
+<font color="#FFFFFF">darf Papa nicht in den neuen Club.</font>
+
+370
+00:24:21,320 --> 00:24:23,800
+<font color="#00FFFF">Ah, verstehe.</font>
+
+371
+00:24:26,520 --> 00:24:29,920
+<font color="#00FFFF">Aber das Wichtigste ist,</font>
+<font color="#00FFFF">dass du das für dich machst,</font>
+
+372
+00:24:30,080 --> 00:24:33,080
+<font color="#00FFFF">nicht für jemand anderen,</font>
+<font color="#00FFFF">auch nicht für deinen Papa.</font>
+
+373
+00:24:33,960 --> 00:24:36,520
+<font color="#00FFFF">Ich war früher so besessen davon,</font>
+<font color="#00FFFF">zu gewinnen,</font>
+
+374
+00:24:36,560 --> 00:24:39,840
+<font color="#00FFFF">dass mir das Spiel irgendwann</font>
+<font color="#00FFFF">keinen Spaß mehr gemacht hat.</font>
+
+375
+00:24:40,000 --> 00:24:42,000
+<font color="#00FFFF">Und als ich einmal verloren habe,</font>
+
+376
+00:24:43,960 --> 00:24:46,160
+<font color="#00FFFF">sind die Pferde</font>
+<font color="#00FFFF">mit mir durchgegangen.</font>
+
+377
+00:24:46,200 --> 00:24:50,240
+<font color="#00FFFF">Danach habe ich mir geschworen, nie</font>
+<font color="#00FFFF">wieder einen Golfplatz zu betreten.</font>
+
+378
+00:24:51,640 --> 00:24:55,320
+<font color="#00FFFF">Rocco, du musst Spaß haben bei dem,</font>
+<font color="#00FFFF">was du machst.</font>
+
+379
+00:24:56,360 --> 00:24:59,360
+<font color="#00FFFF">Sonst macht das alles</font>
+<font color="#00FFFF">überhaupt keinen Sinn, oder?</font>
+
+380
+00:25:00,600 --> 00:25:02,600
+<font color="#FFFFFF">* Elektronische Musik *</font>
+
+381
+00:25:02,640 --> 00:25:04,560
+<font color="#FFFFFF">♪ Schatzi, Motte.</font>
+
+382
+00:25:05,600 --> 00:25:07,240
+<font color="#FFFFFF">Mausi, hör mir zu.</font>
+
+383
+00:25:08,960 --> 00:25:10,440
+<font color="#FFFFFF">Das ist unser Schicksal.</font>
+
+384
+00:25:12,120 --> 00:25:13,840
+<font color="#FFFFFF">Du weißt, was wir tun müssen.</font>
+
+385
+00:25:15,040 --> 00:25:17,240
+<font color="#FFFFFF">Ich weiß, was zu tun ist.</font>
+
+386
+00:25:18,880 --> 00:25:21,080
+<font color="#FFFFFF">Zoe, Rocco.</font>
+
+387
+00:25:23,040 --> 00:25:24,560
+<font color="#FFFFFF">Tut, was getan werden muss.</font>
+
+388
+00:25:29,240 --> 00:25:31,520
+<font color="#FFFFFF">Duckt euch.</font>
+
+389
+00:25:31,560 --> 00:25:33,360
+<font color="#FFFFFF">Geradeaus schauen.</font>
+
+390
+00:25:35,000 --> 00:25:36,760
+<font color="#FFFFFF">Duckt euch.</font>
+
+391
+00:25:36,800 --> 00:25:38,400
+<font color="#FFFFFF">Guckt zurück.</font>
+
+392
+00:25:40,200 --> 00:25:42,040
+<font color="#FFFFFF">Duckt euch.</font>
+
+393
+00:25:42,200 --> 00:25:43,680
+<font color="#FFFFFF">Geradeaus schauen.</font>
+
+394
+00:25:44,640 --> 00:25:46,320
+<font color="#FFFFFF">Super.</font>
+
+395
+00:25:46,480 --> 00:25:49,360
+<font color="#FFFFFF">Gut gemacht. Klasse.</font>
+
+396
+00:25:49,400 --> 00:25:50,880
+<font color="#FFFFFF">Super.</font>
+
+397
+00:25:58,760 --> 00:26:02,000
+<font color="#FFFFFF">Es ist mein Schicksal.</font>
+<font color="#FFFFFF">Mein Buch wird mich vorantreiben.</font>
+
+398
+00:26:02,160 --> 00:26:05,200
+<font color="#FFFFFF">Ich weiß, es ist mein Schicksal.</font>
+
+399
+00:26:05,240 --> 00:26:09,120
+<font color="#FFFFFF">Mein Buch wird mich vorantreiben.</font>
+<font color="#FFFFFF">Jede Challenge bringt mich weiter.</font>
+
+400
+00:26:09,160 --> 00:26:12,880
+<font color="#FFFFFF">Ich weiß, es ist mein Schicksal.</font>
+<font color="#FFFFFF">Ich weiß, es ist mein Schicksal. ♪</font>
+
+401
+00:26:17,800 --> 00:26:19,280
+<font color="#00FFFF">Was machst du denn hier?</font>
+
+402
+00:26:19,320 --> 00:26:21,280
+<font color="#00FF00">Ähm, äh, nichts...</font>
+
+403
+00:26:21,320 --> 00:26:24,760
+<font color="#00FF00">Nur so ein Projekt für die Arbeit.</font>
+<font color="#00FFFF">Mit Handschuhen?</font>
+
+404
+00:26:26,280 --> 00:26:29,080
+<font color="#00FF00">Wir machen uns die Hände schmutzig.</font>
+<font color="#00FFFF">Ah, ja.</font>
+
+405
+00:26:33,040 --> 00:26:36,520
+<font color="#00FF00">Was hast denn du da?</font>
+<font color="#00FF00">Spielst du jetzt doch wieder?</font>
+
+406
+00:26:36,560 --> 00:26:40,240
+<font color="#00FFFF">Hm? Ach so, nee.</font>
+<font color="#00FFFF">Ist nicht das, was du denkst.</font>
+
+407
+00:26:41,400 --> 00:26:43,040
+<font color="#00FF00">Okay.</font>
+<font color="#00FFFF">Okay.</font>
+
+408
+00:26:43,080 --> 00:26:45,480
+<font color="#00FFFF">Ich gehe dann mal wieder hoch.</font>
+<font color="#00FF00">Cool.</font>
+
+409
+00:26:52,040 --> 00:26:54,040
+<font color="#FFFFFF">* Ruhige Musik *</font>
+
+410
+00:27:05,160 --> 00:27:08,360
+<font color="#FFFFFF">Dem guten Rocco</font>
+<font color="#FFFFFF">sind die Sicherungen durchgebrannt.</font>
+
+411
+00:27:08,400 --> 00:27:10,520
+<font color="#FFFFFF">Was für ein Drama.</font>
+<font color="#FFFF00">Rocco, Knalltüte.</font>
+
+412
+00:27:10,560 --> 00:27:13,720
+<font color="#FFFF00">Was sitzt du da wie</font>
+<font color="#FFFF00">eine Schildkröte? Steh endlich auf.</font>
+
+413
+00:27:14,560 --> 00:27:16,680
+<font color="#FFFF00">Junge, reiß dich zusammen.</font>
+
+414
+00:27:16,720 --> 00:27:18,800
+<font color="#FFFF00">Wir werden gleich disqualifiziert.</font>
+
+415
+00:27:18,960 --> 00:27:21,680
+<font color="#FFFF00">Mon Dieu. Rocco.</font>
+<font color="#FFFF00">Kannst du bitte mal aufstehen?</font>
+
+416
+00:27:21,840 --> 00:27:25,640
+<font color="#FFFFFF">Können Sie den Platz verlassen?</font>
+<font color="#FFFF00">Kannst du mal mich nicht anfassen?</font>
+
+417
+00:27:25,680 --> 00:27:28,000
+<font color="#FFFF00">Rocci.</font>
+<font color="#FFFFFF">Keine Gewalt. Einfach kurz den...</font>
+
+418
+00:27:28,040 --> 00:27:29,720
+<font color="#FFFFFF">* Sie reden durcheinander. *</font>
+
+419
+00:27:29,760 --> 00:27:31,240
+<font color="#FFFFFF">Stopp.</font>
+
+420
+00:27:31,400 --> 00:27:33,400
+<font color="#FFFFFF">* Sie reden durcheinander. *</font>
+
+421
+00:27:34,600 --> 00:27:37,000
+<font color="#FFFFFF">Aber das ist doch...</font>
+<font color="#FFFFFF">- Andreas Knuppe?</font>
+
+422
+00:27:37,160 --> 00:27:40,200
+<font color="#FFFFFF">Wie kommt der her?</font>
+<font color="#FFFFFF">- Wegen dem sitzt Gert im Rollstuhl.</font>
+
+423
+00:27:41,560 --> 00:27:43,440
+<font color="#FFFF00">Nein, nicht.</font>
+
+424
+00:27:43,600 --> 00:27:46,760
+<font color="#FFFF00">Ihr Schweine. So könnt ihr</font>
+<font color="#FFFF00">meinen Rocco nicht behandeln.</font>
+
+425
+00:27:46,800 --> 00:27:48,280
+<font color="#FFFFFF">Weiter!</font>
+
+426
+00:27:51,000 --> 00:27:53,960
+<font color="#FFFFFF">Äh, ohne Vormund kann er</font>
+<font color="#FFFFFF">aber nicht mehr mitmachen.</font>
+
+427
+00:27:55,040 --> 00:27:59,000
+<font color="#FFFFFF">Sie hat recht, Kleiner. Ist niemand</font>
+<font color="#FFFFFF">da, der auf dich aufpassen kann?</font>
+
+428
+00:27:59,040 --> 00:28:00,840
+<font color="#FFFFFF">Das hier. Das ist seine Mutter.</font>
+
+429
+00:28:01,000 --> 00:28:03,360
+<font color="#FF00FF">Und? Ich passe trotzdem</font>
+<font color="#FF00FF">nicht auf auf den.</font>
+
+430
+00:28:03,400 --> 00:28:05,400
+<font color="#FFFFFF">Tracy. Sag mal...</font>
+
+431
+00:28:06,760 --> 00:28:10,400
+<font color="#FFFFFF">Das ist kein gewöhnliches Drama,</font>
+<font color="#FFFFFF">das ist ein Familiendrama.</font>
+
+432
+00:28:10,560 --> 00:28:14,120
+<font color="#FF00FF">Jetzt übertreib mal nicht.</font>
+<font color="#FFFFFF">Tut mir wirklich leid, Rocco.</font>
+
+433
+00:28:14,160 --> 00:28:17,280
+<font color="#FFFFFF">Wenn du keinen Erwachsenen hast,</font>
+<font color="#FFFFFF">der dich begleitet...</font>
+
+434
+00:28:17,440 --> 00:28:19,440
+<font color="#FFFFFF">* Heroische Musik *</font>
+
+435
+00:28:21,240 --> 00:28:24,800
+<font color="#FFFFFF">Ist das nicht Theodor Henri Kröger?</font>
+<font color="#FFFFFF">- (alle) Wow!</font>
+
+436
+00:28:24,960 --> 00:28:27,240
+<font color="#FFFFFF">Der Bobbele des Golfsports.</font>
+
+437
+00:28:27,400 --> 00:28:29,120
+<font color="#FF00FF">Hä?</font>
+
+438
+00:28:37,600 --> 00:28:39,080
+<font color="#00FFFF">Ich habe was für dich.</font>
+
+439
+00:28:39,960 --> 00:28:41,440
+<font color="#00FFFF">Mein alter Schläger,</font>
+
+440
+00:28:41,600 --> 00:28:44,240
+<font color="#00FFFF">damit habe ich</font>
+<font color="#00FFFF">die European Golf Tour gewonnen.</font>
+
+441
+00:28:44,280 --> 00:28:45,760
+<font color="#00FFFF">Mein letztes Turnier.</font>
+
+442
+00:28:46,760 --> 00:28:49,240
+<font color="#00FFFF">Vielleicht bringt er</font>
+<font color="#00FFFF">dir mehr Glück als mir.</font>
+
+443
+00:28:53,480 --> 00:28:54,960
+<font color="#00FFFF">Okay.</font>
+
+444
+00:28:55,440 --> 00:28:57,080
+<font color="#00FFFF">Ich werde Rocco begleiten.</font>
+
+445
+00:28:57,240 --> 00:29:00,160
+<font color="#00FFFF">Der Junge</font>
+<font color="#00FFFF">hat eine faire Chance verdient.</font>
+
+446
+00:29:00,320 --> 00:29:01,800
+<font color="#00FFFF">Nicht wahr, Champ?</font>
+
+447
+00:29:03,280 --> 00:29:05,280
+<font color="#FFFFFF">* Jubel, Applaus *</font>
+
+448
+00:29:09,280 --> 00:29:11,680
+<font color="#FF00FF">So, können wir</font>
+<font color="#FF00FF">jetzt mal weitermachen?</font>
+
+449
+00:29:11,720 --> 00:29:13,200
+<font color="#FF00FF">Mann, ey.</font>
+
+450
+00:29:13,360 --> 00:29:15,360
+<font color="#FFFFFF">* Heroische Musik *</font>
+
+451
+00:29:18,920 --> 00:29:20,720
+<font color="#FFFFFF">Rocco!</font>
+
+452
+00:29:34,880 --> 00:29:37,240
+<font color="#FFFFFF">* Die Musik läuft weiter. *</font>
+
+453
+00:29:50,680 --> 00:29:52,680
+<font color="#FFFFFF">* Stummer Dialog *</font>
+
+454
+00:30:06,200 --> 00:30:08,960
+<font color="#FFFFFF">Ein ganz fantastischer Golftag,</font>
+<font color="#FFFFFF">meine Güte.</font>
+
+455
+00:30:09,120 --> 00:30:11,000
+<font color="#FFFFFF">Wir befinden uns am letzten Loch.</font>
+
+456
+00:30:11,040 --> 00:30:13,440
+<font color="#FFFFFF">Alle drei Finalisten</font>
+<font color="#FFFFFF">sind punktgleich.</font>
+
+457
+00:30:13,480 --> 00:30:15,840
+<font color="#FFFFFF">Die Spannung ist kaum zu ertragen.</font>
+
+458
+00:30:17,480 --> 00:30:20,800
+<font color="#FFFFFF">Mit welcher Spielfreude</font>
+<font color="#FFFFFF">und angeborener Perfektion</font>
+
+459
+00:30:20,960 --> 00:30:23,000
+<font color="#FFFFFF">die beiden Knuppes heute abliefern.</font>
+
+460
+00:30:23,160 --> 00:30:26,080
+<font color="#FFFFFF">Also, es ist einfach unglaublich.</font>
+
+461
+00:30:27,520 --> 00:30:29,360
+<font color="#FFFFFF">* Schelmische Musik *</font>
+
+462
+00:30:33,360 --> 00:30:34,840
+<font color="#FFFF00">Ist das etwa?</font>
+
+463
+00:30:37,640 --> 00:30:39,120
+<font color="#FFFF00">Das ist ja Mari...</font>
+
+464
+00:30:40,400 --> 00:30:42,600
+<font color="#FFFF00">Was macht die denn da?</font>
+
+465
+00:30:45,400 --> 00:30:48,680
+<font color="#FFFFFF">Wollen wir mal sehen,</font>
+<font color="#FFFFFF">ob Judith Reimers da mithalten kann.</font>
+
+466
+00:30:48,840 --> 00:30:50,840
+<font color="#FFFFFF">Konzentration, Hase, komm.</font>
+
+467
+00:30:53,360 --> 00:30:55,560
+<font color="#FFFFFF">Achtung, Querschläger.</font>
+
+468
+00:31:00,640 --> 00:31:02,240
+<font color="#FFFFFF">Tracy Knuppe.</font>
+
+469
+00:31:10,920 --> 00:31:12,400
+<font color="#FFFFFF">Ja!</font>
+<font color="#FFFFFF">* Jubel *</font>
+
+470
+00:31:12,440 --> 00:31:13,920
+<font color="#FFFFFF">Tracy Knuppe.</font>
+
+471
+00:31:13,960 --> 00:31:16,360
+<font color="#FFFFFF">Mit dem ersten Schlag</font>
+<font color="#FFFFFF">aufs Green gekommen.</font>
+
+472
+00:31:16,400 --> 00:31:18,440
+<font color="#FFFFFF">Einfach unglaublich, diese Frau.</font>
+
+473
+00:31:18,480 --> 00:31:20,840
+<font color="#FFFFFF">Vielleicht</font>
+<font color="#FFFFFF">ist das die Vorentscheidung.</font>
+
+474
+00:31:20,880 --> 00:31:25,360
+<font color="#FFFFFF">Wenn man Tracys Putten bedenkt,</font>
+<font color="#FFFFFF">muss Rocco ein Hole-in-one schlagen.</font>
+
+475
+00:31:25,520 --> 00:31:27,720
+<font color="#00FFFF">Darf ich zu ihm?</font>
+<font color="#FFFFFF">Um gewinnen zu können.</font>
+
+476
+00:31:31,720 --> 00:31:34,840
+<font color="#00FFFF">Denk dran, Rocco, der Spaß</font>
+<font color="#00FFFF">steht im Vordergrund, okay?</font>
+
+477
+00:31:34,880 --> 00:31:37,160
+<font color="#00FFFF">Gewinnen</font>
+<font color="#00FFFF">macht mehr Spaß als Verlieren,</font>
+
+478
+00:31:37,200 --> 00:31:39,200
+<font color="#00FFFF">also gib jetzt alles.</font>
+
+479
+00:31:39,360 --> 00:31:41,960
+<font color="#FFFFFF">Wenn Rocco jetzt</font>
+<font color="#FFFFFF">seine Nerven im Griff behält,</font>
+
+480
+00:31:42,880 --> 00:31:45,080
+<font color="#FFFFFF">dann braucht er</font>
+<font color="#FFFFFF">eigentlich nur noch ...</font>
+
+481
+00:31:45,680 --> 00:31:47,160
+<font color="#FFFFFF">ein Wunder.</font>
+
+482
+00:31:50,080 --> 00:31:52,040
+<font color="#FFFFFF">* Heroische Musik *</font>
+
+483
+00:31:53,560 --> 00:31:55,040
+<font color="#FFFFFF">Wow.</font>
+
+484
+00:31:58,040 --> 00:31:59,520
+<font color="#FFFFFF">* Knall *</font>
+
+485
+00:32:00,760 --> 00:32:02,760
+<font color="#FFFFFF">* Schelmische Musik *</font>
+
+486
+00:32:08,840 --> 00:32:14,360
+<font color="#FFFFFF">♪ Schatzi, Hasi, Mausi, Baby.</font>
+
+487
+00:32:15,440 --> 00:32:20,000
+<font color="#FFFFFF">Falls du mich suchst,</font>
+
+488
+00:32:21,240 --> 00:32:27,840
+<font color="#FFFFFF">ich lieg'</font>
+<font color="#FFFFFF">unten auf der Couch im Keller. ♪</font>
+
+489
+00:32:29,680 --> 00:32:31,680
+<font color="#FFFFFF">Untertitel im Auftrag des ZDF,</font>
+<font color="#FFFFFF">2023</font>

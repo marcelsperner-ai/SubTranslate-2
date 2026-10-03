@@ -1134,6 +1134,117 @@ form.addEventListener('submit', async (e) => {
     }
 });
 
+function updateReviewButton(count) {
+    const button = document.getElementById('btnReview');
+    if (!button) return;
+    button.style.display = count > 0 ? 'inline-block' : 'none';
+    button.textContent = `🧐 Prüfen (${count})`;
+}
+
+async function openReviewPopup() {
+    if (!currentProjectId) return;
+    const projectId = currentProjectId;
+    const popup = createPreviewWindow('Prüfung');
+    if (!popup) return;
+    popup.document.title = 'Doppelungen prüfen';
+    popup.document.getElementById('preview-title').textContent = 'Verdächtige Doppelungen prüfen';
+    const doc = popup.document;
+    const content = doc.getElementById('preview-content');
+
+    const makeCell = (className, markup) => {
+        const td = doc.createElement('td');
+        td.className = className;
+        td.dir = 'auto';
+        appendSrtMarkup(doc, td, markup);
+        return td;
+    };
+
+    const render = async () => {
+        const res = await fetch(`/api/review/${projectId}`);
+        const data = await res.json();
+        updateReviewButton(data.items.length);
+        content.replaceChildren();
+        doc.getElementById('preview-status').textContent = data.items.length
+            ? `${data.items.length} offene Prüfung(en): Ist die Doppelung im deutschen Original ebenfalls vorhanden?`
+            : 'Keine offenen Prüfungen.';
+        data.items.forEach((item) => {
+            const rows = item.cues.map((cue) => {
+                const row = doc.createElement('tr');
+                const nr = doc.createElement('td');
+                nr.className = 'cue-number';
+                nr.textContent = cue.number;
+                const time = doc.createElement('td');
+                time.className = 'timestamp';
+                time.textContent = `${cue.start} – ${cue.end}`;
+                const editor = doc.createElement('textarea');
+                editor.className = 'csv-cell-editor';
+                editor.dir = 'auto';
+                editor.value = cue.translation;
+                editor.rows = 3;
+                const edit = doc.createElement('td');
+                edit.className = 'subtitle';
+                const preview = makeCell('srt-text', cue.translation);
+                const redo = doc.createElement('button');
+                redo.type = 'button';
+                redo.textContent = 'Neu übersetzen';
+                redo.addEventListener('click', async () => {
+                    redo.disabled = true;
+                    try {
+                        const r = await fetch(`/api/review/${projectId}/retranslate`, {
+                            method: 'POST', headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({cue: cue.number}),
+                        });
+                        const d = await r.json();
+                        if (r.ok) editor.value = d.text; else popup.alert(d.error || 'Fehler');
+                    } finally { redo.disabled = false; }
+                });
+                edit.append(preview, editor, redo);
+                row.append(nr, time, edit, makeCell('subtitle srt-text srt-original', cue.original));
+                row.dataset.number = cue.number;
+                row._editor = editor;
+                row._original = cue.translation;
+                return row;
+            });
+            const section = doc.createElement('div');
+            section.style.marginBottom = '24px';
+            const wrap = doc.createElement('div');
+            wrap.className = 'table-wrap';
+            const table = doc.createElement('table');
+            const head = doc.createElement('thead');
+            head.innerHTML = '<tr><th>Cue-Nr.</th><th>Zeitstempel</th><th>Persische Übersetzung</th><th>Deutsches Original</th></tr>';
+            const body = doc.createElement('tbody');
+            rows.forEach((row) => body.append(row));
+            table.append(head, body);
+            wrap.append(table);
+            const actions = doc.createElement('div');
+            actions.className = 'csv-preview-actions';
+            actions.style.marginTop = '8px';
+            const save = doc.createElement('button');
+            save.type = 'button';
+            save.className = 'primary';
+            save.textContent = 'Speichern / So lassen';
+            save.addEventListener('click', async () => {
+                const edits = {};
+                rows.forEach((row) => {
+                    if (row._editor.value !== row._original) edits[row.dataset.number] = row._editor.value;
+                });
+                const keys = item.cues.map((cue) => cue.number);
+                const r = await fetch(`/api/review/${projectId}/resolve`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({cues: keys, edits}),
+                });
+                if (r.ok) render(); else popup.alert('Speichern fehlgeschlagen.');
+            });
+            actions.append(save);
+            section.append(wrap, actions);
+            content.append(section);
+        });
+    };
+    await render();
+}
+
+document.getElementById('btnReview')?.addEventListener('click', openReviewPopup);
+
 function updatePauseResumeButton(status) {
     const canResume = status === 'pausiert' || status === 'Fehler';
     btnPauseResume.style.display = status === 'laufend' || canResume ? 'inline-block' : 'none';
@@ -1178,6 +1289,7 @@ function startPolling() {
                 statusBadge.className = "badge " + (data.status === 'laufend' ? "bg-primary" : (data.status === 'abgeschlossen' ? "bg-success" : "bg-warning"));
             }
             updatePauseResumeButton(data.status);
+            updateReviewButton(data.review_open || 0);
             
             if (data.status === 'abgeschlossen') {
                 currentAvailableDownloads.srt = true;

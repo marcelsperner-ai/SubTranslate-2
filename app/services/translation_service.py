@@ -1,6 +1,7 @@
 import os
 import time
 import pysrt
+import difflib
 import json
 import re
 import smtplib
@@ -10,6 +11,7 @@ from email.message import EmailMessage
 from datetime import datetime
 from google import genai
 from google.genai import types
+from pydantic import BaseModel
 
 from app.db import (
     get_translation_by_id, 
@@ -23,6 +25,7 @@ from app.db import (
 )
 from app.prompt_manager import load_prompts, get_system_instruction, append_episode_summary
 from app.services.export_service import copy_file_to_export
+from app.services.review_service import find_duplicate_suspects, review_path, save_review_items, add_review_items
 
 def send_email_with_attachments(receiver_email, subject, body, file_paths):
     sender_email = os.getenv("EMAIL_SENDER")
@@ -61,21 +64,73 @@ def send_email_with_attachments(receiver_email, subject, body, file_paths):
         return False, str(e)
 
 
-def translate_batch(client, text_batch, system_instruction, log_callback, model="gemini-3.1-flash-lite", max_retries=5):
+class TranslatedCue(BaseModel):
+    id: int
+    source: str
+    text: str
+
+
+def _normalize_source(text):
+    return " ".join(text.split())
+
+
+def _source_matches(sent, echoed):
+    sent, echoed = _normalize_source(sent), _normalize_source(echoed)
+    return sent == echoed or difflib.SequenceMatcher(None, sent, echoed).ratio() >= 0.85
+
+
+def _write_debug_record(debug_log_path, record):
+    if not debug_log_path:
+        return
+    try:
+        os.makedirs(os.path.dirname(debug_log_path), exist_ok=True)
+        with open(debug_log_path, "a", encoding="utf-8") as debug_file:
+            debug_file.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except OSError as error:
+        print(f"Debug-Log konnte nicht geschrieben werden: {error}", flush=True)
+
+
+def _entry_field(entry, name):
+    return entry.get(name) if isinstance(entry, dict) else getattr(entry, name, None)
+
+
+def _split_entries(entries):
+    ids, sources, texts = [], [], []
+    for entry in entries:
+        entry_id = _entry_field(entry, "id")
+        source, text = _entry_field(entry, "source"), _entry_field(entry, "text")
+        if not isinstance(entry_id, int) or not isinstance(source, str) or not isinstance(text, str):
+            raise ValueError(f"Ungültiger Antworteintrag: {entry!r}")
+        ids.append(entry_id)
+        sources.append(source)
+        texts.append(text)
+    return ids, sources, texts
+
+
+def translate_batch(client, text_batch, system_instruction, log_callback, model="gemini-3.1-flash-lite", max_retries=5, debug_log_path=None):
     batch_instruction = (
         f"{system_instruction.rstrip()}\n\n"
-        f"Übersetze genau {len(text_batch)} Untertitel. Gib für jeden Eingabeeintrag genau einen "
-        "Übersetzungsstring zurück, in derselben Reihenfolge. Fasse niemals benachbarte "
-        "Untertitel zusammen. Bewahre Zeilenumbrüche innerhalb eines Untertitels."
+        f"Die Eingabe ist ein JSON-Array mit genau {len(text_batch)} Objekten der Form "
+        '{"id": Nummer, "text": Untertitel}. Gib ein JSON-Array mit genau einem Objekt je Eingabeobjekt '
+        'zurück: {"id": dieselbe Nummer, "source": der unveränderte Eingabetext dieser id, '
+        '"text": Übersetzung genau dieses Eingabetextes}, in derselben Reihenfolge. '
+        "Übersetze jeden Untertitel ausschließlich anhand seines eigenen Textes. Fasse niemals "
+        "benachbarte Untertitel zusammen, überspringe keine und verschiebe keinen Inhalt in einen "
+        "anderen Eintrag. Bewahre Zeilenumbrüche innerhalb eines Untertitels."
     )
     config = types.GenerateContentConfig(
         system_instruction=batch_instruction,
         temperature=0.3,
-        response_schema=list[str],
+        response_schema=list[TranslatedCue],
         thinking_config=types.ThinkingConfig(thinking_budget=0)
     )
-    contents = json.dumps(text_batch)
+    expected_ids = list(range(1, len(text_batch) + 1))
+    contents = json.dumps(
+        [{"id": cue_id, "text": text} for cue_id, text in zip(expected_ids, text_batch)],
+        ensure_ascii=False,
+    )
     
+    duplicate_retry_done = False
     for attempt in range(1, max_retries + 1):
         try:
             response = client.models.generate_content(
@@ -83,45 +138,74 @@ def translate_batch(client, text_batch, system_instruction, log_callback, model=
                 contents=contents,
                 config=config
             )
+
+            raw_output = getattr(response, "text", None)
+            parsed_output = response.parsed
+            debug_output = raw_output
+            output_label = "Rohantwort"
+            if not debug_output and parsed_output is not None:
+                debug_output = json.dumps(parsed_output, ensure_ascii=False)
+                output_label = "geparste Antwort (response.text war leer)"
+            print(
+                f"\nGemini-{output_label} (Modell={model}, Versuch={attempt}, "
+                f"Eingaben={len(text_batch)}):\n{debug_output or '<leer>'}\n",
+                flush=True,
+            )
+
+            entries = parsed_output if parsed_output else json.loads(response.text)
+            response_ids, response_sources, translated_batch = _split_entries(entries)
+            source_mismatches = (
+                [
+                    cue_id for cue_id, sent, echoed in zip(expected_ids, text_batch, response_sources)
+                    if not _source_matches(sent, echoed)
+                ]
+                if response_ids == expected_ids else []
+            )
+            _write_debug_record(debug_log_path, {
+                "timestamp": datetime.now().isoformat(timespec="seconds"),
+                "model": model,
+                "attempt": attempt,
+                "request": json.loads(contents),
+                "response": raw_output or debug_output,
+                "ids_ok": response_ids == expected_ids,
+                "source_mismatches": source_mismatches,
+            })
             
-            if response.parsed:
-                translated_batch = response.parsed
-            else:
-                translated_batch = json.loads(response.text)
-            
-            if len(translated_batch) != len(text_batch):
+            if response_ids != expected_ids or source_mismatches:
                 candidates = getattr(response, "candidates", None) or []
                 finish_reasons = [str(getattr(candidate, "finish_reason", None)) for candidate in candidates]
                 usage = getattr(response, "usage_metadata", None)
-                raw_output = getattr(response, "text", None)
                 if not raw_output:
                     raw_output = json.dumps(translated_batch, ensure_ascii=False)
                 diagnostic = (
                     f"Gemini-Antwortdiagnose: Modell={model}, Eingaben={len(text_batch)}, "
-                    f"Ausgaben={len(translated_batch)}, Finish-Reason={finish_reasons}, Nutzung={usage!r}"
+                    f"Ausgaben={len(translated_batch)}, IDs={response_ids}, Quelltext-Abweichungen={source_mismatches}, Finish-Reason={finish_reasons}, Nutzung={usage!r}"
                 )
                 log_callback(f"🔎 {diagnostic} (Rohantwort folgt im Flask-Terminal)")
                 print(f"\n{diagnostic}\nRohantwort:\n{raw_output}\n", flush=True)
                 if len(text_batch) > 1:
                     midpoint = len(text_batch) // 2
                     log_callback(
-                        f"↪️ Batch mit {len(text_batch)} Einträgen wird wegen Längenabweichung "
+                        f"↪️ Batch mit {len(text_batch)} Einträgen wird wegen abweichender IDs oder Quelltexte "
                         f"in {midpoint} und {len(text_batch) - midpoint} Einträge geteilt."
                     )
                     first_half = translate_batch(
                         client, text_batch[:midpoint], system_instruction, log_callback,
-                        model=model, max_retries=max_retries
+                        model=model, max_retries=max_retries, debug_log_path=debug_log_path
                     )
                     if first_half is None:
                         return None
                     second_half = translate_batch(
                         client, text_batch[midpoint:], system_instruction, log_callback,
-                        model=model, max_retries=max_retries
+                        model=model, max_retries=max_retries, debug_log_path=debug_log_path
                     )
                     if second_half is None:
                         return None
                     return first_half + second_half
-                raise ValueError(f"Längen-Mismatch! Erwartet: {len(text_batch)}, Erhalten: {len(translated_batch)}")
+                raise ValueError(
+                    f"Zuordnungs-Mismatch! Erwartete IDs: {expected_ids}, erhalten: {response_ids}, "
+                    f"abweichende Quelltexte: {source_mismatches}"
+                )
             
             cleaned_batch = []
             for idx, (orig_text, trans_text) in enumerate(zip(text_batch, translated_batch)):
@@ -136,6 +220,15 @@ def translate_batch(client, text_batch, system_instruction, log_callback, model=
                     log_callback(f"ℹ️ Info: Zeilenanzahl bei Block {idx+1} weicht leicht ab.")
                 
                 cleaned_batch.append(trans_text)
+
+            suspects = find_duplicate_suspects(text_batch, cleaned_batch)
+            if suspects and not duplicate_retry_done and attempt < max_retries:
+                duplicate_retry_done = True
+                log_callback(
+                    f"🔁 Verdacht auf doppelte Übersetzungen in {len(suspects)} Zeilenpaar(en); "
+                    "Batch wird einmal neu angefordert."
+                )
+                continue
                 
             return cleaned_batch
             
@@ -194,6 +287,9 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
         
         # NEU: Einzigartige Temp-Datei für diesen spezifischen Worker-Run
         tmp_out_path = f"{out_path}.{worker_token}.tmp"
+        debug_log_path = os.path.join(
+            outputs_dir, "debug", out_name.replace("_FA.srt", "_gemini_raw.jsonl")
+        )
         
         try:
             subs_in = pysrt.open(in_path, encoding='utf-8')
@@ -206,6 +302,9 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
             subs_work = subs_in
             
         start_index = t['translated_lines']
+        review_file = review_path(outputs_dir, out_name)
+        if start_index == 0:
+            save_review_items(review_file, [])
         
         for i in range(start_index, len(subs_work), batch_size):
             # NEU: Checkt den Kill-Switch aus dem Heartbeat-Thread
@@ -218,7 +317,10 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
             log_cb(f"➤ Sende Zeilen {i+1} bis {min(i+batch_size, len(subs_work))} an API...")
             
             start_time = time.time()
-            translated_texts = translate_batch(client, text_batch, final_system_prompt, log_cb, model=gemini_model)
+            translated_texts = translate_batch(
+                client, text_batch, final_system_prompt, log_cb, model=gemini_model,
+                debug_log_path=debug_log_path
+            )
             duration = time.time() - start_time
             
             if translated_texts:
@@ -239,6 +341,10 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
                 # 3. Wenn die DB ihr OK gibt: Temp-Datei zur echten Datei machen (Atomar)
                 os.replace(tmp_out_path, out_path)
                     
+                suspects = find_duplicate_suspects(text_batch, translated_texts)
+                if add_review_items(review_file, suspects, i):
+                    log_cb(f"🧐 {len(suspects)} verdächtige Doppelung(en) zur Prüfung vorgemerkt.")
+
                 preview = translated_texts[0][:40].replace('\n', ' ') + "..."
                 log_cb(f"✓ Output in {int(duration)} Sek. (Preview: '{preview}')")
             else:

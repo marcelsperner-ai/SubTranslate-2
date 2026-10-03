@@ -19,6 +19,7 @@ from app.db import (
 from app.services.edtech_service import EDTECH_CSV_COLUMNS, EDTECH_GENERATION_INSTRUCTIONS
 from app.services.translation_service import start_translation_job
 from app.services.export_service import copy_file_to_export
+from app.services.review_service import review_path, load_review_items, save_review_items, count_open
 from app.services.subtitle_conversion_service import convert_ttml_to_srt
 
 main_bp = Blueprint('main', __name__)
@@ -470,6 +471,7 @@ def get_status(t_id):
         "status": t['status'],
         "translated_lines": t['translated_lines'],
         "total_lines": t['total_lines'],
+        "review_open": count_open(_review_file(t)),
         "logs": logs
     })
 from app.db import (
@@ -870,3 +872,103 @@ def get_metadata():
         }
             
     return jsonify({"profiles": profiles, "summaries": summaries_data})
+
+def _review_file(t):
+    return review_path(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_FA.srt'))
+
+
+def _open_srt(path):
+    try:
+        return pysrt.open(path, encoding='utf-8')
+    except UnicodeDecodeError:
+        return pysrt.open(path, encoding='iso-8859-1')
+
+
+@main_bp.route('/api/review/<int:t_id>', methods=['GET'])
+def get_review_items(t_id):
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    fa_path = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_FA.srt'))
+    de_path = os.path.join(current_app.config['UPLOADS_DIR'], t['original_filename'])
+    if not os.path.exists(fa_path) or not os.path.exists(de_path):
+        return jsonify({"items": []})
+    fa, de = _open_srt(fa_path), _open_srt(de_path)
+    items = []
+    for item in load_review_items(_review_file(t)):
+        if item.get("status") != "open":
+            continue
+        cues = []
+        for number in item["cues"]:
+            if not 1 <= number <= min(len(fa), len(de)):
+                continue
+            sub = fa[number - 1]
+            cues.append({
+                "number": number,
+                "start": str(sub.start).replace('.', ','),
+                "end": str(sub.end).replace('.', ','),
+                "translation": sub.text,
+                "original": de[number - 1].text,
+            })
+        items.append({"cues": cues})
+    return jsonify({"items": items})
+
+
+@main_bp.route('/api/review/<int:t_id>/resolve', methods=['POST'])
+def resolve_review_item(t_id):
+    """Schließt ein Verdachtspaar ab; optional werden Cue-Texte manuell ersetzt."""
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    data = request.get_json(silent=True) or {}
+    pair = data.get('cues')
+    edits = data.get('edits') or {}
+    review_file = _review_file(t)
+    items = load_review_items(review_file)
+    match = next((i for i in items if i.get("status") == "open" and i["cues"] == pair), None)
+    if match is None:
+        return jsonify({"error": "Prüfeintrag nicht gefunden"}), 404
+    if edits:
+        fa_path = os.path.join(current_app.config['OUTPUTS_DIR'], t['original_filename'].replace('.srt', '_FA.srt'))
+        fa = _open_srt(fa_path)
+        for key, text in edits.items():
+            number = int(key)
+            if number not in pair or not isinstance(text, str) or not 1 <= number <= len(fa):
+                return jsonify({"error": "Ungültige Bearbeitung"}), 400
+            fa[number - 1].text = text
+        tmp_path = f"{fa_path}.review.tmp"
+        fa.save(tmp_path, encoding='utf-8')
+        os.replace(tmp_path, fa_path)
+    match["status"] = "edited" if edits else "kept"
+    save_review_items(review_file, items)
+    return jsonify({"review_open": count_open(review_file)})
+
+
+@main_bp.route('/api/review/<int:t_id>/retranslate', methods=['POST'])
+def retranslate_review_cue(t_id):
+    """Übersetzt einen einzelnen Cue neu und liefert den Vorschlag zurück (ohne zu speichern)."""
+    from google import genai
+    from app.services.translation_service import translate_batch
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return jsonify({"error": "GEMINI_API_KEY fehlt in .env"}), 500
+    try:
+        number = int((request.get_json(silent=True) or {}).get('cue'))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Ungültige Cue-Nummer"}), 400
+    de = _open_srt(os.path.join(current_app.config['UPLOADS_DIR'], t['original_filename']))
+    if not 1 <= number <= len(de):
+        return jsonify({"error": "Cue nicht gefunden"}), 404
+    prompts_data = load_prompts()
+    base_prompt = t.get('custom_translation_prompt') or get_system_instruction(prompts_data, t.get('profile_key', 'default'))
+    prompt = append_episode_summary(base_prompt, (t.get('episode_summary') or '').strip())
+    result = translate_batch(
+        genai.Client(api_key=api_key), [de[number - 1].text], prompt, lambda message: None,
+        model=t.get('translation_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite', max_retries=2,
+    )
+    if not result:
+        return jsonify({"error": "Neu-Übersetzung fehlgeschlagen"}), 502
+    return jsonify({"text": result[0]})
