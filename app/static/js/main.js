@@ -145,6 +145,7 @@ let translationPromptChanged = false;
 let translationPromptConfirmed = false;
 let episodeSummarySaved = true;
 let hasGeneratedAss = false;
+let pendingEdtechExportOptions = null;
 let savedEdtechSettings = null;
 let pendingArchiveProjectId = null;
 let currentSuggestedProjectName = '';
@@ -693,6 +694,7 @@ regenerateTranslationButton.addEventListener('click', async () => {
     translationPromptSaveButton.disabled = true;
     translationPromptSaveStatus.textContent = 'SRT-Neugenerierung wird gestartet...';
     try {
+        const exportOptions = await prepareExportOptions(currentProjectId, ['srt']);
         const response = await fetch(`/api/regenerate/${currentProjectId}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -700,7 +702,8 @@ regenerateTranslationButton.addEventListener('click', async () => {
                 translation_prompt: translationPromptInput.value,
                 sync_offset: translationSyncOffsetInput.value,
                 translation_model: translationModelSelect.value,
-                batch_size: transSettingsForm.elements['batch_size'].value
+                batch_size: transSettingsForm.elements['batch_size'].value,
+                export_options: exportOptions,
             })
         });
         const result = await response.json();
@@ -708,6 +711,7 @@ regenerateTranslationButton.addEventListener('click', async () => {
 
         currentAvailableDownloads = { srt: false, ass: false, csv: false };
         hasGeneratedAss = false;
+        pendingEdtechExportOptions = null;
         translationPromptChanged = false;
         translationPromptConfirmed = false;
         progressSection.style.display = 'block';
@@ -992,6 +996,7 @@ async function loadProjectToMain(id, title, status, filename = '') {
     setProjectLoading(true);
     setTranslationStarted(false);
     currentProjectId = id;
+    pendingEdtechExportOptions = null;
     btnNewProject.classList.remove('active');
     projectTitle.textContent = title;
     projectFilename.textContent = filename;
@@ -1112,7 +1117,19 @@ form.addEventListener('submit', async (e) => {
         if (uploadRes.ok) {
             currentProjectId = uploadData.id;
             const normalizedFilename = uploadData.original_filename || formData.get('file').name;
-            const startRes = await fetch(`/api/start/${currentProjectId}`, { method: 'POST' });
+            let exportOptions;
+            try {
+                exportOptions = await prepareExportOptions(currentProjectId, ['srt']);
+            } catch (error) {
+                loadProjectToMain(currentProjectId, projectTitleText, 'pausiert', normalizedFilename);
+                alert(`Projekt wurde angelegt, Export-Ziele konnten aber nicht geprüft werden: ${error.message}`);
+                return;
+            }
+            const startRes = await fetch(`/api/start/${currentProjectId}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({export_options: exportOptions}),
+            });
             if (!startRes.ok) {
                 const startData = await startRes.json();
                 loadProjectToMain(currentProjectId, projectTitleText, 'pausiert', normalizedFilename);
@@ -1325,6 +1342,7 @@ btnNewProject.addEventListener('click', () => {
     setProjectLoading(false);
     setTranslationStarted(false);
     currentProjectId = null;
+    pendingEdtechExportOptions = null;
     btnNewProject.classList.add('active');
     if (pollInterval) clearInterval(pollInterval);
     
@@ -1376,7 +1394,16 @@ btnPauseResume.addEventListener('click', async () => {
     let endpoint = shouldResume ? `/api/start/${currentProjectId}` : `/api/pause/${currentProjectId}`;
     
     try {
-        const response = await fetch(endpoint, { method: 'POST' });
+        const exportOptions = shouldResume
+            ? await prepareExportOptions(currentProjectId, ['srt'])
+            : null;
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            ...(shouldResume ? {
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({export_options: exportOptions}),
+            } : {}),
+        });
         if (!response.ok) {
             const result = await response.json();
             alert(result.error || 'Statusänderung fehlgeschlagen.');
@@ -1400,6 +1427,63 @@ function setPreviewAvailability(availableDownloads) {
     });
     btnOpenFlashcards.classList.toggle('d-none', !availableDownloads.csv);
     previewLinks.classList.toggle('d-none', !Object.values(availableDownloads).some(Boolean));
+}
+
+async function prepareExportOptions(projectId, fileTypes) {
+    const query = new URLSearchParams({types: fileTypes.join(',')});
+    const response = await fetch(`/api/project/${projectId}/export-targets?${query}`);
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Export-Ziele konnten nicht geprüft werden.');
+
+    const exportOptions = {};
+    for (const [fileType, target] of Object.entries(result.targets || {})) {
+        if (!target.configured) continue;
+        const choice = {filename: target.filename, overwrite: false};
+        if (target.exists) {
+            const targetPath = `${target.directory}/${target.filename}`;
+            if (window.confirm(`Die Exportkopie "${targetPath}" existiert bereits. Soll sie überschrieben werden?`)) {
+                choice.overwrite = true;
+            } else {
+                const filename = window.prompt(
+                    'Neuen Dateinamen für die Exportkopie eingeben. Abbrechen oder leer lassen überspringt die Kopie.',
+                    target.filename,
+                );
+                if (!filename?.trim()) choice.skip = true;
+                else {
+                    const extension = target.filename.slice(target.filename.lastIndexOf('.'));
+                    const enteredFilename = filename.trim();
+                    choice.filename = enteredFilename.toLowerCase().endsWith(extension.toLowerCase())
+                        ? enteredFilename
+                        : `${enteredFilename}${extension}`;
+                    if (choice.filename === target.filename) {
+                        choice.skip = true;
+                    } else {
+                        const customQuery = new URLSearchParams({
+                            types: fileType,
+                            filename: choice.filename,
+                        });
+                        const customResponse = await fetch(
+                            `/api/project/${projectId}/export-targets?${customQuery}`
+                        );
+                        const customResult = await customResponse.json();
+                        if (!customResponse.ok) {
+                            throw new Error(customResult.error || 'Export-Ziel konnte nicht geprüft werden.');
+                        }
+                        const customTarget = customResult.targets[fileType];
+                        if (customTarget.exists) {
+                            const customPath = `${customTarget.directory}/${customTarget.filename}`;
+                            choice.overwrite = window.confirm(
+                                `Die Exportkopie "${customPath}" existiert bereits. Soll sie überschrieben werden?`
+                            );
+                            if (!choice.overwrite) choice.skip = true;
+                        }
+                    }
+                }
+            }
+        }
+        exportOptions[fileType] = choice;
+    }
+    return exportOptions;
 }
 
 btnOpenFlashcards.addEventListener('click', () => {
@@ -2054,6 +2138,10 @@ previewLinks.addEventListener('click', async (event) => {
 function unlockEdtech(availableDownloads = currentAvailableDownloads) {
     const wasLocked = edtechPaneLocked;
     currentAvailableDownloads = availableDownloads;
+    if (!availableDownloads.ass || !availableDownloads.csv) {
+        validationResult.classList.add('d-none');
+        validationResult.textContent = '';
+    }
     edtechPromptInput.disabled = !edtechPromptLoaded || !availableDownloads.srt;
     edtechZone.classList.remove('disabled-overlay');
     edtechStatusBox.style.display = 'none';
@@ -2115,7 +2203,7 @@ function showMismatchProgress(message) {
     validationResult.classList.remove('d-none');
 }
 
-async function generateAss(ignoreValidationErrors = false) {
+async function generateAss(ignoreValidationErrors = false, exportOptions = pendingEdtechExportOptions) {
     btnGenerateEdtech.disabled = true;
     btnGenerateEdtech.textContent = 'Erstelle ASS...';
     const settingsData = new FormData(edtechSettingsForm);
@@ -2124,6 +2212,9 @@ async function generateAss(ignoreValidationErrors = false) {
     payload.ignore_validation_errors = ignoreValidationErrors;
 
     try {
+        if (exportOptions === null) exportOptions = await prepareExportOptions(currentProjectId, ['csv', 'ass']);
+        pendingEdtechExportOptions = exportOptions;
+        payload.export_options = exportOptions;
         const response = await fetch(`/api/edtech/generate/${currentProjectId}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -2143,6 +2234,7 @@ async function generateAss(ignoreValidationErrors = false) {
         validationResult.textContent = 'CSV geprüft; ASS erfolgreich erstellt.';
         validationResult.classList.remove('d-none');
         hasGeneratedAss = true;
+        pendingEdtechExportOptions = null;
         savedEdtechSettings = getEdtechSettingsSnapshot();
         updateAssRebuildButton();
         loadProjects();
@@ -2211,13 +2303,23 @@ async function applyMismatchFix(method) {
     );
     
     try {
+        if (pendingEdtechExportOptions === null) {
+            pendingEdtechExportOptions = await prepareExportOptions(currentProjectId, ['csv']);
+        }
         let res = await fetch(`/api/edtech/fix/${currentProjectId}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ method: method })
+            body: JSON.stringify({
+                method: method,
+                export_options: pendingEdtechExportOptions,
+            })
         });
         
         if (res.ok) {
+            const result = await res.json();
+            if (result.export_copied && pendingEdtechExportOptions?.csv) {
+                pendingEdtechExportOptions.csv.overwrite = true;
+            }
             if (method === 'ignore') {
                 validationResult.className = 'alert alert-warning';
                 validationResult.textContent = 'Abweichungen ausdrücklich ignoriert.';
@@ -2248,6 +2350,14 @@ btnIgnoreMismatches.addEventListener('click', () => applyMismatchFix('ignore'));
 
 generateEdtechForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    try {
+        pendingEdtechExportOptions = await prepareExportOptions(currentProjectId, ['csv', 'ass']);
+    } catch (error) {
+        validationResult.className = 'alert alert-danger';
+        validationResult.textContent = error.message || 'Export-Ziele konnten nicht geprüft werden.';
+        validationResult.classList.remove('d-none');
+        return;
+    }
     btnGenerateEdtech.disabled = true;
     btnGenerateEdtech.textContent = 'Generiere CSV...';
     const edtechMainTab = document.querySelector('#edtechZone .nav-link[href="#ed-main"]');
@@ -2259,6 +2369,7 @@ generateEdtechForm.addEventListener('submit', async (e) => {
     const payload = Object.fromEntries(settingsData.entries());
     payload.generate_csv_only = true;
     payload.force_csv_regeneration = true;
+    payload.export_options = pendingEdtechExportOptions;
     if (edtechPromptConfirmed && edtechPromptInput.value.trim()) {
         payload.custom_edtech_prompt = edtechPromptInput.value;
     }
@@ -2272,6 +2383,9 @@ generateEdtechForm.addEventListener('submit', async (e) => {
         let result = await res.json();
         
         if (res.ok) {
+            if (result.export_copied && pendingEdtechExportOptions?.csv) {
+                pendingEdtechExportOptions.csv.overwrite = true;
+            }
             currentAvailableDownloads.csv = true;
             currentAvailableDownloads.ass = false;
             hasGeneratedAss = false;
@@ -2300,6 +2414,14 @@ generateEdtechForm.addEventListener('submit', async (e) => {
 btnRebuildAss.addEventListener('click', async () => {
     if (!currentProjectId || !hasGeneratedAss) return;
 
+    try {
+        pendingEdtechExportOptions = await prepareExportOptions(currentProjectId, ['csv', 'ass']);
+    } catch (error) {
+        validationResult.className = 'alert alert-danger';
+        validationResult.textContent = error.message || 'Export-Ziele konnten nicht geprüft werden.';
+        validationResult.classList.remove('d-none');
+        return;
+    }
     generateAssAfterValidation = true;
     btnRebuildAss.disabled = true;
     btnRebuildAss.textContent = 'Prüfe CSV...';

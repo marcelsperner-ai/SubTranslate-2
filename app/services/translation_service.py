@@ -246,7 +246,7 @@ def translate_batch(client, text_batch, system_instruction, log_callback, model=
                 return None
 
 
-def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, prompt_override=None):
+def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, prompt_override=None, export_options=None):
     # --- HEARTBEAT THREAD ---
     stop_heartbeat = threading.Event()
     lease_lost = threading.Event()  # NEU: Kill-Switch für die Hauptschleife
@@ -368,7 +368,10 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
             set_translation_status(t_id, 'abgeschlossen', worker_token)
             log_cb("🎉 Datei vollständig übersetzt!")
             subtitles_path, _ = resolve_export_paths(t.get('profile_key', 'default'), t.get('episode_key', ''))
-            copy_file_to_export(out_path, subtitles_path, log_cb)
+            copy_file_to_export(
+                out_path, subtitles_path, log_cb,
+                export_options=(export_options or {}).get('srt'),
+            )
 
     except Exception as e:
         log_cb(f"❌ Systemfehler: {str(e)}")
@@ -380,7 +383,7 @@ def _translation_worker(t_id, api_key, uploads_dir, outputs_dir, worker_token, p
         if 'tmp_out_path' in locals() and os.path.exists(tmp_out_path):
             os.remove(tmp_out_path)
 
-def start_translation_job(t_id, api_key, uploads_dir, outputs_dir, prompt_override=None):
+def start_translation_job(t_id, api_key, uploads_dir, outputs_dir, prompt_override=None, export_options=None):
     worker_token = uuid.uuid4().hex 
     
     if not acquire_translation_lock(t_id, worker_token):
@@ -390,7 +393,7 @@ def start_translation_job(t_id, api_key, uploads_dir, outputs_dir, prompt_overri
         add_db_log(t_id, "▶️ Übersetzung gestartet (Lease erworben).")
         thread = threading.Thread(
             target=_translation_worker, 
-            args=(t_id, api_key, uploads_dir, outputs_dir, worker_token, prompt_override),
+            args=(t_id, api_key, uploads_dir, outputs_dir, worker_token, prompt_override, export_options),
             daemon=True
         )
         thread.start()

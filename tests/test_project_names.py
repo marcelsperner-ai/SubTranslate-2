@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from app import create_app
-from app.db import create_translation
+from app.db import create_translation, save_export_location
 
 
 class ProjectNameTests(unittest.TestCase):
@@ -52,6 +52,39 @@ class ProjectNameTests(unittest.TestCase):
         )
         self.assertEqual(blank_response.status_code, 400)
         self.assertEqual(overlong_response.status_code, 400)
+
+    def test_export_targets_report_configured_filename_and_existing_copy(self):
+        subtitles_dir = self.db_path.parent / 'subtitle_exports'
+        vocab_dir = self.db_path.parent / 'vocab_exports'
+        subtitles_dir.mkdir()
+        with self.app.app_context():
+            save_export_location('tatortreiniger', '1', str(subtitles_dir), str(vocab_dir))
+        (subtitles_dir / 'source_FA.srt').write_text('existing', encoding='utf-8')
+
+        response = self.client.get(
+            f'/api/project/{self.project_id}/export-targets?types=srt,csv,ass'
+        )
+
+        self.assertEqual(response.status_code, 200)
+        targets = response.get_json()['targets']
+        self.assertEqual(targets['srt']['filename'], 'source_FA.srt')
+        self.assertTrue(targets['srt']['exists'])
+        self.assertFalse(targets['ass']['exists'])
+        self.assertEqual(targets['csv']['directory'], str(vocab_dir))
+
+        alternate_response = self.client.get(
+            f'/api/project/{self.project_id}/export-targets?types=srt&filename=alternate'
+        )
+        self.assertEqual(alternate_response.get_json()['targets']['srt']['filename'], 'alternate.srt')
+        (subtitles_dir / 'alternate.srt').write_text('existing alternate', encoding='utf-8')
+        collision_response = self.client.get(
+            f'/api/project/{self.project_id}/export-targets?types=srt&filename=alternate.srt'
+        )
+        self.assertTrue(collision_response.get_json()['targets']['srt']['exists'])
+        unsafe_response = self.client.get(
+            f'/api/project/{self.project_id}/export-targets?types=srt&filename=..%2Foutside.srt'
+        )
+        self.assertEqual(unsafe_response.status_code, 400)
 
 
 if __name__ == '__main__':

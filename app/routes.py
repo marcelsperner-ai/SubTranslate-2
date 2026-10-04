@@ -362,12 +362,14 @@ def start_job(t_id):
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         return jsonify({"error": "GEMINI_API_KEY fehlt in .env"}), 500
-        
+
+    data = request.get_json(silent=True) or {}
     success = start_translation_job(
         t_id, 
         api_key, 
         current_app.config['UPLOADS_DIR'], 
-        current_app.config['OUTPUTS_DIR']
+        current_app.config['OUTPUTS_DIR'],
+        export_options=data.get('export_options'),
     )
     
     if success:
@@ -453,7 +455,8 @@ def regenerate_translation(t_id):
 
     success = start_translation_job(
         t_id, api_key, current_app.config['UPLOADS_DIR'],
-        current_app.config['OUTPUTS_DIR'], prompt_override=prompt
+        current_app.config['OUTPUTS_DIR'], prompt_override=prompt,
+        export_options=data.get('export_options'),
     )
     if not success:
         return jsonify({"error": "Neugenerierung konnte nicht gestartet werden."}), 409
@@ -529,11 +532,14 @@ def fix_edtech(t_id):
         ts_mismatches = report['ts_mismatches']
         kw_mismatches = report['kw_mismatches']
         data_issues = report['data_issues']
+        export_copied = False
         
         if method == 'python' and ts_mismatches:
             fix_csv_timestamps(csv_file, rows, fieldnames, ts_mismatches)
             _, vocab_path = resolve_export_paths(t.get('profile_key', 'default'), t.get('episode_key', ''))
-            copy_file_to_export(csv_file, vocab_path)
+            export_copied = copy_file_to_export(
+                csv_file, vocab_path, export_options=(data.get('export_options') or {}).get('csv')
+            )
         elif method == 'gemini' and (kw_mismatches or data_issues):
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key: return jsonify({"error": "API Key fehlt"}), 500
@@ -546,13 +552,15 @@ def fix_edtech(t_id):
                 model=t.get('edtech_model') or t.get('gemini_model') or 'gemini-3.1-flash-lite'
             )
             _, vocab_path = resolve_export_paths(t.get('profile_key', 'default'), t.get('episode_key', ''))
-            copy_file_to_export(csv_file, vocab_path)
+            export_copied = copy_file_to_export(
+                csv_file, vocab_path, export_options=(data.get('export_options') or {}).get('csv')
+            )
         elif method == 'ignore':
             pass
         else:
             return jsonify({"error": "Unbekannte Methode oder keine Fehler für diese Methode gefunden"}), 400
             
-        return jsonify({"message": f"Reparatur mit '{method}' ausgeführt"})
+        return jsonify({"message": f"Reparatur mit '{method}' ausgeführt", 'export_copied': export_copied})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -656,15 +664,18 @@ def generate_edtech(t_id):
             if res_csv and os.path.exists(res_csv):
                 update_edtech_status(t_id, 0)
                 _, vocab_path = resolve_export_paths(merged_settings.get('profile_key', 'default'), t.get('episode_key', ''))
-                copy_file_to_export(res_csv, vocab_path)
-                return jsonify({"message": "CSV erfolgreich generiert"})
+                export_copied = copy_file_to_export(
+                    res_csv, vocab_path, export_options=(data.get('export_options') or {}).get('csv')
+                )
+                return jsonify({"message": "CSV erfolgreich generiert", 'export_copied': export_copied})
             return jsonify({"error": "CSV generiert, Datei aber auf dem Laufwerk nicht gefunden"}), 500
         else:
             if res_ass and os.path.exists(res_ass) and res_csv and os.path.exists(res_csv):
                 update_edtech_status(t_id, 1)
                 subtitles_path, vocab_path = resolve_export_paths(merged_settings.get('profile_key', 'default'), t.get('episode_key', ''))
-                copy_file_to_export(res_ass, subtitles_path)
-                copy_file_to_export(res_csv, vocab_path)
+                export_options = data.get('export_options') or {}
+                copy_file_to_export(res_ass, subtitles_path, export_options=export_options.get('ass'))
+                copy_file_to_export(res_csv, vocab_path, export_options=export_options.get('csv'))
                 return jsonify({"message": "ASS und CSV erfolgreich generiert"})
             return jsonify({"error": "Generierung lief durch, aber Dateien fehlen auf dem Laufwerk"}), 500
             
@@ -687,6 +698,47 @@ def get_project(t_id):
         'csv': os.path.exists(os.path.join(outputs_dir, f"{base_name}_Vokabeln.csv"))
     }
     return jsonify(t)
+
+@main_bp.route('/api/project/<int:t_id>/export-targets', methods=['GET'])
+def get_project_export_targets(t_id):
+    t = get_translation_by_id(t_id)
+    if not t:
+        return jsonify({"error": "Projekt nicht gefunden"}), 404
+
+    requested_types = [value.strip() for value in request.args.get('types', 'srt,csv,ass').split(',')]
+    suffixes = {'srt': '_FA.srt', 'csv': '_Vokabeln.csv', 'ass': '_Interaktiv.ass'}
+    if any(file_type not in suffixes for file_type in requested_types):
+        return jsonify({"error": "Unbekannter Export-Dateityp."}), 400
+    custom_filename = request.args.get('filename')
+    if custom_filename and len(requested_types) != 1:
+        return jsonify({"error": "Ein alternativer Dateiname kann nur einzeln geprüft werden."}), 400
+
+    subtitles_dir, vocab_dir = resolve_export_paths(t.get('profile_key', 'default'), t.get('episode_key', ''))
+    target_dirs = {'srt': subtitles_dir, 'ass': subtitles_dir, 'csv': vocab_dir}
+    base_name = t['original_filename'].removesuffix('.srt')
+    targets = {}
+    for file_type in requested_types:
+        filename = f'{base_name}{suffixes[file_type]}'
+        if custom_filename:
+            expected_extension = os.path.splitext(suffixes[file_type])[1]
+            if (
+                custom_filename in {'.', '..'}
+                or os.path.basename(custom_filename) != custom_filename
+                or '\\' in custom_filename
+            ):
+                return jsonify({"error": "Der Export-Dateiname darf keinen Pfad enthalten."}), 400
+            custom_extension = os.path.splitext(custom_filename)[1]
+            if custom_extension and custom_extension.casefold() != expected_extension.casefold():
+                return jsonify({"error": f'Die Dateiendung muss {expected_extension} bleiben.'}), 400
+            filename = custom_filename if custom_extension else f'{custom_filename}{expected_extension}'
+        directory = target_dirs[file_type]
+        targets[file_type] = {
+            'configured': bool(directory),
+            'directory': directory or '',
+            'filename': filename,
+            'exists': bool(directory and os.path.isfile(os.path.join(directory, filename))),
+        }
+    return jsonify({'targets': targets})
 
 @main_bp.route('/api/prompts/<int:t_id>', methods=['GET'])
 def get_prompts(t_id):
