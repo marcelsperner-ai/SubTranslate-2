@@ -711,7 +711,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             else:
                 return f"{{\\c{color_map.get(color.lower(), '&HFFFFFF&')}}}"
         text = re.sub(r'<font color="([^"]+)">', repl, text)
-        return text.replace('</font>', '{\\c}')
+        text = text.replace('</font>', '{\\c}')
+        text = re.sub(r'<i(?:\s[^>]*)?>', r'{\\i1}', text, flags=re.IGNORECASE)
+        return re.sub(r'</i\s*>', r'{\\i0}', text, flags=re.IGNORECASE)
 
     def srt_time_to_ass(t):
         h, m, s_ms = t.split(':')

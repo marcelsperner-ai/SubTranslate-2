@@ -159,6 +159,26 @@ class EdTechValidationTests(unittest.TestCase):
         self.assertIn(r'{\u1}ترجمه{\u0}', dialogue)
         self.assertNotIn(r'{\u1}مفهوم{\u0}', dialogue)
 
+    def test_generator_converts_srt_italics_to_ass_overrides(self):
+        self.write_valid_csv()
+        self.farsi_subtitles[0] = (
+            '1\n00:00:02,000 --> 00:00:03,000\n<I>ترجمه</I> واژه1'
+        )
+        self.farsi_path.write_text('\n\n'.join(self.farsi_subtitles), encoding='utf-8')
+
+        edtech_service.generate_learning_subtitles(
+            str(self.farsi_path), str(self.ass_path), german_srt_path=str(self.german_path),
+            csv_filepath=str(self.csv_path),
+        )
+
+        dialogue = next(
+            line for line in self.ass_path.read_text(encoding='utf-8').splitlines()
+            if line.startswith('Dialogue: 0,0:00:02.00,')
+        )
+        self.assertIn(r'{\i1}ترجمه{\i0}', dialogue)
+        self.assertNotIn('<I>', dialogue)
+        self.assertNotIn('</I>', dialogue)
+
     def test_invalid_highlight_is_reported_and_not_applied(self):
         rows = self.write_valid_csv()
         rows[0]['Farsi_Hervorhebung'] = 'متن غایب'
