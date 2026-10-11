@@ -12,7 +12,14 @@ async function loadTranscripeProjectInfo(id) {
     if (id !== Number(info.dataset.projectId)) info.classList.add('d-none');
     try {
         const project = await transcripeRequest(`project/${id}`);
-        if (sequence !== transcripeInfoSequence || id !== currentProjectId || !project) return;
+        if (sequence !== transcripeInfoSequence || id !== currentProjectId) return;
+        const hadVideo = currentProjectHasVideo;
+        currentProjectHasVideo = Boolean(project?.assets?.video);
+        updateMediaPlayerButton();
+        if (currentProjectHasVideo && !hadVideo) {
+            mediaPlayerStatus.textContent = 'Video bereit. VLC verwendet ASS, falls vorhanden, sonst SRT.';
+        }
+        if (!project) return;
         const fields = Object.keys(project.assets).join(', ');
         info.textContent = `Transcripe: ${project.source_filename} · Importierte Dateien: ${fields}`;
         info.dataset.projectId = String(id);

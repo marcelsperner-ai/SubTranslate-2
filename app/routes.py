@@ -470,6 +470,7 @@ def get_status(t_id):
     return jsonify({
         "status": t['status'],
         "translated_lines": t['translated_lines'],
+        "translation_started": bool(t['translation_started']),
         "total_lines": t['total_lines'],
         "review_open": count_open(_review_file(t)),
         "logs": logs

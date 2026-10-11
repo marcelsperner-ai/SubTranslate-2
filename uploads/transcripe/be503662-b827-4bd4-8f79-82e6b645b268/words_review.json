@@ -1,0 +1,67 @@
+[
+  {
+    "first_word_id": 425,
+    "last_word_id": 426,
+    "original": "enthalten stimmen,",
+    "replacement": "enthielten",
+    "reason": "Die Grammatikkonstruktion 'enthalten stimmen' ist fehlerhaft und wirkt wie ein Spracherkennungsfehler für 'enthielten' oder 'uns enthalten'.",
+    "category": "grammar",
+    "confidence": "medium",
+    "audio_required": true,
+    "decision": "Ablehnen",
+    "approved_replacement": null,
+    "full_subtitle_edit": null
+  },
+  {
+    "first_word_id": 454,
+    "last_word_id": 460,
+    "original": "Stimmen nochmal von AfD und B. Und",
+    "replacement": null,
+    "reason": "Die Abfolge 'und B. Und' ist unvollständig oder fehlerhaft erkannt, vermutlich war BSW gemeint, aber ohne Audio kann kein sicherer Ersatz genannt werden.",
+    "category": "recognition",
+    "confidence": "low",
+    "audio_required": true,
+    "decision": "Bearbeiten",
+    "approved_replacement": null,
+    "full_subtitle_edit": "Rausch von der AfD zusätzlich bekommen zu den Stimmen nochmal von AfD und BWS, und die müssen ja von irgendwo hergekommen sein."
+  },
+  {
+    "first_word_id": 899,
+    "last_word_id": 901,
+    "original": "Bundestagspräsidentin Julia Glöckner",
+    "replacement": "Bundestagspräsidentin Julia Klöckner",
+    "reason": "Verwechslung des Nachnamens der Politikerin Julia Klöckner.",
+    "category": "recognition",
+    "confidence": "high",
+    "audio_required": true,
+    "decision": "Ablehnen",
+    "approved_replacement": null,
+    "full_subtitle_edit": null
+  },
+  {
+    "first_word_id": 1050,
+    "last_word_id": 1051,
+    "original": "Till Schneider",
+    "replacement": "Hans-Thomas Tillschneider",
+    "reason": "Mögliche Verwechslung oder Verkürzung des bekannten AfD-Politikers Hans-Thomas Tillschneider im gesprochenen Transkript.",
+    "category": "recognition",
+    "confidence": "medium",
+    "audio_required": true,
+    "decision": "Bearbeiten",
+    "approved_replacement": null,
+    "full_subtitle_edit": "die jetzt über allen anderen stehen soll, das propagiert Tillschneider und macht da auch überhaupt keinen Hehl draus."
+  },
+  {
+    "first_word_id": 1794,
+    "last_word_id": 1796,
+    "original": "Bundesvorsitzende Alice Weigel",
+    "replacement": "Bundesvorsitzende Alice Weidel",
+    "reason": "Der Nachname der Politikerin Alice Weidel wird hier vermutlich falsch als Weigel erkannt.",
+    "category": "recognition",
+    "confidence": "high",
+    "audio_required": true,
+    "decision": "Bearbeiten",
+    "approved_replacement": null,
+    "full_subtitle_edit": "Und hören wir uns einmal kurz an, was eben die Bundesvorsitzende Alice Weidel gestern nach den Wahlergebnissen so dazu"
+  }
+]

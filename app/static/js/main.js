@@ -156,6 +156,32 @@ let translationSettingsSaveSequence = 0;
 let edtechPromptLoaded = false;
 let edtechPromptChanged = false;
 let edtechPromptConfirmed = false;
+let currentProjectHasVideo = false;
+let mediaPlayerBusy = false;
+const btnPlayVideo = document.getElementById('btnPlayVideo');
+const mediaPlayerStatus = document.getElementById('mediaPlayerStatus');
+
+function updateMediaPlayerButton() {
+    btnPlayVideo.disabled = mediaPlayerBusy || !currentProjectId || !currentProjectHasVideo || !currentAvailableDownloads.srt;
+}
+
+btnPlayVideo.addEventListener('click', async () => {
+    const projectId = currentProjectId;
+    mediaPlayerBusy = true;
+    updateMediaPlayerButton();
+    mediaPlayerStatus.textContent = 'VLC wird gestartet...';
+    try {
+        const response = await fetch(`/api/transcripe/project/${projectId}/play`, {method: 'POST'});
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Medienplayer konnte nicht gestartet werden.');
+        if (projectId === currentProjectId) mediaPlayerStatus.textContent = result.message;
+    } catch (error) {
+        if (projectId === currentProjectId) mediaPlayerStatus.textContent = error.message;
+    } finally {
+        mediaPlayerBusy = false;
+        updateMediaPlayerButton();
+    }
+});
 
 function setProjectLoading(isLoading) {
     if (!projectLoadingOverlay) return;
@@ -711,6 +737,7 @@ regenerateTranslationButton.addEventListener('click', async () => {
         if (!response.ok) throw new Error(result.error || 'SRT-Neugenerierung fehlgeschlagen.');
 
         currentAvailableDownloads = { srt: false, ass: false, csv: false };
+        updateMediaPlayerButton();
         hasGeneratedAss = false;
         pendingEdtechExportOptions = null;
         translationPromptChanged = false;
@@ -997,6 +1024,9 @@ async function loadProjectToMain(id, title, status, filename = '') {
     setProjectLoading(true);
     setTranslationStarted(false);
     currentProjectId = id;
+    currentProjectHasVideo = false;
+    updateMediaPlayerButton();
+    mediaPlayerStatus.textContent = 'Wartet auf ein gespeichertes Video aus Transcripe.';
     loadTranscripeProjectInfo(id);
     pendingEdtechExportOptions = null;
     btnNewProject.classList.remove('active');
@@ -1028,6 +1058,7 @@ async function loadProjectToMain(id, title, status, filename = '') {
             translationSyncOffsetInput.value = pData.sync_offset ?? 0;
             loadedTranslationSyncOffset = translationSyncOffsetInput.value;
             setTranslationStarted(Boolean(pData.translation_started));
+            updatePauseResumeButton(status);
             if (transSettingsForm.elements['batch_size']) transSettingsForm.elements['batch_size'].value = pData.batch_size || 40;
             setModelSelectValue(translationModelSelect, pData.translation_model || pData.gemini_model);
             setModelSelectValue(edtechModelSelect, pData.edtech_model || pData.gemini_model);
@@ -1267,7 +1298,9 @@ document.getElementById('btnReview')?.addEventListener('click', openReviewPopup)
 function updatePauseResumeButton(status) {
     const canResume = status === 'pausiert' || status === 'Fehler';
     btnPauseResume.style.display = status === 'laufend' || canResume ? 'inline-block' : 'none';
-    btnPauseResume.textContent = canResume ? (status === 'Fehler' ? 'Erneut versuchen' : 'Fortsetzen') : 'Pause';
+    btnPauseResume.textContent = canResume
+        ? (status === 'Fehler' ? 'Erneut versuchen' : (translationSyncOffsetInput.disabled ? 'Fortsetzen' : 'Übersetzung starten'))
+        : 'Pause';
 }
 
 // 5. POLLING (Fortschritt, Logs)
@@ -1307,6 +1340,7 @@ function startPolling() {
                 statusBadge.textContent = data.status.toUpperCase();
                 statusBadge.className = "badge " + (data.status === 'laufend' ? "bg-primary" : (data.status === 'abgeschlossen' ? "bg-success" : "bg-warning"));
             }
+            setTranslationStarted(Boolean(data.translation_started));
             updatePauseResumeButton(data.status);
             updateReviewButton(data.review_open || 0);
             
@@ -1344,6 +1378,9 @@ btnNewProject.addEventListener('click', () => {
     setProjectLoading(false);
     setTranslationStarted(false);
     currentProjectId = null;
+    currentProjectHasVideo = false;
+    updateMediaPlayerButton();
+    mediaPlayerStatus.textContent = 'Wartet auf ein gespeichertes Video aus Transcripe.';
     document.getElementById('transcripeProjectInfo').classList.add('d-none');
     pendingEdtechExportOptions = null;
     btnNewProject.classList.add('active');
@@ -2141,6 +2178,7 @@ previewLinks.addEventListener('click', async (event) => {
 function unlockEdtech(availableDownloads = currentAvailableDownloads) {
     const wasLocked = edtechPaneLocked;
     currentAvailableDownloads = availableDownloads;
+    updateMediaPlayerButton();
     if (!availableDownloads.ass || !availableDownloads.csv) {
         validationResult.classList.add('d-none');
         validationResult.textContent = '';

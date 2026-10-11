@@ -54,5 +54,22 @@ weiterlaufen.
 Genuegend freien Speicher fuer Audio-/Videokopien vorsehen. Gleichzeitige
 Schreibvorgaenge in Transcripe auf dieselbe Dateibasis sind weiterhin nicht
 unterstuetzt. Die Integration ist fuer vertrauenswuerdige lokale Nutzung
-gedacht. Gemini-Glossarerstellung und Medienplayer gehoeren noch nicht zu
-dieser ersten Stufe; beim Import wird nichts an Gemini gesendet.
+gedacht. Gemini-Glossarerstellung gehoert noch nicht zu dieser ersten Stufe;
+beim Import wird nichts an Gemini gesendet.
+
+### Video mit Untertiteln abspielen
+
+In **EdTech > Main** startet **Video mit Untertiteln in VLC abspielen** den
+lokalen VLC-Player mit dem gespeicherten Transcripe-Video. Der Button wird
+nach Erzeugung der persischen SRT und Zuordnung des Videos freigeschaltet.
+Verwendet wird die erzeugte ASS, sobald EdTech abgeschlossen ist und die
+Datei vorhanden ist; andernfalls die persische SRT. ASS stellt auch die
+EdTech-Infoboxen und Formatierungen dar. Eine neue Wiedergabe nach einer
+Neugenerierung verwendet die aktuellen Untertitel.
+
+VLC muss auf dem Rechner des Flask-Backends installiert sein. Die Anwendung
+sucht im PATH und in den Windows-Standardordnern von VideoLAN. Bei einer
+anderen Installation vor dem Start `SUBTRANSLATE_VLC_PATH` auf den kompletten
+Pfad zu `vlc.exe` setzen. Startfehler werden direkt beim Button angezeigt.
+Der Start ist nur von einem lokalen Browser erlaubt. VLC wird als eigene
+Instanz gestartet und beim Beenden von SubTranslate nicht geschlossen.
