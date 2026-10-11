@@ -19,6 +19,7 @@ enthalten. Das Beispiel unten verwendet ausschließlich neu erfundenen Text.
   im Stammordner. Alte Exporte liegen auch noch direkt im Projektverzeichnis.
 - Hauptdateien: `<basis>.srt` und `<basis>.words.json`.
 - YouTube zusätzlich: `<basis>.json` mit Titel, Kanalname und Beschreibung.
+  Zusätzlich kennzeichnen Video-ID und Herkunft die jeweilige SRT-Variante.
   Für Audio-Uploads und den Wortdaten-Reexport wird diese Metadaten-Datei
   aktuell nicht erzeugt.
 - Wort-JSON: Liste mit `word`, `start_sec`, `end_sec`; Zeiten in Sekunden.
@@ -27,6 +28,9 @@ enthalten. Das Beispiel unten verwendet ausschließlich neu erfundenen Text.
   Die bloße Existenz von SRT und Wort-JSON beweist weiterhin NICHT den Abschluss.
 - Spätere Videomeldung: `<basis>.media.json` mit derselben Export-ID.
   Ordnerübergabe ohne neue HTTP-API; Video ist keine Importvoraussetzung.
+- Manuelle deutsche YouTube-Untertiteldownloads erzeugen ebenfalls ein
+  Übergabepaket, separat als `<basis>.youtube-de.*` (Abschnitt 7).
+  Eine zusätzliche Transkription erhält eine andere UUID und bleibt erhalten.
 - Zusammenfassung und Glossar werden aktuell nicht erzeugt/exportiert.
   Eine zusätzliche Eigennamen-/Glossarprüfung kann optional in SubTranslate-2
   nach dem Import und vor der persischen Übersetzung stattfinden.
@@ -90,14 +94,14 @@ Der aktuell dort gespeicherte Stammordner ist:
 `C:\Users\marce\Documents\Subtitles`.
 
 Sitzungsweise übernommene Einstellungen können davon abweichen.
-`app.py:540` löst den ausgewählten Pfad absolut auf.
+`app.py:576` löst den ausgewählten Pfad absolut auf.
 Der Stammordner muss bereits existieren; der jeweilige Auftragsordner wird
 beim Start angelegt. Bei Werkseinstellungen entscheidet deshalb `cwd`.
 Für einen fest konfigurierten Watcher den Stammordner in beiden Apps abstimmen.
 
 ### Auftragsordner
 
-`app.py:70` (`safe_output_name`) bereinigt Dateinamen; `app.py:84`
+`app.py:71` (`safe_output_name`) bereinigt Dateinamen; `app.py:85`
 (`output_directory_name`) bildet die Ordnernamen:
 
 - YouTube: `<bereinigter Videotitel> - <Video-ID>`;
@@ -137,6 +141,11 @@ C:\Users\marce\Documents\Subtitles\Beispielvideo - <Video-ID>\
     Beispielvideo.mkv                [optional; unabhängiger Video-Download]
     Beispielvideo.ready.json         [Fertigmanifest, ohne auf Video zu warten]
     Beispielvideo.media.json         [optionale separate Videomeldung]
+    Beispielvideo.youtube-de.srt     [optionaler manueller deutscher Download]
+    Beispielvideo.youtube-de.words.json
+    Beispielvideo.youtube-de.json
+    Beispielvideo.youtube-de.ready.json
+    Beispielvideo.youtube-de.media.json [gleiches Video, eigene Export-UUID]
     .media\
         <Video-ID>\
             Beispielvideo.mp3
@@ -150,8 +159,10 @@ C:\Users\marce\Documents\Subtitles\Beispielvideo - <Video-ID>\
 Die SRT-Dateibasis ist im Haupttab anpassbar. Bei YouTube gilt sie gemeinsam
 für SRT, Audio und optionales Video. Manuelle Untertitel werden im
 Originalformat unter `.media\subtitles` gespeichert; bei mehreren Sprachen
-wird der Sprachcode angefügt. Diese Dateien NICHT als neue Transkriptionen
-importieren. Aktuell wird das optionale Video im Auftragsordner abgelegt;
+wird der Sprachcode angefügt. Die Originaldateien NICHT als Transkriptionen
+importieren; stattdessen das zusätzlich erzeugte deutsche SRT-Paket über
+sein eigenes Fertigmanifest importieren.
+Aktuell wird das optionale Video im Auftragsordner abgelegt;
 die Einstellung `video_dir` ist kein separater tatsächlicher Video-Ausgabepfad
 in diesem Ablauf.
 
@@ -193,20 +204,20 @@ Relevante Stellen, jeweils relativ zum Projektpfad aus Abschnitt 1:
 
 | Stelle | Funktion |
 | --- | --- |
-| `app.py:421` | `save_text`: UTF-8, Schreiben nach `<ziel>.tmp`, danach `os.replace` |
-| `app.py:451` | `finish_export`: finale SRT, Metadaten, Fertigmanifest, Videobindung |
-| `app.py:1210` | abschließende Wortdaten-Speicherung und Start der optionalen Prüfung |
-| `app.py:1609` | Prüfdateien ausdrücklich dem aktuellen Export zuordnen |
+| `app.py:422` | `save_text`: UTF-8, Schreiben nach `<ziel>.tmp`, danach `os.replace` |
+| `app.py:482` | `finish_export`: finale SRT, Metadaten, Fertigmanifest, Videobindung |
+| `app.py:1286` | abschließende Wortdaten-Speicherung und Start der optionalen Prüfung |
+| `app.py:1685` | Prüfdateien ausdrücklich dem aktuellen Export zuordnen |
 | `subtitles.py:9` | `TimedWord`: vorhandenes Wortdatenmodell |
 | `subtitles.py:481` | SRT-Zeitformatierung |
 | `subtitles.py:491` | SRT-Erzeugung aus Wortgruppen |
 | `media_sources.py:167` | öffentliches Metadaten-Exportformat |
-| `media_sources.py:307` | YouTube-Audio-Resolver |
-| `media_sources.py:412` | internes `metadata.json` |
-| `app.py:1072` | Kopie des Audio-Uploads in `.media` |
+| `media_sources.py:306` | YouTube-Audio-Resolver |
+| `media_sources.py:411` | internes `metadata.json` |
+| `app.py:1148` | Kopie des Audio-Uploads in `.media` |
 | `youtube_video.py:73` | Veröffentlichung des fertigen optionalen Videos |
 | `transcript_review.py:374` | Zusammenfassung freigegebener Textbereiche zu einer Worteinheit |
-| `export_handoff.py:27` | Export-ID, relative Pfade, Prüfsummen und atomare Marker |
+| `export_handoff.py:29` | Export-ID, relative Pfade, Prüfsummen und atomare Marker |
 | `youtube_video.py:241` | unabhängiger Videoauftrag mit nachträglicher Exportbindung |
 
 Vorhandener atomarer Textschreiber:
@@ -259,7 +270,7 @@ save_text(metadata_path, metadata_json)
 
 `progress_bar.progress(1.0)` bedeutet nur: alle Audiosegmente verarbeitet.
 Es bedeutet NICHT: Prüfung und Export vollständig abgeschlossen.
-`app.py:874` erkennt den UI-Abschluss über sitzungsinternes
+`app.py:965` erkennt den UI-Abschluss über sitzungsinternes
 `export_downloads` mit passendem `job_dir` und vorhandenem Schlüssel `srt`.
 Der dauerhafte, extern lesbare Abschluss ist jetzt das Fertigmanifest.
 Der UI-Schlüssel wird erst nach erfolgreichem Metadaten- und Manifestexport
@@ -351,8 +362,12 @@ Synthetisches Beispiel mit der echten Struktur:
 }
 ```
 
-Die drei Werte können auch `null` sein. Video-ID, URL, Dauer, Medienpfade,
-Quell-/Zielsprache und Fertigstatus werden hier aktuell NICHT exportiert.
+Die drei Kontextwerte können auch `null` sein. Bei Transkriptionen enthält
+die Metadaten-JSON jetzt außerdem `source_id`, `subtitle_source: "transcription"`
+und `timing_precision: "word_or_segment"`. Das obige Beispiel zeigt nur den
+unveränderten Kontextteil. Für heruntergeladene deutsche Spuren siehe Abschnitt 7.
+URL, Dauer, Medienpfade, Zielsprache und Fertigstatus werden hier weiterhin
+NICHT exportiert.
 Für einen normalen Audio-Upload `probe.wav` gäbe es `probe.json` im IST-Zustand
 also nicht; das obige Metadatenbeispiel beschreibt den YouTube-Fall separat.
 
@@ -532,9 +547,8 @@ darf vom Importer nicht als Transkriptions- oder Medienübergabe verwendet werde
   nicht als erfolgreich importiert markieren; den aktuellen Marker erneut
   einlesen und bewusst erneut importieren bzw. den Fehler anzeigen.
 - `export_id` persistent mit dem Projekt speichern und gegen doppelte
-  Watcherereignisse deduplizieren. Ein erneuter Export hat eine neue ID;
-  ob er ein neues Projekt erzeugt oder ein bestehendes aktualisiert,
-  muss SubTranslate-2 ausdrücklich festlegen.
+  Watcherereignisse deduplizieren. Jede neue UUID erzeugt ein neues Projekt;
+  dieselbe UUID erneut anzukündigen aktualisiert kein bestehendes Projekt.
 - Metadaten fehlen bei Uploads zulässigerweise. Ein Import darf dafür
   nicht endlos auf `<basis>.json` warten.
 - Eine Videomeldung nach `export_id` zuordnen, das Video kopieren und ebenfalls
@@ -549,3 +563,110 @@ der Markerimport einschließlich Prüfsummenprüfung, Deduplizierung und
 nachträglicher Videozuordnung einzubauen. Die vorhandenen SRT-/Wortdatenformate
 und die eigentliche Transkription bzw. Übersetzung müssen dafür nicht
 umgestellt werden.
+
+## 7. Deutscher YouTube-Untertiteldownload als eigenständiger Export
+
+### Auswahl und Dateien
+
+Weiterhin werden nur manuell hinterlegte YouTube-Spuren angeboten.
+Automatische Spuren werden auf ausdrücklichen Wunsch nicht zur Auswahl
+hinzugefügt. Die Bereinigung ist auch für rollende Eingabedaten abgesichert.
+Beim Download einer deutschen Spur (`de` oder `de-...`) wird neben dem
+Originalformat ein vollständiges Übergabepaket erzeugt:
+
+```text
+Beispielvideo.youtube-de.srt
+Beispielvideo.youtube-de.words.json
+Beispielvideo.youtube-de.json
+Beispielvideo.youtube-de.ready.json
+Beispielvideo.youtube-de.media.json  [optional]
+```
+
+Bei einer Sprachvariante ersetzt z.B. `youtube-de-DE` den Zusatz `youtube-de`.
+Eine zusätzlich erstellte Transkription verwendet unabhängig davon
+`Beispielvideo.srt`, `.words.json`, `.json`, `.ready.json` und `.media.json`.
+Heruntergeladene SRT und Transkriptions-SRT werden nicht gegenseitig überschrieben.
+Der reservierte Namensbereich `.youtube-...` ist auch bei angeforderten
+Transkriptions-/Wortdaten-Reexporten geschützt: Diese erhalten `.transcript`.
+
+Beide Pakete haben eigene Export-UUIDs; das sind zwei SubTranslate-Projekte,
+nicht zwei Versionen innerhalb desselben Projekts. Erneuter Download erzeugt
+eine neue UUID, ohne den vorhandenen Transkriptionsexport zu ersetzen.
+Die Oberfläche benennt den getrennten YouTube-Export ausdrücklich.
+
+### SRT-Konvertierung, Bereinigung und Wortdaten
+
+`subtitle_import.py` konvertiert VTT und andere FFmpeg-lesbare Formate zuerst
+lokal in SRT. SRT-Eingaben müssen UTF-8 sein; ein UTF-8-BOM wird akzeptiert.
+Nicht lesbare/ungültige Dateien oder leere Segmente führen zu einem sichtbaren
+Fehler und keinem Fertigmanifest. Die Originaldatei bleibt unverändert.
+
+Der Parser prüft Text, positive Dauer und chronologisch geordnete Zeitbereiche.
+Die Bereinigung entfernt HTML-Tags, normalisiert Zeilen/Leerraum und entfernt
+exakte Textwiederholungen bzw. identische End-/Anfangswortfolgen bei zeitlich
+überlappenden Nachbarsegmenten. Progressive rollende Texte werden so nicht
+mehrfach weitergegeben. Verbleibende Anzeigeüberschneidungen werden an den
+Segmentanfängen getrennt; bei identischen Startzeiten werden Texte gebündelt.
+Zeitlich getrennte Wiederholungen bleiben erhalten, da sie tatsächlich
+gesprochen worden sein können. Es gibt keine semantische oder LLM-basierte
+Entfernung ähnlicher Formulierungen.
+
+Die fertige SRT wird als UTF-8 geschrieben und erneut validiert.
+Das Wort-JSON ist eine nicht leere Liste im unveränderten Schema mit genau
+`word`, `start_sec`, `end_sec`. Ein Eintrag enthält den gesamten Text und
+Zeitbereich eines bereinigten Untertitelsegments. Das sind ausdrücklich
+KEINE echten Einzelwortzeitstempel. Es wird nicht in künstlich gleich lange
+Wortzeiten aufgeteilt.
+Übersetzung und EdTech können weiterhin die SRT verwenden; der Wortdatenimport
+erfordert keine zusätzliche Auswertung dieser Segmentdaten.
+
+### Metadaten und Manifest
+
+Beispiel der neuen Metadaten für die heruntergeladene deutsche Spur:
+
+```json
+{
+  "title": "Neutrales Schnittstellenbeispiel",
+  "channel_name": "Beispielkanal",
+  "description": "Fiktive Beschreibung zum Testen der lokalen Uebergabe.",
+  "source_id": "TESTVIDEO01",
+  "subtitle_source": "youtube_manual",
+  "language": "de",
+  "timing_precision": "segment"
+}
+```
+
+SubTranslate-2 kann über dieselbe `source_id` feststellen, dass zwei
+eigenständige SRT-Pakete vom selben Video stammen, und über `subtitle_source`
+den Download von der Transkription unterscheiden. Transkriptions-Metadaten
+enthalten stattdessen `subtitle_source: "transcription"` und
+`timing_precision: "word_or_segment"` (auch Transkriptionen können nach
+Freigabe zusammengefasste Textbereiche enthalten).
+
+Der Fertigmanifestvertrag aus Abschnitt 6 bleibt unverändert:
+Version 1, eigene UUID, `srt`, `words` sowie alle vier optionalen Dateifelder.
+Beim direkten Download ist `metadata` die neu erzeugte Metadaten-JSON;
+`words_original`, `words_review` und `audio` sind `null`.
+Für genau die drei angekündigten Dateien werden SHA-256-Prüfsummen nach deren
+vollständigem Schreiben ermittelt. Erst danach wird der Marker atomar publiziert.
+Die zentrale Manifestübergabe validiert jetzt auch für Transkriptionen eine
+gültige nicht leere UTF-8-SRT und nicht leere Wortdaten mit vollständigem Schema.
+
+### Video und Synchronität
+
+Bei aktiviertem Video-Download verwenden beide Exporte denselben passenden
+Videoauftrag (gleiche YouTube-URL, Ordner, Dateibasis und Qualität).
+Ein bereits fertig heruntergeladenes passendes Video wird wiederverwendet.
+Der Auftrag verwaltet mehrere Exportbindungen und erzeugt für jedes Paket
+eine separate Medienmeldung mit dessen UUID und derselben Video-Prüfsumme.
+Das Video bleibt optional; es ist keine Voraussetzung für die Fertigmeldung.
+
+Untertitel und Video gehören zur geprüften selben YouTube-Video-ID.
+Das Video wird vollständig heruntergeladen/remuxt, nicht zugeschnitten oder
+mit Zeitversatz versehen. Untertitelzeiten beziehen sich weiterhin auf den
+Videoanfang, nicht auf einen neuen Ausschnitt. Reicht das letzte Segment mehr
+als 1 Sekunde über die bekannte Videodauer hinaus, wird der Export abgelehnt.
+Die gewählte Videoqualität ändert nicht die Zeitbasis.
+Eine inhaltlich falsch synchronisierte, vom Ersteller hinterlegte Spur lässt
+sich damit nicht automatisch ausschließen; eine manuelle Synchronitätsprüfung
+am tatsächlichen Video bleibt bei solchen Quellen erforderlich.

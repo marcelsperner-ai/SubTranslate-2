@@ -8,7 +8,10 @@ from unittest.mock import Mock, patch
 from uuid import uuid4
 
 from app import create_app
-from app.db import get_all_translations, get_translation_by_id, save_default_settings
+from app.db import (
+    archive_translation, get_all_translations, get_db_connection,
+    get_translation_by_id, init_db, save_default_settings,
+)
 from app.services.transcripe_service import (
     import_transcript, import_video, metadata_context, read_manifest, resolve_source,
 )
@@ -75,6 +78,107 @@ class TranscripeTests(unittest.TestCase):
 
     def enable(self):
         save_default_settings('transcripe', {'enabled': True, 'inbox_dir': str(self.inbox)})
+
+    def package_with_source(self, source='youtube_manual', precision='segment', language='de-DE'):
+        marker, manifest = self.package()
+        metadata = {
+            'title': 'Gleicher Videotitel', 'source_id': 'TESTVIDEO01',
+            'subtitle_source': source, 'language': language, 'timing_precision': precision,
+        }
+        content = json.dumps(metadata).encode('utf-8')
+        (self.job / manifest['metadata']).write_bytes(content)
+        manifest['sha256']['metadata'] = hashlib.sha256(content).hexdigest()
+        marker.write_text(json.dumps(manifest), encoding='utf-8')
+        return marker, manifest, metadata
+
+    def test_manual_youtube_segment_metadata_persists_without_changing_srt(self):
+        marker, manifest, metadata = self.package_with_source()
+        project_id = import_transcript(marker, self.uploads)
+        project = get_translation_by_id(project_id)
+        self.assertEqual(project['status'], 'pausiert')
+        self.assertFalse(project['translation_started'])
+        self.assertEqual((self.uploads / project['original_filename']).read_bytes(), SRT.encode())
+        info = self.client.get(f'/api/transcripe/project/{project_id}').get_json()
+        self.assertEqual(info['metadata'], metadata)
+        words = json.loads((self.uploads / info['assets']['words']).read_text())
+        self.assertEqual(words, WORDS)
+        self.assertIn(' ', words[0]['word'])
+        new_app = create_app()
+        self.addCleanup(new_app.extensions['transcripe'].stop)
+        self.assertEqual(new_app.test_client().get(
+            f'/api/project/{project_id}').get_json()['import_metadata'], metadata)
+        archive_translation(project_id)
+        listed = self.client.get('/api/projects').get_json()[0]
+        self.assertTrue(listed['archived'])
+        self.assertEqual(listed['import_metadata'], metadata)
+        (self.job / manifest['metadata']).write_bytes(b'overwritten metadata')
+        self.assertEqual(import_transcript(marker, self.uploads), project_id)
+        self.assertEqual(self.client.get(
+            f'/api/transcripe/project/{project_id}').get_json()['metadata'], metadata)
+
+    def test_same_video_has_independent_source_projects_and_video_copies(self):
+        marker, first, first_metadata = self.package_with_source()
+        first_id = import_transcript(marker, self.uploads)
+        video_marker = self.video_marker(first['export_id'])
+        self.assertEqual(import_video(video_marker, self.uploads), first_id)
+        marker, second, second_metadata = self.package_with_source(
+            source='transcription', precision='word_or_segment')
+        second_video = self.video_marker(second['export_id'])
+        self.assertIsNone(import_video(second_video, self.uploads))
+        second_id = import_transcript(marker, self.uploads)
+        self.assertNotEqual(first_id, second_id)
+        self.assertEqual(import_video(second_video, self.uploads), second_id)
+        self.assertEqual(import_video(second_video, self.uploads), second_id)
+        self.assertEqual(len(get_all_translations()), 2)
+        first_info = self.client.get(f'/api/transcripe/project/{first_id}').get_json()
+        second_info = self.client.get(f'/api/transcripe/project/{second_id}').get_json()
+        self.assertEqual(first_info['metadata'], first_metadata)
+        self.assertEqual(second_info['metadata'], second_metadata)
+        self.assertNotEqual(first_info['assets']['video'], second_info['assets']['video'])
+        for info in (first_info, second_info):
+            self.assertEqual((self.uploads / info['assets']['video']).read_bytes(), b'example-video')
+        projects = self.client.get('/api/projects').get_json()
+        self.assertEqual({p['import_metadata']['subtitle_source'] for p in projects},
+                         {'youtube_manual', 'transcription'})
+
+    def test_legacy_optional_and_unknown_source_metadata_are_supported(self):
+        marker, _ = self.package(metadata=False)
+        project_id = import_transcript(marker, self.uploads)
+        self.assertEqual(self.client.get(
+            f'/api/project/{project_id}').get_json()['import_metadata'], {})
+        marker, _, metadata = self.package_with_source(source='future_source', precision=None, language=None)
+        project_id = import_transcript(marker, self.uploads)
+        self.assertEqual(self.client.get(
+            f'/api/project/{project_id}').get_json()['import_metadata'], metadata)
+
+    def test_invalid_source_metadata_rejects_import_without_partial_project(self):
+        for field in ('source_id', 'subtitle_source', 'language', 'timing_precision'):
+            marker, manifest, metadata = self.package_with_source()
+            metadata[field] = ['invalid']
+            content = json.dumps(metadata).encode('utf-8')
+            (self.job / manifest['metadata']).write_bytes(content)
+            manifest['sha256']['metadata'] = hashlib.sha256(content).hexdigest()
+            marker.write_text(json.dumps(manifest))
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, field):
+                import_transcript(marker, self.uploads)
+            self.assertEqual(get_all_translations(), [])
+            self.assertEqual(list(self.uploads.iterdir()), [])
+
+    def test_import_metadata_migration_preserves_legacy_mapping(self):
+        marker, manifest = self.package(metadata=False)
+        project_id = import_transcript(marker, self.uploads)
+        connection = get_db_connection()
+        try:
+            connection.execute('ALTER TABLE transcripe_imports DROP COLUMN metadata_json')
+            connection.commit()
+        finally:
+            connection.close()
+        init_db()
+        init_db()
+        info = self.client.get(f'/api/transcripe/project/{project_id}').get_json()
+        self.assertEqual(info['metadata'], {})
+        self.assertEqual(info['export_id'], manifest['export_id'])
+        self.assertEqual(import_transcript(marker, self.uploads), project_id)
 
     def test_import_uses_defaults_context_and_verified_independent_copies(self):
         marker, manifest = self.package(audio=True)

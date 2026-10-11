@@ -21,6 +21,7 @@ from app.services.translation_service import start_translation_job
 from app.services.export_service import copy_file_to_export
 from app.services.review_service import review_path, load_review_items, save_review_items, count_open
 from app.services.subtitle_conversion_service import convert_ttml_to_srt
+from app.services.transcripe_service import project_import_info, project_import_metadata
 
 main_bp = Blueprint('main', __name__)
 load_dotenv()
@@ -63,11 +64,13 @@ def list_projects():
     """Liefert aktive und archivierte Projekte samt Dateistatus für die UI."""
     outputs_dir = current_app.config['OUTPUTS_DIR']
     projects = get_all_translations()
+    import_metadata = project_import_metadata()
     try:
         prompt_profiles = load_prompts()
     except (OSError, yaml.YAMLError):
         prompt_profiles = {}
     for project in projects:
+        project['import_metadata'] = import_metadata.get(project['id'], {})
         add_project_display_names(project, prompt_profiles)
         base_name = project['original_filename'].replace('.srt', '')
         project['available_downloads'] = {
@@ -688,6 +691,8 @@ def get_project(t_id):
     if not t:
         return jsonify({"error": "Projekt nicht gefunden"}), 404
     add_project_display_names(t)
+    imported = project_import_info(t_id)
+    t['import_metadata'] = imported['metadata'] if imported else {}
     base_name = t['original_filename'].replace('.srt', '')
     outputs_dir = current_app.config['OUTPUTS_DIR']
     t['available_downloads'] = {

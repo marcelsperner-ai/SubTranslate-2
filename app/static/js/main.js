@@ -774,6 +774,21 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
 }
 
+function importSourceLabel(metadata = {}) {
+    const source = metadata.subtitle_source === 'youtube_manual' ? 'YouTube-Untertitel'
+        : (metadata.subtitle_source === 'transcription' ? 'Audio-Transkription' : '');
+    if (!source) return '';
+    const language = metadata.language;
+    const languageLabel = language === 'de' || language?.startsWith('de-') ? 'Deutsch' : language;
+    return languageLabel ? `${source} · ${languageLabel}` : source;
+}
+
+function importTimingLabel(metadata = {}) {
+    if (metadata.timing_precision === 'segment') return 'Segmentzeiten – keine Einzelwortzeitstempel';
+    if (metadata.timing_precision === 'word_or_segment') return 'Wort- oder Segmentzeiten – keine durchgehende Einzelwortgenauigkeit garantiert';
+    return '';
+}
+
 function getEdtechSettingsSnapshot() {
     const settings = {};
     for (const field of edtechSettingsForm.elements) {
@@ -960,6 +975,7 @@ async function loadProjects() {
             let safeName = escapeHtml(name);
             let safeFilename = escapeHtml(p.original_filename);
             let safeStatus = escapeHtml(p.status);
+            const sourceLabel = escapeHtml(importSourceLabel(p.import_metadata));
             let canArchive = p.status === 'abgeschlossen'
                 && p.available_downloads?.srt && p.available_downloads?.ass;
 
@@ -973,6 +989,7 @@ async function loadProjects() {
                         <div class="text-truncate" style="max-width: 68%;">
                             <div class="fw-bold fs-6 text-truncate">${safeName}</div>
                             <div class="text-muted small text-truncate" title="${safeFilename}">${safeFilename}</div>
+                            <div class="small text-muted">${sourceLabel}</div>
                             <div class="text-muted" style="font-size: 0.8em;">Status: ${safeStatus}</div>
                         </div>
                         <div class="d-flex gap-1 me-1">
@@ -993,10 +1010,11 @@ async function loadProjects() {
             const safeName = escapeHtml(p.project_name || p.original_filename.replace('.srt', ''));
             const safeFilename = escapeHtml(p.original_filename);
             const safeStatus = escapeHtml(p.status);
+            const sourceLabel = escapeHtml(importSourceLabel(p.import_metadata));
             let badgeClass = p.status === 'abgeschlossen' ? 'bg-success' : (p.status === 'laufend' ? 'bg-primary' : 'bg-secondary');
             let archiveHtml = `
             <tr>
-                <td>${safeName}<div class="small text-muted" title="${safeFilename}">${safeFilename}</div></td>
+                <td>${safeName}<div class="small text-muted" title="${safeFilename}">${safeFilename}</div><div class="small text-muted">${sourceLabel}</div></td>
                 <td><span class="badge ${badgeClass}">${safeStatus}</span></td>
                 <td class="text-muted small">${new Date(p.last_updated).toLocaleString()}</td>
                 <td><button class="btn btn-sm btn-outline-secondary" data-project-id="${Number(p.id)}" data-project-title="${safeName}" data-project-status="${safeStatus}" data-project-filename="${safeFilename}" data-project-archived="true">Öffnen</button></td>

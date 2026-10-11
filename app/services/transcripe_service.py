@@ -162,12 +162,22 @@ def validate_review(path: Path) -> None:
             raise ValueError('audio_required muss ein Boolean sein.')
 
 
-def metadata_context(path: Path | None) -> tuple[str, str]:
+def read_metadata(path: Path | None) -> dict:
     if path is None:
-        return '', ''
+        return {}
     data = json.loads(path.read_text(encoding='utf-8-sig'))
     if not isinstance(data, dict):
         raise ValueError('YouTube-Metadaten muessen ein JSON-Objekt sein.')
+    for field in ('title', 'channel_name', 'description', 'source_id',
+                  'subtitle_source', 'language', 'timing_precision'):
+        value = data.get(field)
+        if value is not None and not isinstance(value, str):
+            raise ValueError(f'Metadatenfeld {field} muss Text oder null sein.')
+    return data
+
+
+def metadata_context(path: Path | None) -> tuple[str, str]:
+    data = read_metadata(path)
     values = {}
     for field in ('title', 'channel_name', 'description'):
         value = data.get(field)
@@ -211,7 +221,13 @@ def project_import_info(translation_id: int) -> dict | None:
     if row is None:
         return None
     return {'export_id': row['export_id'], 'source_filename': row['source_filename'],
-            'assets': json.loads(row['assets_json'])}
+            'assets': json.loads(row['assets_json']), 'metadata': json.loads(row['metadata_json'])}
+
+
+def project_import_metadata() -> dict[int, dict]:
+    with closing(get_db_connection()) as conn:
+        rows = conn.execute('SELECT translation_id, metadata_json FROM transcripe_imports').fetchall()
+    return {row['translation_id']: json.loads(row['metadata_json']) for row in rows}
 
 
 def import_transcript(marker: Path, uploads_dir: Path) -> int:
@@ -244,6 +260,7 @@ def import_transcript(marker: Path, uploads_dir: Path) -> int:
                 raise ValueError('Pruefentscheidungen benoetigen die zugehoerigen Originalwortdaten.')
             validate_review(files['words_review'])
         title, summary = metadata_context(files.get('metadata'))
+        metadata = read_metadata(files.get('metadata'))
         if read_manifest(marker) != manifest:
             raise ValueError('Fertigmanifest wurde waehrend des Imports ersetzt. Erneuter Import erforderlich.')
         source_name = Path(manifest.paths['srt'].replace('\\', '/')).name
@@ -279,8 +296,12 @@ def import_transcript(marker: Path, uploads_dir: Path) -> int:
             t_id = create_translation(filename, len(subs), settings['sync_offset'], 'default',
                                       '__custom__', (title or Path(source_name).stem)[:120],
                                       settings=settings, connection=conn)
-            conn.execute('INSERT INTO transcripe_imports VALUES (?, ?, ?, ?, NULL, ?)',
-                         (manifest.export_id, t_id, source_name, json.dumps(assets), datetime.now().isoformat()))
+            conn.execute('''
+                INSERT INTO transcripe_imports
+                    (export_id, translation_id, source_filename, assets_json, video_sha256, imported_at, metadata_json)
+                VALUES (?, ?, ?, ?, NULL, ?, ?)
+            ''', (manifest.export_id, t_id, source_name, json.dumps(assets),
+                  datetime.now().isoformat(), json.dumps(metadata)))
             conn.commit()
             return t_id
         except (OSError, ValueError, sqlite3.Error):

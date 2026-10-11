@@ -21,7 +21,13 @@ async function loadTranscripeProjectInfo(id) {
         }
         if (!project) return;
         const fields = Object.keys(project.assets).join(', ');
-        info.textContent = `Transcripe: ${project.source_filename} · Importierte Dateien: ${fields}`;
+        const metadata = project.metadata || {};
+        const details = [
+            importSourceLabel(metadata),
+            importTimingLabel(metadata),
+            metadata.source_id ? `Video-ID: ${metadata.source_id}` : '',
+        ].filter(Boolean).join(' · ');
+        info.textContent = `Transcripe: ${project.source_filename} · Importierte Dateien: ${fields}${details ? ` · ${details}` : ''}`;
         info.dataset.projectId = String(id);
         info.classList.remove('d-none');
     } catch (error) {

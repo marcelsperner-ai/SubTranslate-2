@@ -140,6 +140,9 @@ def init_db():
             updated_at TEXT NOT NULL
         )
     ''')
+    import_columns = {row[1] for row in c.execute('PRAGMA table_info(transcripe_imports)')}
+    if 'metadata_json' not in import_columns:
+        c.execute("ALTER TABLE transcripe_imports ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'")
 
     conn.commit()
     conn.close()

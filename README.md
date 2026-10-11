@@ -73,3 +73,26 @@ anderen Installation vor dem Start `SUBTRANSLATE_VLC_PATH` auf den kompletten
 Pfad zu `vlc.exe` setzen. Startfehler werden direkt beim Button angezeigt.
 Der Start ist nur von einem lokalen Browser erlaubt. VLC wird als eigene
 Instanz gestartet und beim Beenden von SubTranslate nicht geschlossen.
+
+### Manuelle deutsche YouTube-Untertitel
+
+Transcripe kann eine manuelle deutsche YouTube-Spur als eigenes Paket
+exportieren (z.B. `Titel.youtube-de.srt`). Eine zusaetzliche Transkription
+mit eigener Export-UUID erzeugt ein zweites Projekt, auch bei gleichem Titel
+und gleicher YouTube-Video-ID. Nur die Export-UUID dedupliziert Importe.
+Beide Projekte koennen jeweils eine Videomeldung fuer dasselbe Video erhalten;
+SubTranslate speichert dafuer unabhaengige Kopien.
+
+Die Metadaten `source_id`, `subtitle_source`, `language` und `timing_precision`
+werden beim Import dauerhaft gespeichert. Projektliste und Archiv unterscheiden
+**YouTube-Untertitel** und **Audio-Transkription**; die Projektansicht zeigt
+zusaetzlich Video-ID und Zeitpraezision. Fehlende Angaben bei alten Exporten
+bleiben zulaessig und werden nicht aus Dateinamen erraten.
+
+Mehrwortige `word`-Eintraege sind erlaubt. `segment` bedeutet Segmentzeiten
+ohne Einzelwortzeitstempel; auch `word_or_segment` garantiert keine
+durchgehende Einzelwortgenauigkeit. Es werden keine kuenstlichen Wortzeiten
+berechnet. Uebersetzung und EdTech verwenden weiterhin die SRT und die
+bestehenden expliziten Sync-Offset-Einstellungen. Herkunftsmetadaten fuehren
+zu keiner automatischen Zeitverschiebung. Die Synchronitaet bei Bedarf
+am Video pruefen; eine zusaetzliche Mediendauerpruefung ist nicht implementiert.
