@@ -497,6 +497,7 @@ btnSaveDefaultSettings.addEventListener('click', async () => {
         appDefaultSettings = result;
         applyDefaultsToNewProjectForms();
         await saveExportPathSettings();
+        await saveTranscripeSettings();
         settingsModal.hide();
     } catch (error) {
         settingsSaveStatus.textContent = error.message;
@@ -996,6 +997,7 @@ async function loadProjectToMain(id, title, status, filename = '') {
     setProjectLoading(true);
     setTranslationStarted(false);
     currentProjectId = id;
+    loadTranscripeProjectInfo(id);
     pendingEdtechExportOptions = null;
     btnNewProject.classList.remove('active');
     projectTitle.textContent = title;
@@ -1342,6 +1344,7 @@ btnNewProject.addEventListener('click', () => {
     setProjectLoading(false);
     setTranslationStarted(false);
     currentProjectId = null;
+    document.getElementById('transcripeProjectInfo').classList.add('d-none');
     pendingEdtechExportOptions = null;
     btnNewProject.classList.add('active');
     if (pollInterval) clearInterval(pollInterval);

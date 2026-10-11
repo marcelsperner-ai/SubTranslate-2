@@ -311,10 +311,7 @@ def upload_file():
             project_file.write(srt_content)
         
     project_name = suggested_project_name(profile_key, episode_key, project_filename)
-    t_id = create_translation(project_filename, len(subs), sync_offset, profile_key, episode_key, project_name)
-    
-    # Zusammenfassung und Upload-Einstellungen gemeinsam speichern.
-    save_project_settings(t_id, {
+    t_id = create_translation(project_filename, len(subs), sync_offset, profile_key, episode_key, project_name, settings={
         'batch_size': batch_size,
         'custom_translation_prompt': custom_translation_prompt,
         'episode_summary': real_summary,

@@ -376,7 +376,10 @@
                 <button class="btn btn-sm btn-outline-secondary active" id="btnNewProject">Neu ➕</button>
             </div>
         </div>
-        
+        <div class="px-3 pb-2">
+            <button type="button" class="btn btn-sm btn-outline-primary w-100" id="btnTranscripe">Transkribieren</button>
+            <div id="transcripeStatus" class="small text-muted mt-1" aria-live="polite"></div>
+        </div>
         <div class="project-list" id="sidebarProjectList">
             <!-- Aktives Projekt -->
             <div class="mini-project active">
@@ -508,6 +511,7 @@
                             </div>
 
                             <!-- FORTSCHRITT -->
+                            <div id="transcripeProjectInfo" class="small text-muted d-none mt-2"></div>
                             <div id="progressSection" style="display: none;">
                                 <div class="mb-1 d-flex justify-content-between align-items-center">
                                     <span id="statusBadge" class="badge bg-secondary">Wartet</span>
@@ -724,6 +728,7 @@
                         <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#settings-srt">SRT-Modul</a></li>
                         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#settings-edtech">EdTech-Modul</a></li>
                         <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#settings-paths">Pfade</a></li>
+                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#settings-transcripe">Transcripe</a></li>
                     </ul>
                     <div class="tab-content mt-3">
                         <div class="tab-pane fade show active" id="settings-srt">
@@ -820,6 +825,23 @@
                                 </div>
                             </div>
                             <div id="exportSeasonRows"></div>
+                        </div>
+                        <div class="tab-pane fade" id="settings-transcripe">
+                            <form id="transcripeSettingsForm">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" name="enabled" id="transcripeEnabled">
+                                    <label class="form-check-label" for="transcripeEnabled">Automatischen Import aktivieren</label>
+                                </div>
+                                <label class="form-label small" for="transcripeInbox">Transcripe-Ausgabeordner (auf dem SubTranslate-Rechner)</label>
+                                <input class="form-control form-control-sm mb-3" id="transcripeInbox" name="inbox_dir" placeholder="C:\Users\marce\Documents\Subtitles">
+                                <label class="form-label small" for="transcripeAppDir">Transcripe-App-Ordner</label>
+                                <input class="form-control form-control-sm mb-3" id="transcripeAppDir" name="app_dir" placeholder="C:\Users\marce\Documents\Transcripe\Transcribe">
+                                <label class="form-label small" for="transcripePython">Python-Interpreter von Transcripe</label>
+                                <input class="form-control form-control-sm mb-3" id="transcripePython" name="python_path" placeholder="C:\Users\marce\Documents\Transcripe\Transcribe\.venv\Scripts\python.exe">
+                            </form>
+                            <p class="small text-muted">Jede neue Export-ID erzeugt ein pausiertes Projekt. Auch vorhandene Fertigmarker werden importiert. Audio und Video werden kopiert; ausreichend Speicherplatz einplanen. App-Ordner und Interpreter sind nur zum Starten erforderlich. Port: 8501.</p>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btnTranscripeScan">Jetzt prüfen</button>
+                            <div id="transcripeEvents" class="small mt-2" aria-live="polite"></div>
                         </div>
                     </div>
                     <div id="settingsSaveStatus" class="small text-muted mt-2" aria-live="polite"></div>
@@ -925,5 +947,6 @@
 <!-- Flask url_for zum Laden der statischen JS-Datei -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/transcripe.js') }}"></script>
 </body>
 </html>

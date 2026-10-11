@@ -1,0 +1,551 @@
+# Schnittstelleninformationen: Transcripe -> SubTranslate-2
+
+Stand: 11.10.2026. Grundlage ist der lokal vorhandene Quellcode von Transcribe.
+Diese Datei dokumentiert den IST-Zustand einschließlich der implementierten
+Fertigmanifest- und Videoübergabe. Der Importer in SubTranslate-2 ist separat
+an diesen Vertrag anzupassen.
+API-Schlüssel, Zugangsdaten und Inhalte vorhandener Transkripte sind nicht
+enthalten. Das Beispiel unten verwendet ausschließlich neu erfundenen Text.
+
+## 1. Kurzfassung für die Integration
+
+- Anwendung: Streamlit, Einstiegspunkt `Transcribe\app.py`.
+- Projektpfad: `C:\Users\marce\Documents\Transcripe\Transcribe`.
+- Zielrechner: Windows; lokale Dateisystemübergabe an Flask ist naheliegend,
+  sofern beide Apps auf diesem Rechner laufen und dieselben Ordner lesen können.
+- Gespeicherter Ausgabe-Stammordner:
+  `C:\Users\marce\Documents\Subtitles`.
+- Ergebnisse liegen inzwischen in Auftrags-Unterordnern, nicht generell direkt
+  im Stammordner. Alte Exporte liegen auch noch direkt im Projektverzeichnis.
+- Hauptdateien: `<basis>.srt` und `<basis>.words.json`.
+- YouTube zusätzlich: `<basis>.json` mit Titel, Kanalname und Beschreibung.
+  Für Audio-Uploads und den Wortdaten-Reexport wird diese Metadaten-Datei
+  aktuell nicht erzeugt.
+- Wort-JSON: Liste mit `word`, `start_sec`, `end_sec`; Zeiten in Sekunden.
+- Fertigmarker: `<basis>.ready.json`, nach dem vollständigen Export atomar
+  geschrieben, mit UUID-Export-ID und SHA-256-Prüfsummen (Abschnitt 6).
+  Die bloße Existenz von SRT und Wort-JSON beweist weiterhin NICHT den Abschluss.
+- Spätere Videomeldung: `<basis>.media.json` mit derselben Export-ID.
+  Ordnerübergabe ohne neue HTTP-API; Video ist keine Importvoraussetzung.
+- Zusammenfassung und Glossar werden aktuell nicht erzeugt/exportiert.
+  Eine zusätzliche Eigennamen-/Glossarprüfung kann optional in SubTranslate-2
+  nach dem Import und vor der persischen Übersetzung stattfinden.
+
+## 2. Start, Umgebung und Erreichbarkeit
+
+### Vorhandener Startbefehl
+
+Die VS-Code-Aufgabe `Transcribe: Streamlit` ist in
+`.vscode\tasks.json` im übergeordneten Workspace definiert:
+
+```powershell
+Set-Location 'C:\Users\marce\Documents\Transcripe\Transcribe'
+& '.\.venv\Scripts\python.exe' -m streamlit run app.py --server.port 8501
+```
+
+Interpreter:
+`C:\Users\marce\Documents\Transcripe\Transcribe\.venv\Scripts\python.exe`
+
+Die virtuelle Umgebung ist vorhanden; der ausgewählte Interpreter meldet
+Python 3.13.5. Es gibt im übergeordneten Workspace ebenfalls eine `.venv`;
+für den obigen Start ist ausdrücklich die Umgebung IM Projekt zu verwenden.
+Eine vorherige Shell-Aktivierung ist nicht nötig.
+
+URL für SubTranslate-2: `http://127.0.0.1:8501/`
+Beim lokalen Check antwortete `http://127.0.0.1:8501/_stcore/health` mit `ok`.
+Die ebenfalls im Browser vorhandene URL auf Port 8502 war bei diesem Check
+nicht erreichbar. Port 8502 ist nicht in der vorhandenen Startaufgabe festgelegt.
+Das sind Momentaufnahmen, keine dauerhafte Erreichbarkeitsgarantie.
+
+Für den Prozessstart aus Flask dieselben Argumente und denselben Arbeitsordner
+verwenden; Prozessparameter für `subprocess.Popen`:
+
+```text
+executable = C:\Users\marce\Documents\Transcripe\Transcribe\.venv\Scripts\python.exe
+arguments  = -m streamlit run app.py --server.port 8501
+cwd        = C:\Users\marce\Documents\Transcripe\Transcribe
+```
+
+Vor einem zweiten Start prüfen, ob die gewünschte Instanz bereits erreichbar
+ist. Das Starten des Servers startet noch KEINE Transkription: Quellenauswahl,
+Start und gegebenenfalls Prüfentscheidungen erfolgen weiterhin in Streamlit.
+Eine automatische Jobübergabe von Flask an Streamlit ist nicht implementiert.
+
+Abhängigkeiten stehen in `Transcribe\requirements.txt`: Streamlit, google-genai,
+mistralai, imageio-ffmpeg, python-dotenv und yt-dlp mit default-Extras.
+YouTube-Abrufe benötigen zusätzlich Deno ab 2.3. FFmpeg wird über
+imageio-ffmpeg angesprochen.
+Die App lädt ihre bestehenden Zugangsdaten über `load_dotenv()`; diese
+konfigurierte Umgebung beibehalten und keine Schlüssel ins Manifest übernehmen.
+
+## 3. Ausgabeordner, Dateinamen und Medien
+
+### Auswahl des Ausgabeordners
+
+`app_settings.py:27` definiert `AppSettings`; Werkseinstellung `save_dir = "."`.
+`frontend.py:158` bietet die Auswahl in den Einstellungen.
+Gespeicherte Standardwerte stehen in
+`Transcribe\.frontend_defaults.json`, ohne API-Schlüssel.
+Der aktuell dort gespeicherte Stammordner ist:
+`C:\Users\marce\Documents\Subtitles`.
+
+Sitzungsweise übernommene Einstellungen können davon abweichen.
+`app.py:540` löst den ausgewählten Pfad absolut auf.
+Der Stammordner muss bereits existieren; der jeweilige Auftragsordner wird
+beim Start angelegt. Bei Werkseinstellungen entscheidet deshalb `cwd`.
+Für einen fest konfigurierten Watcher den Stammordner in beiden Apps abstimmen.
+
+### Auftragsordner
+
+`app.py:70` (`safe_output_name`) bereinigt Dateinamen; `app.py:84`
+(`output_directory_name`) bildet die Ordnernamen:
+
+- YouTube: `<bereinigter Videotitel> - <Video-ID>`;
+  ohne Titel dient die Video-ID als Ersatz.
+- Audio-Upload: `<bereinigter Upload-Dateistamm>`.
+- Wortdaten-Reexport: Upload-Dateistamm, wobei abschließendes `.words`
+  entfernt wird.
+
+Der Bereiniger ersetzt unzulässige Zeichen, normalisiert Leerraum, begrenzt
+die Basis auf 100 Zeichen und behandelt reservierte Windows-Namen.
+Der Auftragsordner ist NICHT eindeutig pro Verarbeitungslauf.
+
+### Zusammengehörige Dateien
+
+Für einen Audio-Upload `probe.wav` mit SRT-Dateinamen `probe.srt`:
+
+```text
+C:\Users\marce\Documents\Subtitles\probe\
+    probe.srt
+    probe.words.json
+    probe.words.original.json       [nur bei entsprechender Prüf-Freigabe]
+    probe.words.review.json         [nur bei entsprechender Prüf-Freigabe]
+    probe.ready.json                [Fertigmanifest]
+    .media\
+        probe.wav                   [Kopie des hochgeladenen Originals]
+    .transcription_cache\
+        <fingerabdruck>\             [interne Audiosegmente/Checkpoints]
+```
+
+Für YouTube mit Dateibasis `Beispielvideo`:
+
+```text
+C:\Users\marce\Documents\Subtitles\Beispielvideo - <Video-ID>\
+    Beispielvideo.srt
+    Beispielvideo.words.json
+    Beispielvideo.json               [exportierte YouTube-Metadaten]
+    Beispielvideo.mkv                [optional; unabhängiger Video-Download]
+    Beispielvideo.ready.json         [Fertigmanifest, ohne auf Video zu warten]
+    Beispielvideo.media.json         [optionale separate Videomeldung]
+    .media\
+        <Video-ID>\
+            Beispielvideo.mp3
+            metadata.json           [umfangreichere interne Quellmetadaten]
+        subtitles\                  [optionale manuelle Untertitelspuren]
+        video\                      [interne Downloadstände und Diagnose]
+    .transcription_cache\
+        <fingerabdruck>\
+```
+
+Die SRT-Dateibasis ist im Haupttab anpassbar. Bei YouTube gilt sie gemeinsam
+für SRT, Audio und optionales Video. Manuelle Untertitel werden im
+Originalformat unter `.media\subtitles` gespeichert; bei mehreren Sprachen
+wird der Sprachcode angefügt. Diese Dateien NICHT als neue Transkriptionen
+importieren. Aktuell wird das optionale Video im Auftragsordner abgelegt;
+die Einstellung `video_dir` ist kein separater tatsächlicher Video-Ausgabepfad
+in diesem Ablauf.
+
+Die Zuordnung lautet immer über den gemeinsamen Stamm:
+`<basis>.srt` <-> `<basis>.words.json` <-> optional `<basis>.json`.
+Nicht einfach jede beliebige JSON-Datei im Ordner zuordnen.
+
+### Dauerhaftigkeit und Zeitbezug
+
+- Ergebnisdateien und die Medien in `.media` sind lokale, dauerhafte Ablagen,
+  keine Browser-Downloads und keine nur kurzlebigen Upload-Dateien.
+- YouTube-Audio: MP3, vom Resolver mit bevorzugter Qualität 128 kbit/s erzeugt.
+- Audio-Upload: Originalbytes, gespeicherte bereinigte Originaldateibezeichnung;
+  akzeptierte Formate MP3, WAV, M4A, OGG und FLAC.
+- Optionales YouTube-Video: MKV, gewählte maximale Auflösung
+  480p/720p/1080p oder beste verfügbare Qualität.
+- Die Transkription verwendet 300-Sekunden-Segmente. Deren Zeitoffset wird den
+  Wortzeiten hinzugefügt; der Export bezieht sich auf den Anfang des gesamten
+  Eingabemediums, NICHT auf den Anfang jedes internen Segments.
+- Wenn der Benutzer bereits einen extern ausgeschnittenen Clip hochlädt,
+  ist dessen Anfang der Nullpunkt. Ein Bezug zu einem früheren Originalmedium
+  wird nicht gespeichert.
+- Beim Wortdaten-Reexport werden die gelieferten Sekundenwerte übernommen.
+  Passendes Audio ist optional als lokaler Pfad wählbar. Liegt es außerhalb
+  des Auftragsordners, wird es jetzt in `.media` kopiert; innerhalb des Ordners
+  bleibt der vorhandene Pfad. Das Manifest nennt genau diese lokale Datei.
+- Prüf-Player erzeugen temporäre WAV-Ausschnitte zum Gegenhören. Diese sind
+  keine exportierten Referenzmedien für SubTranslate-2.
+- Das gezielte Löschen des Transkriptionscaches entfernt nicht die aktuelle
+  `.media`-Ablage und nicht die fertigen SRT-Dateien. Legacy-Audio im alten
+  Job-Cache kann dagegen von dessen Löschung betroffen sein.
+- SubTranslate-2 sollte benötigte Dateien ins eigene Projekt übernehmen
+  oder dauerhafte Referenzen ausdrücklich verwalten; spätere Benutzerlöschung
+  oder erneute Verarbeitung darf importierte Projekte nicht beschädigen.
+
+## 4. Exportcode und Abschluss
+
+Relevante Stellen, jeweils relativ zum Projektpfad aus Abschnitt 1:
+
+| Stelle | Funktion |
+| --- | --- |
+| `app.py:421` | `save_text`: UTF-8, Schreiben nach `<ziel>.tmp`, danach `os.replace` |
+| `app.py:451` | `finish_export`: finale SRT, Metadaten, Fertigmanifest, Videobindung |
+| `app.py:1210` | abschließende Wortdaten-Speicherung und Start der optionalen Prüfung |
+| `app.py:1609` | Prüfdateien ausdrücklich dem aktuellen Export zuordnen |
+| `subtitles.py:9` | `TimedWord`: vorhandenes Wortdatenmodell |
+| `subtitles.py:481` | SRT-Zeitformatierung |
+| `subtitles.py:491` | SRT-Erzeugung aus Wortgruppen |
+| `media_sources.py:167` | öffentliches Metadaten-Exportformat |
+| `media_sources.py:307` | YouTube-Audio-Resolver |
+| `media_sources.py:412` | internes `metadata.json` |
+| `app.py:1072` | Kopie des Audio-Uploads in `.media` |
+| `youtube_video.py:73` | Veröffentlichung des fertigen optionalen Videos |
+| `transcript_review.py:374` | Zusammenfassung freigegebener Textbereiche zu einer Worteinheit |
+| `export_handoff.py:27` | Export-ID, relative Pfade, Prüfsummen und atomare Marker |
+| `youtube_video.py:241` | unabhängiger Videoauftrag mit nachträglicher Exportbindung |
+
+Vorhandener atomarer Textschreiber:
+
+```python
+def save_text(path: str, content: str) -> None:
+    temporary_path = path + ".tmp"
+    with open(temporary_path, "w", encoding="utf-8") as f:
+        f.write(content)
+    os.replace(temporary_path, path)
+```
+
+Vorhandene Wortdaten-Serialisierung, auf den wesentlichen Teil gekürzt:
+
+```python
+word_data_path = str(Path(full_output_path).with_suffix(".words.json"))
+word_data_json = json.dumps(
+    [asdict(w) for w in all_timed_words], ensure_ascii=False, indent=2
+)
+save_text(word_data_path, word_data_json)
+```
+
+`finish_export` ruft `create_srt` auf, schreibt die SRT mit `save_text` und
+schreibt anschließend bei YouTube `<basis>.json` mit:
+
+```python
+metadata_json = json.dumps(
+    export_metadata_payload(metadata), ensure_ascii=False, indent=2
+)
+metadata_path = str(Path(settings["output"]).with_suffix(".json"))
+save_text(metadata_path, metadata_json)
+```
+
+### Tatsächliche Reihenfolge
+
+1. Audio sichern/herunterladen, Audiosegmente und Checkpoints erzeugen.
+2. Ohne aktivierte Transkriptprüfung kann nach neu transkribierten Segmenten
+   bereits eine partielle SRT am späteren Zielpfad erscheinen.
+3. Nach Verarbeitung der Segmente wird `<basis>.words.json` geschrieben.
+4. Optional: LLM-Prüfung und Benutzerfreigabe. Während einer offenen Freigabe
+   sind die Wortdaten vorhanden, aber noch nicht endgültig freigegeben.
+5. Bei einer Freigabe mit Auffälligkeiten werden Original-Wortdaten,
+   Prüfentscheidungen und aktuelle korrigierte Wortdaten gespeichert.
+6. `finish_export` erzeugt die endgültige SRT; bei YouTube folgt die
+   exportierte Metadaten-JSON.
+7. Nach erfolgreichem Export aller angekündigten Dateien wird zuletzt das
+   Fertigmanifest geschrieben. Erst danach zeigt die UI Erfolg und SRT-Download.
+   Das Video kann unabhängig davon
+   weiterhin herunterladen oder separat fehlschlagen.
+
+`progress_bar.progress(1.0)` bedeutet nur: alle Audiosegmente verarbeitet.
+Es bedeutet NICHT: Prüfung und Export vollständig abgeschlossen.
+`app.py:874` erkennt den UI-Abschluss über sitzungsinternes
+`export_downloads` mit passendem `job_dir` und vorhandenem Schlüssel `srt`.
+Der dauerhafte, extern lesbare Abschluss ist jetzt das Fertigmanifest.
+Der UI-Schlüssel wird erst nach erfolgreichem Metadaten- und Manifestexport
+gesetzt. Fehler davor ergeben keinen erfolgreichen SRT-Downloadstatus.
+
+Jede Textdatei wird einzeln atomar ersetzt; das Paket aus mehreren Dateien
+ist NICHT gemeinsam atomar. Auch ein Beobachten von Dateigröße/Änderungszeit
+oder das bloße Warten auf SRT und Wort-JSON ist kein verlässlicher Fertignachweis:
+Prüfpausen und alte Dateien eines früheren Exports können denselben Zustand
+vortäuschen.
+
+### Wiederholungen und Parallelität
+
+- Erneute Verarbeitung mit identischem Ordner und identischer Basis ersetzt
+  bestehende Dateien; es wird kein neuer Versionsordner angelegt. Vor dem
+  Schreiben werden beide alten Marker entfernt; der neue Lauf hat eine neue ID.
+- Ein neuer SRT-Dateiname legt andere Ergebnisdateien im selben Auftrag ab.
+- Alte optionale Prüfdateien werden bei einem späteren Export ohne Freigabe
+  nicht automatisch entfernt. Ihre Existenz beweist deshalb nicht, dass sie
+  zum aktuellen Lauf gehören.
+- Cache-Fingerabdrücke dienen der Wiederaufnahme, nicht als eindeutige
+  Export-ID. Der Prüfdialog-Token ist ebenfalls keine öffentliche Job-ID.
+- Die UI sperrt bestimmte Aktionen innerhalb derselben Sitzung. Für mehrere
+  Streamlit-Sitzungen/Prozesse gibt es im Exportablauf keine globale
+  Schreibsperre oder eindeutigen Laufordner. Derselbe Zielname kann kollidieren,
+  auch beim festen Namen `<ziel>.tmp`.
+- Für den minimalen ersten Integrationsschritt pro Zielordner/Dateibasis nur
+  einen schreibenden Auftrag gleichzeitig zulassen. Echte parallele
+  Verarbeitung mit getrennten Laufordnern wäre eine zusätzliche Erweiterung.
+
+## 5. Vorhandene JSON-Formate und neutrales Beispielpaket
+
+Die Schlüssel und Werttypen wurden zusätzlich an vorhandenen lokalen
+Wortdaten geprüft, ohne deren Textinhalte hier zu übernehmen.
+Beide Metadaten-Schlüsselmengen wurden ebenfalls an vorhandenen Dateien
+bestätigt. Das folgende Beispiel enthält synthetischen Text; die SRT wurde
+mit dem tatsächlichen `create_srt` und dessen Standardoptionen erzeugt.
+Es ist kein Ausschnitt eines vorhandenen Videos und hat kein zugehöriges Audio.
+Die Dateiinhalte sind hier eingebettet, keine zusätzlichen Dateien angelegt.
+
+### `probe.srt`
+
+```srt
+1
+00:00:00,000 --> 00:00:01,556
+Heute testen wir Untertitel.
+```
+
+### `probe.words.json`
+
+```json
+[
+  {"word": "Heute", "start_sec": 0.0, "end_sec": 0.3},
+  {"word": "testen", "start_sec": 0.3, "end_sec": 0.65},
+  {"word": "wir", "start_sec": 0.65, "end_sec": 0.8},
+  {"word": "Untertitel.", "start_sec": 0.8, "end_sec": 1.5}
+]
+```
+
+- Oberste Ebene: JSON-Liste, keine Hülle mit `words`, keine Schema-Version.
+- `word`: Text inklusive etwaiger Satzzeichen.
+- `start_sec`, `end_sec`: Zahlen in Sekunden, nicht Millisekunden.
+- Keine Sprecherkennung, Transkriptionskonfidenz, Sprachkennung oder Cue-ID.
+- Die Position in der Liste liefert die Reihenfolge. Interne Prüf-Wort-IDs
+  sind 1-basiert, aber nicht in dieser Wortdatei gespeichert.
+- SRT-Cues haben eine Anzeigedauer mit möglichem Nachlauf. Im Beispiel endet
+  die Sprache bei 1.5 Sekunden, die Anzeige erst bei 1.556 Sekunden.
+  Cue-Ende und letztes Wortende daher nicht auf Gleichheit prüfen.
+- Die Zuordnung von Worten zu SRT-Cues wird nicht exportiert. Bei Bedarf muss
+  SubTranslate-2 sie aus Reihenfolge/Text und Zeiten ableiten; die bestehende
+  Wortdatei braucht dafür zunächst kein neues Schema.
+- WICHTIG: Nach freigegebenen Korrekturen kann ein `word` einen ganzen
+  mehrwortigen Textbereich oder Untertitel enthalten. Dafür bleiben nur
+  Beginn/Ende des gesamten ursprünglichen Bereichs erhalten. Einzelwortzeiten
+  innerhalb eines solchen Ersatztextes werden NICHT erfunden.
+- Für die Übersetzung die aktuelle `<basis>.words.json` zusammen mit der
+  finalen SRT verwenden. `<basis>.words.original.json` ist optionales
+  Auditmaterial und kann nach Korrekturen eine andere Anzahl Einträge haben.
+
+### `<basis>.json`: exportierte YouTube-Metadaten
+
+Synthetisches Beispiel mit der echten Struktur:
+
+```json
+{
+  "title": "Neutrales Schnittstellenbeispiel",
+  "channel_name": "Beispielkanal",
+  "description": "Fiktive Beschreibung zum Testen der lokalen Uebergabe."
+}
+```
+
+Die drei Werte können auch `null` sein. Video-ID, URL, Dauer, Medienpfade,
+Quell-/Zielsprache und Fertigstatus werden hier aktuell NICHT exportiert.
+Für einen normalen Audio-Upload `probe.wav` gäbe es `probe.json` im IST-Zustand
+also nicht; das obige Metadatenbeispiel beschreibt den YouTube-Fall separat.
+
+### `.media\<Video-ID>\metadata.json`: interne Quellmetadaten
+
+Synthetisches Beispiel mit der echten Struktur:
+
+```json
+{
+  "source_id": "TESTVIDEO01",
+  "title": "Neutrales Schnittstellenbeispiel",
+  "duration_seconds": 2.0,
+  "channel_name": "Beispielkanal",
+  "description": "Fiktive Beschreibung zum Testen der lokalen Uebergabe.",
+  "manual_subtitle_languages": ["de"]
+}
+```
+
+`source_id` ist die YouTube-Video-ID; `duration_seconds` ist die Mediendauer
+in Sekunden. Dieses Beispiel bezeichnet ausdrücklich kein abzurufendes Video.
+Die Liste enthält verfügbare manuelle Untertitelsprachen, nicht zwingend
+die Sprache des transkribierten Audios.
+
+### `<basis>.words.review.json`: optionale Prüfentscheidungen
+
+JSON-Liste mit einem Objekt pro Auffälligkeit:
+
+```text
+first_word_id, last_word_id: Ganzzahlen, 1-basierte IDs in den Originaldaten
+original: string
+replacement: string oder null
+reason: string
+category: string
+confidence: string, vom Prüfmodell eingeschätzt
+audio_required: boolean
+decision: "Ablehnen", "Übernehmen" oder "Bearbeiten"
+approved_replacement: string oder null
+full_subtitle_edit: string oder null
+```
+
+`confidence` gehört zur Auffälligkeit, NICHT zur Erkennung jedes Wortes.
+Ein `approved_replacement = null` schließt eine Änderung des gesamten
+Untertitels nicht aus; dazu `full_subtitle_edit` berücksichtigen.
+Bei einer Prüfung ohne Auffälligkeiten entstehen diese Auditdateien im
+aktuellen Ablauf nicht neu.
+Browserdownloads der Audits heißen abweichend `original.words.json` und
+`transcript.review.json`; für den Watcher gelten die oben dokumentierten
+lokalen Namen mit gemeinsamer Basis.
+
+### Zusammenfassung, Glossar und Sprache
+
+Es gibt derzeit keinen Exportcode und kein Dateiformat für Zusammenfassung
+oder Glossar. Die bestehende Transkriptprüfung liefert Auffälligkeiten und
+optionale Textkorrekturen, kein Eigennamenglossar. Die zusätzliche
+LLM-Gruppierung bildet lediglich Untertitelgrenzen.
+
+Gespeichert ist momentan der Voxtral-Sprachhinweis `Deutsch`; die Prüfung ist
+aktiviert und LLM-Gruppierung deaktiviert. Das sind änderbare Standardwerte.
+Der Sprachhinweis ist kein Sprachfilter: Sprachwechsel können erhalten bleiben.
+Der aktuelle Export bestätigt nicht maschinenlesbar, dass ausschließlich
+Deutsch enthalten ist. SubTranslate-2 sollte die Projektsprachen Deutsch ->
+Persisch ausdrücklich festlegen und bei Bedarf prüfen.
+
+## 6. Implementierter Übergabevertrag
+
+### Ein Übergabemanifest als Fertigmarker
+
+Der Export schreibt `<basis>.ready.json` im Auftragsordner. Ein zusätzlicher
+Button und eine HTTP-Schnittstelle sind nicht erforderlich.
+Das bisherige Wortdatenformat bleibt unverändert.
+
+Schema-Version 1, synthetisches Beispiel (Prüfsummen sind hier Platzhalter):
+
+```json
+{
+  "version": 1,
+  "export_id": "<UUID dieses Exportlaufs>",
+  "srt": "probe.srt",
+  "words": "probe.words.json",
+  "metadata": null,
+  "words_original": null,
+  "words_review": null,
+  "audio": ".media\\probe.wav",
+  "sha256": {
+    "srt": "<64 hexadezimale Zeichen>",
+    "words": "<64 hexadezimale Zeichen>",
+    "audio": "<64 hexadezimale Zeichen>"
+  }
+}
+```
+
+Alle sechs Dateifelder sind immer vorhanden. `srt` und `words` sind
+verpflichtend, die anderen Felder dürfen `null` sein. `metadata` ist bei
+YouTube der Name von `<basis>.json`, sonst `null`.
+`words_original` und `words_review` werden nur genannt, wenn die Freigabe
+dieses Laufs die Dateien geschrieben hat; alte Dateien werden nicht erraten.
+`audio` nennt die tatsächlich verwendete lokale Audioquelle im Auftragsordner,
+bei einem Wortdaten-Reexport ohne Audio ist es `null`.
+Alle Pfade sind relativ zum Ordner des Manifests; unter Windows enthalten sie
+Backslashes, die in JSON als `\\` escaped sind.
+
+`sha256` ist ein Objekt: Schlüssel sind Dateifeldnamen, Werte sind
+64-stellige kleingeschriebene hexadezimale SHA-256-Prüfsummen der vollständigen
+Dateibytes. Für jedes nicht-null Dateifeld gibt es genau eine Prüfsumme;
+für null-Felder keine. Für große Medien wird gestreamt statt die gesamte
+Datei in den Speicher zu laden.
+
+### Lebenszyklus
+
+1. Jeder tatsächlich gestartete Verarbeitungslauf erhält eine neue UUID.
+   Fortsetzung durch Prüfdialog oder bewussten Ersatzexport behält diese ID;
+   ein erneuter Start oder Wiederverarbeiten erhält eine neue.
+2. Vor Änderungen derselben Basis werden das alte Fertigmanifest UND die
+   alte Videomeldung entfernt. Eine fehlgeschlagene Entfernung blockiert
+   die Verarbeitung vor dem Schreiben neuer Ergebnisse.
+3. `finish_export` speichert die finale SRT und gegebenenfalls Metadaten,
+   ermittelt die Pfade/Prüfsummen der aktuellen Dateien und veröffentlicht
+   zuletzt das Fertigmanifest. Fehlende, leere oder außerhalb des
+   Auftragsordners liegende angekündigte Dateien führen zu einem Fehler.
+4. Die Marker verwenden eine eindeutige temporäre Datei im selben Ordner,
+   die nach vollständigem Schließen atomar ersetzt wird. Temporäre
+   Manifestdateien werden bei Fehlern bereinigt.
+5. Erst nach Veröffentlichung wird der UI-Abschluss gesetzt.
+   Metadaten-/Manifestfehler werden als Exportfehler gemeldet.
+6. Alle Abschlusswege nutzen `finish_export`: normaler Export,
+   Freigabe nach Prüfung, bewusster Export ohne erfolgreiche Prüfung sowie
+   regelbasierter Ersatz nach fehlgeschlagener LLM-Gruppierung.
+7. Der Marker bestätigt nur das Übersetzungspaket, nicht den unabhängigen
+   optionalen Video-Download.
+
+### Separate Videomeldung: `<basis>.media.json`
+
+Nach erfolgreichem Transkriptionsexport wird dessen Videoauftrag an dieselbe
+Export-ID gebunden. Sobald das Video fertig ist, veröffentlicht der
+Hintergrundauftrag atomar eine separate Medienmeldung. War das Video schon
+fertig, erscheint die Meldung unmittelbar nach dem Fertigmanifest.
+
+```json
+{
+  "version": 1,
+  "export_id": "<dieselbe UUID wie im Fertigmanifest>",
+  "video": "Beispielvideo.mkv",
+  "sha256": {
+    "video": "<64 hexadezimale Zeichen>"
+  }
+}
+```
+
+Diese Datei ist ausdrücklich KEIN Fertigmarker für das Transkript.
+Bei deaktiviertem oder fehlgeschlagenem Video-Download wird sie nicht erzeugt.
+Ein Fehler beim Schreiben der Meldung erscheint separat als
+Video-Übergabefehler; das fertige Transkript bleibt verfügbar.
+Es gibt keinen zusätzlichen automatischen Retry-Dienst.
+
+Ein später Abschluss eines alten Hintergrundauftrags wird verworfen, wenn
+sein Export ersetzt wurde, dessen Fertigmarker fehlt oder dessen Export-ID
+nicht mehr zum aktuellen Fertigmarker passt.
+Die App muss bis zum Videoabschluss laufen; diese Bindung ist nicht über
+einen Prozessneustart hinweg persistent.
+Das interne `completed.json` des Videodownloads bleibt ein Cache-Marker und
+darf vom Importer nicht als Transkriptions- oder Medienübergabe verwendet werden.
+
+### Ablauf in SubTranslate-2
+
+- Streamlit bei Bedarf starten und seine Oberfläche öffnen.
+- Den Ausgabe-Stammordner nach `*.ready.json` und `*.media.json` in
+  Auftragsordnern überwachen, auch bereits vorhandene Marker beim Start
+  erfassen. `.media` und `.transcription_cache` sind keine Markerquellen;
+  ihre explizit referenzierten Mediendateien dürfen natürlich importiert werden.
+- Nur die im Marker genannten zusammengehörigen Dateien einlesen.
+  Pfade auf den zulässigen Auftragsordner begrenzen, Existenz und
+  SRT-/JSON-Struktur prüfen; Fehler als Importfehler anzeigen.
+- Medien und Ergebnisdateien ins neue Übersetzungsprojekt kopieren, nicht
+  während der Übersetzung weiter aus überschreibbaren Exportdateien lesen.
+- Nach dem Kopieren für jede angekündigte Datei die SHA-256-Prüfsumme
+  der IMPORTKOPIE mit dem Manifest vergleichen. Bei Abweichung das Paket
+  nicht als erfolgreich importiert markieren; den aktuellen Marker erneut
+  einlesen und bewusst erneut importieren bzw. den Fehler anzeigen.
+- `export_id` persistent mit dem Projekt speichern und gegen doppelte
+  Watcherereignisse deduplizieren. Ein erneuter Export hat eine neue ID;
+  ob er ein neues Projekt erzeugt oder ein bestehendes aktualisiert,
+  muss SubTranslate-2 ausdrücklich festlegen.
+- Metadaten fehlen bei Uploads zulässigerweise. Ein Import darf dafür
+  nicht endlos auf `<basis>.json` warten.
+- Eine Videomeldung nach `export_id` zuordnen, das Video kopieren und ebenfalls
+  die Prüfsumme seiner Kopie validieren. Falls der Projektimport noch läuft,
+  die Meldung für diese ID vormerken. Transkription und Video getrennt
+  deduplizieren; eine neue Export-ID gehört nicht automatisch zum alten Projekt.
+- Optional danach Eigennamenprüfung/Glossar, anschließend Übersetzung nach
+  Persisch. Ohne diese Option muss der normale Import weiter funktionieren.
+
+Die Anpassung in Transcripe ist implementiert. In SubTranslate-2 ist noch
+der Markerimport einschließlich Prüfsummenprüfung, Deduplizierung und
+nachträglicher Videozuordnung einzubauen. Die vorhandenen SRT-/Wortdatenformate
+und die eigentliche Transkription bzw. Übersetzung müssen dafür nicht
+umgestellt werden.

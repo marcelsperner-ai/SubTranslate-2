@@ -1,0 +1,54 @@
+[
+  {
+    "first_word_id": 169,
+    "last_word_id": 170,
+    "original": "Peter Modjo",
+    "replacement": "Péter Magyar",
+    "reason": "Möglicherweise phonetische Fehlbenennung des ungarischen Politikers Péter Magyar im gesprochenen Transkript.",
+    "category": "recognition",
+    "confidence": "medium",
+    "audio_required": true,
+    "decision": "Übernehmen",
+    "approved_replacement": null,
+    "full_subtitle_edit": "Der neu gewählte Ministerpräsident Péter Magyar gab nach seinem Wahlsieg bei den Parlamentswahlen im April"
+  },
+  {
+    "first_word_id": 203,
+    "last_word_id": 203,
+    "original": "Modja",
+    "replacement": "Magyar",
+    "reason": "Möglicherweise ungenaue Erkennung des Nachnamens des Politikers (Bezug auf Péter Magyar).",
+    "category": "recognition",
+    "confidence": "medium",
+    "audio_required": true,
+    "decision": "Ablehnen",
+    "approved_replacement": null,
+    "full_subtitle_edit": null
+  },
+  {
+    "first_word_id": 363,
+    "last_word_id": 364,
+    "original": "Peter Morjo",
+    "replacement": "Péter Magyar",
+    "reason": "Der Name des ungarischen Oppositionsführers lautet Péter Magyar; hier liegt sehr wahrscheinlich ein Erkennungsfehler der Spracherkennung vor.",
+    "category": "recognition",
+    "confidence": "high",
+    "audio_required": true,
+    "decision": "Übernehmen",
+    "approved_replacement": null,
+    "full_subtitle_edit": "Dazu gehörten auch KI-generierte Wahlkampfinhalte gegen Péter Magyar und seine TISA-Partei."
+  },
+  {
+    "first_word_id": 585,
+    "last_word_id": 586,
+    "original": "verbindliche Währung",
+    "replacement": "verbindliche Vorgabe",
+    "reason": "Der Ausdruck 'verbindliche Währung' in Bezug auf einen Sender und dessen Neustart wirkt semantisch unpassend im Kontext von Geschäftsführung und Etat; möglicherweise liegt ein Erkennungsfehler für 'Vorgabe' oder einen anderen Begriff vor.",
+    "category": "semantic",
+    "confidence": "medium",
+    "audio_required": true,
+    "decision": "Bearbeiten",
+    "approved_replacement": null,
+    "full_subtitle_edit": "Deshalb konnte bislang niemand eine verbindliche Vision formulieren und es gibt auch keinen echten Etat für die Umsetzung."
+  }
+]

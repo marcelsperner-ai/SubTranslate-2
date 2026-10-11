@@ -122,6 +122,24 @@ def init_db():
             PRIMARY KEY (profile_key, season)
         )
     ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS transcripe_imports (
+            export_id TEXT PRIMARY KEY,
+            translation_id INTEGER NOT NULL UNIQUE REFERENCES translations(id),
+            source_filename TEXT NOT NULL,
+            assets_json TEXT NOT NULL,
+            video_sha256 TEXT,
+            imported_at TEXT NOT NULL
+        )
+    ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS transcripe_events (
+            marker TEXT PRIMARY KEY,
+            level TEXT NOT NULL,
+            message TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+    ''')
 
     conn.commit()
     conn.close()
@@ -199,8 +217,8 @@ def save_default_settings(scope, settings_dict):
     conn.commit()
     conn.close()
 
-def save_project_settings(t_id, settings_dict):
-    conn = get_db_connection()
+def save_project_settings(t_id, settings_dict, *, connection=None):
+    conn = connection if connection is not None else get_db_connection()
     c = conn.cursor()
     query = '''
         UPDATE translations SET 
@@ -229,8 +247,9 @@ def save_project_settings(t_id, settings_dict):
         settings_dict.get('export_path', ''),
         t_id
     ))
-    conn.commit()
-    conn.close()
+    if connection is None:
+        conn.commit()
+        conn.close()
 
 def update_translation_runtime_settings(t_id, batch_size, translation_model):
     conn = get_db_connection()
@@ -410,17 +429,23 @@ def get_translation_by_id(t_id):
     conn.close()
     return dict(row) if row else None
 
-def create_translation(filename, total_lines, sync_offset, profile_key, episode_key='', project_name=''):
-    conn = get_db_connection()
-    c = conn.cursor()
-    c.execute('''
-        INSERT INTO translations (original_filename, status, total_lines, translated_lines, last_updated, sync_offset, profile_key, episode_key, project_name)
-        VALUES (?, 'pausiert', ?, 0, ?, ?, ?, ?, ?)
-    ''', (filename, total_lines, datetime.now().isoformat(), sync_offset, profile_key, episode_key, project_name))
-    t_id = c.lastrowid
-    conn.commit()
-    conn.close()
-    return t_id
+def create_translation(filename, total_lines, sync_offset, profile_key, episode_key='', project_name='',
+                       *, settings=None, connection=None):
+    conn = connection if connection is not None else get_db_connection()
+    try:
+        c = conn.execute('''
+            INSERT INTO translations (original_filename, status, total_lines, translated_lines, last_updated, sync_offset, profile_key, episode_key, project_name)
+            VALUES (?, 'pausiert', ?, 0, ?, ?, ?, ?, ?)
+        ''', (filename, total_lines, datetime.now().isoformat(), sync_offset, profile_key, episode_key, project_name))
+        t_id = c.lastrowid
+        if settings is not None:
+            save_project_settings(t_id, settings, connection=conn)
+        if connection is None:
+            conn.commit()
+        return t_id
+    finally:
+        if connection is None:
+            conn.close()
 
 def update_project_name(t_id, project_name):
     conn = get_db_connection()

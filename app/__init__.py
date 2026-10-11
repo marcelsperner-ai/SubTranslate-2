@@ -21,6 +21,13 @@ def create_app():
         
     from app.routes import main_bp
     app.register_blueprint(main_bp)
+    from app.transcripe_routes import transcripe_bp
+    from app.services.transcripe_service import TranscripeIntegration, get_transcripe_settings
+    app.register_blueprint(transcripe_bp)
+    integration = TranscripeIntegration(app)
+    app.extensions['transcripe'] = integration
+    if get_transcripe_settings()['enabled']:
+        integration.start()
     
     return app
 
